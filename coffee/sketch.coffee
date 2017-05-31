@@ -120,6 +120,10 @@ setup = ->
 
 	tabell = $('#tabell')
 
+	p1 = $('#p1')
+	p2 = $('#p2')
+	p3 = $('#p3')
+
 	fillSelect sel1, ['free'].concat range 0, 360, 15 # x
 	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
 
@@ -200,6 +204,7 @@ draw = ->
 	else
 		rotateX radians sel2.value
 	t = frameCount
+	count = 0
 	for i in range N
 		for j in range N
 			for k in range N
@@ -209,10 +214,14 @@ draw = ->
 					index = N*N*k+N*j+i
 					texture pg[index]
 					box SIZE,SIZE,SIZE
+					count++
 				else
 					texture pg[N*N*N-1]
 					box 2,2,2
 				pop()
+	p1.innerHTML = 'Words: ' + code.value.replace(/\n/,' ').split(' ').length
+	p2.innerHTML = 'Cubes: ' + count
+	p3.innerHTML = 'FPS: ' + int frameRate()
 
 tableClear = -> $("#tabell tr").remove()
 
