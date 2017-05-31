@@ -11,11 +11,32 @@ Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går allts
 
 ```coffeescript
 dup swap
-< > <= >= != ==
 + - * / %
+< > <= >= != ==
 & | ^ ~
 and or not
 abs sqrt
+```
+```coffeescript
+2 3 +    5  ==
+2 3 *    6  ==
+2 3 -   -1  ==
+
+2 3 ==   0  ==
+2 3 !=   1  ==
+2 3 >    0  ==
+
+7 12 |  15  ==
+7 12 &   4  ==
+7 12 ^  11  ==
+
+1 0 and  0  ==
+1 0 or   1  ==
+1 not    0  ==
+0 not    1  ==
+
+-3 abs   3  ==
+9 sqrt   3  ==
 ```
 
 ## Dessa kommandon finns bara i p5Forth3D:
@@ -42,14 +63,14 @@ bitijk
 ## Exempel:
 
 ```coffeescript
-0 5 bit 1 ==
-1 5 bit 0 ==
-2 5 bit 1 ==
-3 5 bit 0 ==
+0 5 bit  1  ==
+1 5 bit  0  ==
+2 5 bit  1  ==
+3 5 bit  0  ==
 
-3 biti    <=>  i 3 bit
-6 bitij   <=>  i 6 bit j 6 bit
-9 bitijk  <=>  i 9 bit j 9 bit k 9 bit
+3 biti    i 3 bit  ==
+6 bitij   i 6 bit j 6 bit  ==
+9 bitijk  i 9 bit j 9 bit k 9 bit  ==
 ```
 
 ## Dessutom kan nya ord skapas med :;
@@ -58,8 +79,8 @@ bitijk
 : sq dup * ;
 : dist sq swap sq + sqrt ;
 
-6 sq 36 ==
-3 4 dist 5 ==
+6 sq     36  ==
+3 4 dist  5  ==
 ```
 
 ## Övningar
