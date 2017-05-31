@@ -47,6 +47,21 @@ abs sqrt
 
 6 sq     36  ==
 3 4 dist  5  ==
+
+12 5 dist
+
+ger följande stacktrace:
+
+command	    stack
+12		      [12]
+5	          [12,5]
+dist.sq.dup	[12,5,5]
+dist.sq.*	  [12,25]
+dist.swap	  [25,12]
+dist.sq.dup	[25,12,12]
+dist.sq.*	  [25,144]
+dist.+	    [169]
+dist.sqrt	  [13]
 ```
 Tag bort ett ord så här:
 ```coffeescript
