@@ -10,6 +10,8 @@ i = 0
 j = 0
 k = 0
 t = 0
+frameRates = []
+frameRateSum = 0
 
 words = {}
 
@@ -219,9 +221,14 @@ draw = ->
 					texture pg[N*N*N-1]
 					box 2,2,2
 				pop()
+
 	p1.innerHTML = 'Words: ' + code.value.replace(/\n/,' ').split(' ').length
 	p2.innerHTML = 'Cubes: ' + count
-	p3.innerHTML = 'FPS: ' + int frameRate()
+	fr = frameRate()
+	frameRateSum += fr
+	frameRates.push fr
+	if frameRates.length > 200 then frameRateSum -= frameRates.shift()
+	p3.innerHTML = 'FPS: ' + int frameRateSum/frameRates.length
 
 tableClear = -> $("#tabell tr").remove()
 
