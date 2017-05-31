@@ -50,7 +50,7 @@ abs sqrt
 
 12 5 dist
 
-ger följande stacktrace:
+ger följande ögonblicksbilder av stacken:
 
 command     stack
 12          [12]
@@ -116,16 +116,20 @@ bitijk
 * grön axel motsvarar j
 * blå axel motsvarar k
 
-## Övrig information
+## Utritning
 
-* Ändringar i editorn ritas ut direkt om speed >= 1.
-* Nedre högra delen kan användas för att felsöka programmet.
-  * i,j,k och t väljs och man ser sedan hur stacken förändras.
-  * Sista raden bör innehålla ett enda värde.
-  * Om detta är noll ritas kuben ej ut.
-  * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
-* Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
 * Sätt speed=0 för att stänga av omritning.
+* Ändringar i editorn ritas ut direkt om speed >= 1.
+* Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
 * x=free innebär att kuben roterar vänster till höger
 * y=free innebär att kuben roterar uppifrån och ner.
 * Övriga värden för x och y innebär fryst rotation i en viss vinkel.
+
+## Felsökning
+
+Nedre högra delen kan användas för att felsöka programmet.
+
+* i,j,k och t väljs och man kan sedan se hur stacken förändras.
+* Sista raden bör innehålla ett enda värde.
+* Om detta är noll ritas kuben ej ut.
+* Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
