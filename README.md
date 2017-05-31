@@ -9,7 +9,7 @@ Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går allts
 
 ## Följande kommandon finns även i [Forth Haiku](http://forthsalon.appspot.com/word-list):
 
-```javascript
+```coffeescript
 dup swap
 < > <= >= != ==
 + - * / %
@@ -20,7 +20,7 @@ abs sqrt
 
 ## Dessa kommandon finns bara i p5Forth3D:
 
-```javascript
+```coffeescript
 //  Heltalsdivision
 %%  Modulo på negativa tal
 rot Hämtar översta elementet på stacken
@@ -32,16 +32,16 @@ t   Hämtar frameCount
 
 ## Följande kommandon maskar bitar:
 
-* bit
-* biti,bitj,bitk Dessa hämtar i,j resp k själva
-* bitij
-* bitik
-* bitjk
-* bitijk
+```coffeescript
+bit
+biti bitj bitk
+bitij bitik bitjk
+bitijk
+```
 
 ## Exempel:
 
-```javascript
+```coffeescript
 0 5 bit 1 ==
 1 5 bit 0 ==
 2 5 bit 1 ==
@@ -54,7 +54,7 @@ t   Hämtar frameCount
 
 ## Dessutom kan nya ord skapas med :;
 
-```javascript
+```coffeescript
 : sq dup * ;
 : dist sq swap sq + sqrt ;
 
@@ -81,5 +81,4 @@ t   Hämtar frameCount
 * Sätt speed=0 om programmet känns segt.
 * x=free innebär att kuben roterar vänster till höger
 * y=free innebär att kuben roterar uppifrån och ner.
-* Övriga värden för x och innebär fryst rotation i en viss vinkel.
-
+* Övriga värden för x och y innebär fryst rotation i en viss vinkel.
