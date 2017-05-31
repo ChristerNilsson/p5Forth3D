@@ -64,3 +64,22 @@ t   Hämtar frameCount
 
 ## Övningar
 [Exempel](https://christernilsson.github.io/p5Dojo/ForthHaiku3D.html)
+
+## Koordinater
+
+* Svarta hörnet motsvarar origo = 0,0,0
+* Vita hörnet motsvarar 9,9,9
+* röd axel motsvarar i
+* grön axel motsvarar j
+* blå axel motsvarar k
+
+## Övrig information
+
+* Ändringar i editorn slår igenom direkt.
+* Nedre högra delen kan användas för att felsöka programmet. i,j,k och t väljs och man ser sedan hur stacken förändras. Sista raden bör innehålla ett enda värde. Om detta är noll ritas kuben ej ut.
+* Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
+* Sätt speed=0 om programmet känns segt.
+* x=free innebär att kuben roterar vänster till höger
+* y=free innebär att kuben roterar uppifrån och ner.
+* Övriga värden för x och innebär fryst rotation i en viss vinkel.
+

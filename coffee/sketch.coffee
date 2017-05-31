@@ -131,7 +131,7 @@ setup = ->
 
 	sel1.val("free").change()
 	sel2.val("free").change()
-	sel4.val("0").change()
+	sel4.val("1").change()
 
 	sel5.val("0").change()
 	sel6.val("0").change()
