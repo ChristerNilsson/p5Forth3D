@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>p5Forth3D</title>
+    <script src="libraries/jquery-3.1.1.js"></script>
+    <script src="libraries/p5.js" ></script>
+    <script src="libraries/p5.dom.js"></script>
+    <script src="libraries/underscore.js"></script>
+    <script src="libraries/nilsson.js"></script>
+
+    <script src="js/sketch.js"></script>
+    <style>
+      select {overflow-y: auto; font-family:monospace;}
+      body {padding: 0; margin: 0;}
+      canvas {vertical-align: top;}
+      th, td {padding: 2px;}
+      a:link {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif;}
+      a:hover {color: #FFFF00;}
+      a:visited {color: #000000;}
+    </style>
+
+  </head>
+  <body>
+    <textarea id="code" wrap="soft" style="font-family:monospace; font-size:18px;position:absolute; top:0px; left:500px; width:500px; height:495px">513 bitijk and and</textarea>
+    <div id="canvas" style="position:absolute; top:0px; left:0px; width:211px; height:635px"></div>
+
+    <a href='https://github.com/ChristerNilsson/p5Dojo/blob/master/README.md#p5dojo' style="position:absolute; top:500px; left:200px">Help</a>
+
+    <button id="btn1" style="position: absolute; top:500px; left:  0px; width:50px">x</button>
+    <button id="btn2" style="position: absolute; top:500px; left: 50px; width:50px">y</button>
+    <button id="btn4" style="position: absolute; top:500px; left:100px; width:50px">speed</button>
+
+    <select onclick="sel1click(this);" id='sel1' size="25" style="position: absolute; top:520px; left:0px; width:50px"></select>
+    <select onclick="sel2click(this);" id='sel2' size="25" style="position: absolute; top:520px; left:50px; width:50px"></select>
+    <select onclick="sel4click(this);" id='sel4' size="25" style="position: absolute; top:520px; left:100px; width:50px"></select>
+
+    <button id="btn5" style="position: absolute; top:500px; left:300px; width:50px">i</button>
+    <button id="btn6" style="position: absolute; top:500px; left:350px; width:50px">j</button>
+    <button id="btn7" style="position: absolute; top:500px; left:400px; width:50px">k</button>
+    <button id="btn8" style="position: absolute; top:500px; left:450px; width:50px">t</button>
+
+    <select onclick="sel5click(this);" id='sel5' size="10" style="position: absolute; top:520px; left:300px; width:50px"></select>
+    <select onclick="sel6click(this);" id='sel6' size="10" style="position: absolute; top:520px; left:350px; width:50px"></select>
+    <select onclick="sel7click(this);" id='sel7' size="10" style="position: absolute; top:520px; left:400px; width:50px"></select>
+    <select onclick="sel8click(this);" id='sel8' size="10" style="position: absolute; top:520px; left:450px; width:50px"></select>
+
+    <table id="tabell" style="font-family:monospace; font-size:20px; position:absolute; top:500px; left:500px;" border="0px"></table>
+   </body>
+</html>
