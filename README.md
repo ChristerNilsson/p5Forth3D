@@ -39,6 +39,20 @@ abs sqrt
 9 sqrt   3  ==
 ```
 
+## Dessutom kan nya ord skapas med : och ; som brukligt är i Forth
+
+```coffeescript
+: sq dup * ;
+: dist sq swap sq + sqrt ;
+
+6 sq     36  ==
+3 4 dist  5  ==
+```
+Tag bort ett ord så här:
+```coffeescript
+: sq ;
+```
+
 ## Dessa kommandon finns bara i p5Forth3D:
 
 ```coffeescript
@@ -48,7 +62,7 @@ rot Hämtar översta elementet på stacken
 i   Hämtar i-koordinat 0..9
 j   Hämtar j-koordinat 0..9
 k   Hämtar k-koordinat 0..9
-t   Hämtar frameCount
+t   Hämtar frameCount  0..
 ```
 
 ## Följande kommandon maskar bitar:
@@ -68,19 +82,12 @@ bitijk
 2 5 bit  1  ==
 3 5 bit  0  ==
 
-3 biti    i 3 bit  ==
-6 bitij   i 6 bit j 6 bit  ==
-9 bitijk  i 9 bit j 9 bit k 9 bit  ==
-```
-
-## Dessutom kan nya ord skapas med :;
-
-```coffeescript
-: sq dup * ;
-: dist sq swap sq + sqrt ;
-
-6 sq     36  ==
-3 4 dist  5  ==
+: bit swap >> 1 & ;
+: biti i swap bit ;
+: bitj j swap bit ;
+: bitk k swap bit ;
+: bitij dup biti swap bitj ;
+: bitijk dup bitij swap bitk ;
 ```
 
 ## Övningar
@@ -96,10 +103,14 @@ bitijk
 
 ## Övrig information
 
-* Ändringar i editorn slår igenom direkt.
-* Nedre högra delen kan användas för att felsöka programmet. i,j,k och t väljs och man ser sedan hur stacken förändras. Sista raden bör innehålla ett enda värde. Om detta är noll ritas kuben ej ut.
+* Ändringar i editorn ritas ut direkt om speed >= 1.
+* Nedre högra delen kan användas för att felsöka programmet.
+ * i,j,k och t väljs och man ser sedan hur stacken förändras.
+ * Sista raden bör innehålla ett enda värde.
+ * Om detta är noll ritas kuben ej ut.
+ * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
 * Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
-* Sätt speed=0 om programmet känns segt.
+* Sätt speed=0 för att stänga av omritning.
 * x=free innebär att kuben roterar vänster till höger
 * y=free innebär att kuben roterar uppifrån och ner.
 * Övriga värden för x och y innebär fryst rotation i en viss vinkel.

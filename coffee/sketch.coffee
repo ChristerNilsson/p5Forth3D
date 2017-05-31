@@ -89,6 +89,12 @@ buildCommands = =>
 	commands['&'] = () => stack.push stack.pop() & stack.pop()
 	commands['|'] = () => stack.push stack.pop() | stack.pop()
 	commands['^'] = () => stack.push stack.pop() ^ stack.pop()
+	commands['>>'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() >> a
+	commands['<<'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() << a
 	commands['~'] = () => stack.push ~stack.pop()
 	commands['and'] = () =>
 		[a,b] = [stack.pop(),stack.pop()]
@@ -160,11 +166,11 @@ evaluate = (trace, line, level='') ->
 	arr = line.split ' '
 	for cmd in arr
 		if cmd==''
+		else if words[cmd]?
+			evaluate true, words[cmd],level + cmd + '.'
 		else if commands[cmd]?
 			commands[cmd]()
 			if trace then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
-		else if words[cmd]?
-			evaluate true, words[cmd],level + cmd + '.'
 		else
 			stack.push parseFloat cmd
 			if trace then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
@@ -175,7 +181,10 @@ calc = (trace=false) ->
 	for line in lines
 		if line.indexOf(':')==0
 			arr = line.split ' '
-			words[arr[1]] = arr[2..-2].join(' ')
+			if arr.length == 3 and arr[2] == ';'
+				delete words[arr[1]]
+			else
+				words[arr[1]] = arr[2..-2].join(' ')
 		else
 			evaluate trace,line
 	0 != _.last stack
