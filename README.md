@@ -120,10 +120,10 @@ bitijk
 
 * Ändringar i editorn ritas ut direkt om speed >= 1.
 * Nedre högra delen kan användas för att felsöka programmet.
- * i,j,k och t väljs och man ser sedan hur stacken förändras.
- * Sista raden bör innehålla ett enda värde.
- * Om detta är noll ritas kuben ej ut.
- * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
+  * i,j,k och t väljs och man ser sedan hur stacken förändras.
+  * Sista raden bör innehålla ett enda värde.
+  * Om detta är noll ritas kuben ej ut.
+  * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
 * Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
 * Sätt speed=0 för att stänga av omritning.
 * x=free innebär att kuben roterar vänster till höger
