@@ -4,7 +4,11 @@ SIZE = 250/N
 pg = Array N*N*N
 lightX = 0
 lightY = 0
-commands = {}
+
+cmd0 = {}
+cmd1 = {}
+cmd2 = {}
+
 stack = []
 i = 0
 j = 0
@@ -33,7 +37,7 @@ sel6click = (sel) -> trace()
 sel7click = (sel) -> trace()
 sel8click = (sel) -> trace()
 
-trace = (sel) ->
+trace = ->
 	tableClear()
 	tableAppend tabell, 'command', 'stack'
 	i = parseInt(sel5.value)
@@ -43,76 +47,81 @@ trace = (sel) ->
 	calc true
 
 buildCommands = =>
-	commands = {}
-	commands['dup'] = () => stack.push _.last stack
-	commands['swap'] = () =>
-		n = stack.length - 1
-		[stack[n-1],stack[n]] = [stack[n],stack[n-1]]
-	commands['rot'] = () => stack.push stack.shift()
-	commands['i'] = () => stack.push i
-	commands['j'] = () => stack.push j
-	commands['k'] = () => stack.push k
-	commands['t'] = () => stack.push t
-	commands['<'] = () => stack.push digit stack.pop() > stack.pop()
-	commands['>'] = () => stack.push digit stack.pop() < stack.pop()
-	commands['=='] = () => stack.push digit stack.pop() == stack.pop()
-	commands['<='] = () => stack.push digit stack.pop() >= stack.pop()
-	commands['>='] = () => stack.push digit stack.pop() <= stack.pop()
-	commands['!='] = () => stack.push digit stack.pop() != stack.pop()
-	commands['+'] = () => stack.push stack.pop() + stack.pop()
-	commands['-'] = () => stack.push -stack.pop() + stack.pop()
-	commands['*'] = () => stack.push stack.pop() * stack.pop()
-	commands['/'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() / a
-	commands['//'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() // a
-	commands['%'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() % a
-	commands['%%'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() %% a
-	commands['bit'] = () => stack.push stack.pop() >> stack.pop() & 1
-	commands['biti'] = () => stack.push stack.pop() >> i & 1
-	commands['bitj'] = () => stack.push stack.pop() >> j & 1
-	commands['bitk'] = () => stack.push stack.pop() >> k & 1
-	commands['bitij'] = () =>
+	cmd0 = {}
+	cmd1 = {}
+	cmd2 = {}
+
+	cmd0['i'] = () => stack.push i
+	cmd0['j'] = () => stack.push j
+	cmd0['k'] = () => stack.push k
+	cmd0['t'] = () => stack.push t
+
+	cmd1['dup'] = () => stack.push _.last stack
+	cmd1['not'] = () => stack.push digit stack.pop() == 0
+	cmd1['abs'] = () => stack.push abs stack.pop()
+	cmd1['sqrt'] = () => stack.push sqrt stack.pop()
+	cmd1['rot'] = () => stack.push stack.shift()
+	cmd1['~'] = () => stack.push ~stack.pop()
+	cmd1['biti'] = () => stack.push stack.pop() >> i & 1
+	cmd1['bitj'] = () => stack.push stack.pop() >> j & 1
+	cmd1['bitk'] = () => stack.push stack.pop() >> k & 1
+	cmd1['bitij'] = () =>
 		bits = stack.pop()
 		stack = stack.concat [bits >> i & 1, bits >> j & 1]
-	commands['bitik'] = () =>
+	cmd1['bitik'] = () =>
 		bits = stack.pop()
 		stack = stack.concat [bits >> i & 1, bits >> k & 1]
-	commands['bitjk'] = () =>
+	cmd1['bitjk'] = () =>
 		bits = stack.pop()
 		stack = stack.concat [bits >> j & 1, bits >> k & 1]
-	commands['bitijk'] = () =>
+	cmd1['bitijk'] = () =>
 		bits = stack.pop()
 		stack = stack.concat [bits >> i & 1, bits >> j & 1, bits >> k & 1]
-	commands['&'] = () => stack.push stack.pop() & stack.pop()
-	commands['|'] = () => stack.push stack.pop() | stack.pop()
-	commands['^'] = () => stack.push stack.pop() ^ stack.pop()
-	commands['>>'] = () =>
+
+	cmd2['swap'] = () =>
+		n = stack.length - 1
+		[stack[n-1],stack[n]] = [stack[n],stack[n-1]]
+	cmd2['<'] = () => stack.push digit stack.pop() > stack.pop()
+	cmd2['>'] = () => stack.push digit stack.pop() < stack.pop()
+	cmd2['=='] = () => stack.push digit stack.pop() == stack.pop()
+	cmd2['<='] = () => stack.push digit stack.pop() >= stack.pop()
+	cmd2['>='] = () => stack.push digit stack.pop() <= stack.pop()
+	cmd2['!='] = () => stack.push digit stack.pop() != stack.pop()
+	cmd2['+'] = () => stack.push stack.pop() + stack.pop()
+	cmd2['-'] = () => stack.push -stack.pop() + stack.pop()
+	cmd2['*'] = () => stack.push stack.pop() * stack.pop()
+	cmd2['/'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() / a
+	cmd2['//'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() // a
+	cmd2['%'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() % a
+	cmd2['%%'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() %% a
+	cmd2['bit'] = () => stack.push stack.pop() >> stack.pop() & 1
+	cmd2['&'] = () => stack.push stack.pop() & stack.pop()
+	cmd2['|'] = () => stack.push stack.pop() | stack.pop()
+	cmd2['^'] = () => stack.push stack.pop() ^ stack.pop()
+	cmd2['>>'] = () =>
 		a = stack.pop()
 		stack.push stack.pop() >> a
-	commands['<<'] = () =>
+	cmd2['<<'] = () =>
 		a = stack.pop()
 		stack.push stack.pop() << a
-	commands['~'] = () => stack.push ~stack.pop()
-	commands['and'] = () =>
+	cmd2['and'] = () =>
 		[a,b] = [stack.pop(),stack.pop()]
 		stack.push digit a!=0 and b!=0
-	commands['or'] = () =>
+	cmd2['or'] = () =>
 		[a,b] = [stack.pop(),stack.pop()]
 		stack.push digit a!=0 or b!=0
-	commands['xor'] = () =>
+	cmd2['xor'] = () =>
 		a = digit stack.pop() != 0
 		b = digit stack.pop() != 0
 		stack.push digit a+b == 1
-	commands['not'] = () => stack.push digit stack.pop() == 0
-	commands['abs'] = () => stack.push abs stack.pop()
-	commands['sqrt'] = () => stack.push sqrt stack.pop()
 
 setup = ->
 	c = createCanvas 500,500,WEBGL
@@ -171,32 +180,49 @@ setup = ->
 
 digit = (bool) -> if bool then 1 else 0
 
-evaluate = (trace, line, level='') ->
+evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
 	for cmd in arr
 		if cmd==''
+			# do nothing
 		else if words[cmd]?
-			evaluate true, words[cmd],level + cmd + '.'
-		else if commands[cmd]?
-			commands[cmd]()
-			if trace then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+			evaluate traceFlag, words[cmd],level + cmd + '.'
+		else if cmd2[cmd]?
+			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
+			cmd2[cmd]()
+			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+		else if cmd1[cmd]?
+			if stack.length < 1 then throw [level+cmd,'Stack Underflow']
+			cmd1[cmd]()
+			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+		else if cmd0[cmd]?
+			cmd0[cmd]()
+			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
 		else
-			stack.push parseFloat cmd
-			if trace then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
-
-calc = (trace=false) ->
+			nr = parseFloat cmd
+			if _.isNumber(nr) and not _.isNaN nr
+				stack.push nr
+				if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+			else
+				throw [level+cmd,'Unknown symbol']
+calc = (traceFlag = false) ->
 	stack = []
 	lines = code.value.split "\n"
-	for line in lines
-		if line.indexOf(':')==0
-			arr = line.split ' '
-			if arr.length == 3 and arr[2] == ';'
-				delete words[arr[1]]
+	try
+		for line in lines
+			if line.indexOf(':')==0
+				arr = line.split ' '
+				if arr.length == 3 and arr[2] == ';'
+					delete words[arr[1]]
+				else
+					words[arr[1]] = arr[2..-2].join(' ')
 			else
-				words[arr[1]] = arr[2..-2].join(' ')
-		else
-			evaluate trace,line
-	0 != _.last stack
+				evaluate traceFlag, line
+		0 != _.last stack
+	catch e
+		if traceFlag==true
+			[cmd, message] = e
+			tableAppend tabell, cmd, message
 
 mousePressed = ->
 	if 0 < mouseX < width then lightX = mouseX
@@ -217,7 +243,6 @@ draw = ->
 	if sel1.value == 'free'
 		yVinkel += sel4.value/500
 		yVinkel %= TWO_PI
-		print yVinkel
 		rotateY yVinkel
 	else
 		rotateY radians sel1.value

@@ -3,7 +3,7 @@
 Detta program kombinerar ForthHaiku med tredimensionella färgkuber.
 För varje pixel i,j,k räknar ett Forthprogram ut om kuben ska vara med eller inte. Du skriver detta program.
 
-Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan du går vidare.
+Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan du går vidare. Förutom att ForthSalon är 2D, kan man där ange färgen på varje pixel individuellt. Med p5Forth3D kan man inte styra över färgen.
 
 Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går alltså att räkna med.
 
@@ -122,15 +122,15 @@ bitijk
 * Sätt speed=0 för att stänga av omritning helt.
 * Ändringar i editorn ritas ut direkt om speed >= 1.
 * Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
-* x=free innebär att kuben roterar vänster till höger
-* y=free innebär att kuben roterar uppifrån och ner.
+* x = free innebär att kuben roterar vänster till höger
+* y = free innebär att kuben roterar uppifrån och ner.
 * Övriga värden för x och y innebär fryst rotation i en viss vinkel.
 
 ## Felsökning
 
-Nedre högra delen kan användas för att felsöka programmet.
+Nedre högra delen kan användas för att felsöka ditt Forth-program.
 
-* i,j,k och t väljs och man kan sedan se hur stacken förändras.
+* Välj i,j,k samt t och se hur beräkningen sker, kommando för kommando.
 * Sista raden bör innehålla ett enda värde.
-* Om detta är noll ritas kuben ej ut.
+* Om detta ej är noll ritas kuben ut.
 * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
