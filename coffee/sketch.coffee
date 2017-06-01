@@ -188,7 +188,8 @@ evaluate = (traceFlag, line, level='') ->
 		if cmd==''
 			# do nothing
 		else if words[cmd]?
-			evaluate traceFlag, words[cmd],level + cmd + '.'
+			if level.indexOf('.'+cmd+'.') != -1 then throw [level+cmd,'Recursion not allowed']
+			evaluate traceFlag, words[cmd], level + cmd + '.'
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
 			cmd2[cmd]()
