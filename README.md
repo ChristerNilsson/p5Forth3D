@@ -14,14 +14,14 @@ Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går allts
 i j k t
 
 # Kräver en operand
-not inv abs sqrt ~ dup rot
+not chs inv abs sqrt ~ dup rot
 biti bitj bitk bitij bitik bitjk bitijk
 
 # Kräver två operander
 swap
 + - * / // % %%
 < > <= >= != ==
-& | ^ ~ >> << bit
+& | ^ >> << bit
 and or xor
 ```
 
@@ -29,6 +29,7 @@ and or xor
 1 not    0  ==
 0 not    1  ==
 
+3 chs    -3  ==
 2 inv    0.5  ==
 -3 abs   3  ==
 9 sqrt   3  ==
