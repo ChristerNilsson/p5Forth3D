@@ -58,6 +58,7 @@ buildCommands = =>
 
 	cmd1['dup'] = () => stack.push _.last stack
 	cmd1['not'] = () => stack.push digit stack.pop() == 0
+	cmd1['inv'] = () => stack.push 1 / stack.pop()
 	cmd1['abs'] = () => stack.push abs stack.pop()
 	cmd1['sqrt'] = () => stack.push sqrt stack.pop()
 	cmd1['rot'] = () => stack.push stack.shift()

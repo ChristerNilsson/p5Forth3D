@@ -10,33 +10,101 @@ Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går allts
 ## Följande kommandon finns även i [Forth Haiku](http://forthsalon.appspot.com/word-list):
 
 ```coffeescript
-dup swap
-+ - * / %
+# Kräver ingen operand
+i j k t
+
+# Kräver en operand
+not inv abs sqrt ~ dup rot
+biti bitj bitk bitij bitik bitjk bitijk
+
+# Kräver två operander
+swap
++ - * / // % %%
 < > <= >= != ==
-& | ^ ~
-and or not
-abs sqrt
+& | ^ ~ >> << bit
+and or xor
 ```
+
 ```coffeescript
-2 3 +    5  ==
-2 3 *    6  ==
-2 3 -   -1  ==
-
-2 3 ==   0  ==
-2 3 !=   1  ==
-2 3 >    0  ==
-
-7 12 |  15  ==
-7 12 &   4  ==
-7 12 ^  11  ==
-
-1 0 and  0  ==
-1 0 or   1  ==
 1 not    0  ==
 0 not    1  ==
 
+2 inv    0.5  ==
 -3 abs   3  ==
 9 sqrt   3  ==
+7 ~     -8  ==
+
+2 3 +    5  ==
+2 3 -   -1  ==
+2 3 *    6  ==
+1 2 /    0.5  ==
+3 2 //   1  ==
+7 2 %    1  ==
+-7 2 %%  1  ==
+
+2 3 <    1  ==
+2 3 >    0  ==
+2 3 <=   1  ==
+2 3 >=   0  ==
+2 3 !=   1  ==
+2 3 ==   0  ==
+
+7 12 &   4  ==
+7 12 |  15  ==
+7 12 ^  11  ==
+7 2 >>  1   ==
+2 3 <<  16  ==
+0 5 bit  1  ==
+1 5 bit  0  ==
+2 5 bit  1  ==
+3 5 bit  0  ==
+
+0 0 and  0  ==
+0 1 and  0  ==
+1 0 and  0  ==
+1 1 and  1  ==
+
+0 0 or   0  ==
+0 1 or   1  ==
+1 0 or   1  ==
+1 1 or   1  ==
+
+0 0 xor  0  ==
+0 1 xor  1  ==
+1 0 xor  1  ==
+1 1 xor  0  ==
+```
+
+## Dessa kommandon finns bara i p5Forth3D:
+
+```coffeescript
+i   Hämtar i-koordinat 0..9
+j   Hämtar j-koordinat 0..9
+k   Hämtar k-koordinat 0..9
+t   Hämtar frameCount  0..
+rot Hämtar översta elementet på stacken
+//  Heltalsdivision
+%%  Modulo på negativa tal
+```
+
+## Följande kommandon maskar bitar:
+
+```coffeescript
+bit
+biti bitj bitk
+bitij bitik bitjk
+bitijk
+```
+
+## Exempel:
+
+```coffeescript
+: bit swap >> 1 & ;
+: biti i swap bit ;
+: bitj j swap bit ;
+: bitk k swap bit ;
+: bitij dup biti swap bitj ;
+: bitijk dup bitij swap bitk ;
 ```
 
 ## Dessutom kan nya ord skapas med : och ; som brukligt är i Forth
@@ -66,43 +134,6 @@ dist.sqrt   [13]
 Tag bort ett ord så här:
 ```coffeescript
 : sq ;
-```
-
-## Dessa kommandon finns bara i p5Forth3D:
-
-```coffeescript
-//  Heltalsdivision
-%%  Modulo på negativa tal
-rot Hämtar översta elementet på stacken
-i   Hämtar i-koordinat 0..9
-j   Hämtar j-koordinat 0..9
-k   Hämtar k-koordinat 0..9
-t   Hämtar frameCount  0..
-```
-
-## Följande kommandon maskar bitar:
-
-```coffeescript
-bit
-biti bitj bitk
-bitij bitik bitjk
-bitijk
-```
-
-## Exempel:
-
-```coffeescript
-0 5 bit  1  ==
-1 5 bit  0  ==
-2 5 bit  1  ==
-3 5 bit  0  ==
-
-: bit swap >> 1 & ;
-: biti i swap bit ;
-: bitj j swap bit ;
-: bitk k swap bit ;
-: bitij dup biti swap bitj ;
-: bitijk dup bitij swap bitk ;
 ```
 
 ## Övningar
