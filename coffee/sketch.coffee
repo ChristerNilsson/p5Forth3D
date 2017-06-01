@@ -10,8 +10,9 @@ i = 0
 j = 0
 k = 0
 t = 0
-frameRates = []
-frameRateSum = 0
+xVinkel = 0 # radians
+yVinkel = 0 # radians
+timestamp = 0
 
 words = {}
 
@@ -20,9 +21,12 @@ fillSelect = (sel, arr) ->
 	for key in arr
 		sel.append($("<option>").attr('value', key).text(key))
 
-sel1click = (sel) -> print sel.value
-sel2click = (sel) -> print sel.value
-sel4click = (sel) -> print sel.value
+sel1click = (sel) ->
+sel2click = (sel) ->
+sel3click = (sel) ->
+	print sel.value
+	frameRate int sel.value
+sel4click = (sel) ->
 
 sel5click = (sel) -> trace()
 sel6click = (sel) -> trace()
@@ -120,6 +124,7 @@ setup = ->
 
 	sel1 = $('#sel1')
 	sel2 = $('#sel2')
+	sel3 = $('#sel3')
 	sel4 = $('#sel4')
 	sel5 = $('#sel5')
 	sel6 = $('#sel6')
@@ -134,21 +139,25 @@ setup = ->
 
 	fillSelect sel1, ['free'].concat range 0, 360, 15 # x
 	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
-
+	fillSelect sel3, range 1,26 # frameRate
 	fillSelect sel4, range 25 # speed
+
 	fillSelect sel5, range 10 #
 	fillSelect sel6, range 10 # i
 	fillSelect sel7, range 10 # j
 	fillSelect sel8, range 10 # k
 
-	sel1.val("free").change()
-	sel2.val("free").change()
-	sel4.val("1").change()
+	frameRate 10
 
-	sel5.val("0").change()
-	sel6.val("0").change()
-	sel7.val("0").change()
-	sel8.val("0").change()
+	sel1.val("free").change() # x
+	sel2.val("free").change() # y
+	sel3.val("10").change() # fps
+	sel4.val("10").change() # speed
+
+	sel5.val("0").change() # i
+	sel6.val("0").change() # j
+	sel7.val("0").change() # k
+	sel8.val("0").change() # t
 
 	trace()
 
@@ -190,8 +199,8 @@ calc = (trace=false) ->
 	0 != _.last stack
 
 mousePressed = ->
-	if 0<mouseX<width then lightX = mouseX
-	if 0<mouseY<height then lightY = mouseY
+	if 0 < mouseX < width then lightX = mouseX
+	if 0 < mouseY < height then lightY = mouseY
 
 draw = ->
 	if sel4.value == '0' then return
@@ -206,14 +215,20 @@ draw = ->
 	pointLight 255, 255, 255, locX,locY,0
 
 	if sel1.value == 'free'
-		rotateY sel4.value * frameCount/250
+		yVinkel += sel4.value/500
+		yVinkel %= TWO_PI
+		print yVinkel
+		rotateY yVinkel
 	else
 		rotateY radians sel1.value
 
 	if sel2.value == 'free'
-		rotateX sel4.value * frameCount/500
+		xVinkel += sel4.value/500
+		xVinkel %= TWO_PI
+		rotateX xVinkel
 	else
 		rotateX radians sel2.value
+
 	t = frameCount
 	count = 0
 	for i in range N
@@ -231,13 +246,11 @@ draw = ->
 					box 2,2,2
 				pop()
 
-	p1.innerHTML = 'Words: ' + code.value.replace(/\n/,' ').split(' ').length
+	p1.innerHTML = 'Words: ' + code.value.replace(/\n/g,' ').split(' ').length
 	p2.innerHTML = 'Cubes: ' + count
-	fr = frameRate()
-	frameRateSum += fr
-	frameRates.push fr
-	if frameRates.length > 200 then frameRateSum -= frameRates.shift()
-	p3.innerHTML = 'FPS: ' + int frameRateSum/frameRates.length
+	if millis() > timestamp
+		p3.innerHTML = 'FPS: ' + int frameRate()
+		timestamp = millis() + 1000
 
 tableClear = -> $("#tabell tr").remove()
 

@@ -118,7 +118,8 @@ bitijk
 
 ## Utritning
 
-* Sätt speed=0 för att stänga av omritning.
+* Om editorn känns seg, dra ner på fps till 75% av maximal FPS.
+* Sätt speed=0 för att stänga av omritning helt.
 * Ändringar i editorn ritas ut direkt om speed >= 1.
 * Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
 * x=free innebär att kuben roterar vänster till höger
