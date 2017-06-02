@@ -144,6 +144,7 @@ setup = ->
 	sel6 = $('#sel6')
 	sel7 = $('#sel7')
 	sel8 = $('#sel8')
+	sel9 = $('#sel9')
 
 	tabell = $('#tabell')
 
@@ -160,6 +161,7 @@ setup = ->
 	fillSelect sel6, range 10 # i
 	fillSelect sel7, range 10 # j
 	fillSelect sel8, range 10 # k
+	fillSelect sel9, [1,2,4,8,16,32,64,128,256,512]
 
 	frameRate 10
 

@@ -11,7 +11,7 @@
 
     <script src="js/sketch.js"></script>
     <style>
-      select {overflow-y: auto; font-family:monospace;}
+      select {overflow-y: auto; font-family:monospace; text-align:right }
       body {padding: 0; margin: 0;}
       canvas {vertical-align: top;}
       th, td {padding: 2px;}
@@ -31,25 +31,26 @@
     <p id="p2" style="position:absolute; top:540px; left:205px">Words: 23</p>
     <p id="p3" style="position:absolute; top:560px; left:205px">FPS: 23</p>
 
-    <button id="btn1" style="position: absolute; top:500px; left:  0px; width:50px">x</button>
-    <button id="btn2" style="position: absolute; top:500px; left: 50px; width:50px">y</button>
-    <button id="btn3" style="position: absolute; top:500px; left:100px; width:50px">fps</button>
-    <button id="btn4" style="position: absolute; top:500px; left:150px; width:50px">speed</button>
+    <button disabled id="btn1" style="position: absolute; top:500px; left:  0px; width:50px">x</button>
+    <button disabled id="btn2" style="position: absolute; top:500px; left: 50px; width:50px">y</button>
+    <button disabled id="btn3" style="position: absolute; top:500px; left:100px; width:50px">fps</button>
+    <button disabled id="btn4" style="position: absolute; top:500px; left:150px; width:50px">speed</button>
 
     <select onclick="sel1click(this);" id='sel1' size="25" style="position: absolute; top:520px; left:0px; width:50px"></select>
     <select onclick="sel2click(this);" id='sel2' size="25" style="position: absolute; top:520px; left:50px; width:50px"></select>
     <select onclick="sel3click(this);" id='sel3' size="25" style="position: absolute; top:520px; left:100px; width:50px"></select>
     <select onclick="sel4click(this);" id='sel4' size="25" style="position: absolute; top:520px; left:150px; width:50px"></select>
 
-    <button id="btn5" style="position: absolute; top:500px; left:300px; width:50px">i</button>
-    <button id="btn6" style="position: absolute; top:500px; left:350px; width:50px">j</button>
-    <button id="btn7" style="position: absolute; top:500px; left:400px; width:50px">k</button>
-    <button id="btn8" style="position: absolute; top:500px; left:450px; width:50px">t</button>
+    <button disabled id="btn5" style="position: absolute; top:500px; left:340px; width:40px">i</button>
+    <button disabled id="btn6" style="position: absolute; top:500px; left:380px; width:40px">j</button>
+    <button disabled id="btn7" style="position: absolute; top:500px; left:420px; width:40px">k</button>
+    <button disabled id="btn8" style="position: absolute; top:500px; left:460px; width:40px">t</button>
 
-    <select onclick="sel5click(this);" id='sel5' size="10" style="position: absolute; top:520px; left:300px; width:50px"></select>
-    <select onclick="sel6click(this);" id='sel6' size="10" style="position: absolute; top:520px; left:350px; width:50px"></select>
-    <select onclick="sel7click(this);" id='sel7' size="10" style="position: absolute; top:520px; left:400px; width:50px"></select>
-    <select onclick="sel8click(this);" id='sel8' size="10" style="position: absolute; top:520px; left:450px; width:50px"></select>
+    <select disabled                   id='sel9' size="10" style="position: absolute; top:520px; left:300px; width:40px"></select>
+    <select onclick="sel5click(this);" id='sel5' size="10" style="position: absolute; top:520px; left:340px; width:40px"></select>
+    <select onclick="sel6click(this);" id='sel6' size="10" style="position: absolute; top:520px; left:380px; width:40px"></select>
+    <select onclick="sel7click(this);" id='sel7' size="10" style="position: absolute; top:520px; left:420px; width:40px"></select>
+    <select onclick="sel8click(this);" id='sel8' size="10" style="position: absolute; top:520px; left:460px; width:40px"></select>
 
     <table id="tabell" style="font-family:monospace; font-size:20px; position:absolute; top:500px; left:500px;" border="0px"></table>
    </body>
