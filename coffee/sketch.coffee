@@ -51,82 +51,51 @@ buildCommands = =>
 	cmd1 = {}
 	cmd2 = {}
 
-	cmd0['i'] = () => stack.push i
-	cmd0['j'] = () => stack.push j
-	cmd0['k'] = () => stack.push k
-	cmd0['t'] = () => stack.push t
+	cmd0['i'] = => stack.push i
+	cmd0['j'] = => stack.push j
+	cmd0['k'] = => stack.push k
+	cmd0['t'] = => stack.push t
 
-	cmd1['dup'] = () => stack.push _.last stack
-	cmd1['not'] = () => stack.push digit stack.pop() == 0
-	cmd1['inv'] = () => stack.push 1 / stack.pop()
-	cmd1['chs'] = () => stack.push -stack.pop()
-	cmd1['abs'] = () => stack.push abs stack.pop()
-	cmd1['sqrt'] = () => stack.push sqrt stack.pop()
-	cmd1['rot'] = () => stack.push stack.shift()
-	cmd1['~'] = () => stack.push ~stack.pop()
-	cmd1['biti'] = () => stack.push stack.pop() >> i & 1
-	cmd1['bitj'] = () => stack.push stack.pop() >> j & 1
-	cmd1['bitk'] = () => stack.push stack.pop() >> k & 1
-	cmd1['bitij'] = () =>
-		bits = stack.pop()
-		stack = stack.concat [bits >> i & 1, bits >> j & 1]
-	cmd1['bitik'] = () =>
-		bits = stack.pop()
-		stack = stack.concat [bits >> i & 1, bits >> k & 1]
-	cmd1['bitjk'] = () =>
-		bits = stack.pop()
-		stack = stack.concat [bits >> j & 1, bits >> k & 1]
-	cmd1['bitijk'] = () =>
-		bits = stack.pop()
-		stack = stack.concat [bits >> i & 1, bits >> j & 1, bits >> k & 1]
+	cmd1['dup'] = (a) => stack = stack.concat [a,a]
+	cmd1['not'] = (a) => stack.push digit a == 0
+	cmd1['inv'] = (a) => stack.push 1 / a
+	cmd1['chs'] = (a) => stack.push -a
+	cmd1['abs'] = (a) => stack.push abs a
+	cmd1['sqrt'] = (a) => stack.push sqrt a
+	cmd1['rot'] = (a) => stack.push a
+	cmd1['~'] = (a) => stack.push ~a
+	cmd1['biti'] = (a) => stack.push a >> i & 1
+	cmd1['bitj'] = (a) => stack.push a >> j & 1
+	cmd1['bitk'] = (a) => stack.push a >> k & 1
+	cmd1['bitij'] = (a) => stack = stack.concat [a >> i & 1, a >> j & 1]
+	cmd1['bitik'] = (a) => stack = stack.concat [a >> i & 1, a >> k & 1]
+	cmd1['bitjk'] = (a) => stack = stack.concat [a >> j & 1, a >> k & 1]
+	cmd1['bitijk'] = (a) => stack = stack.concat [a >> i & 1, a >> j & 1, a >> k & 1]
 
-	cmd2['swap'] = () =>
-		n = stack.length - 1
-		[stack[n-1],stack[n]] = [stack[n],stack[n-1]]
-	cmd2['<'] = () => stack.push digit stack.pop() > stack.pop()
-	cmd2['>'] = () => stack.push digit stack.pop() < stack.pop()
-	cmd2['=='] = () => stack.push digit stack.pop() == stack.pop()
-	cmd2['<='] = () => stack.push digit stack.pop() >= stack.pop()
-	cmd2['>='] = () => stack.push digit stack.pop() <= stack.pop()
-	cmd2['!='] = () => stack.push digit stack.pop() != stack.pop()
-	cmd2['+'] = () => stack.push stack.pop() + stack.pop()
-	cmd2['-'] = () => stack.push -stack.pop() + stack.pop()
-	cmd2['*'] = () => stack.push stack.pop() * stack.pop()
-	cmd2['**'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() ** a
-	cmd2['/'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() / a
-	cmd2['//'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() // a
-	cmd2['%'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() % a
-	cmd2['%%'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() %% a
-	cmd2['bit'] = () => stack.push stack.pop() >> stack.pop() & 1
-	cmd2['&'] = () => stack.push stack.pop() & stack.pop()
-	cmd2['|'] = () => stack.push stack.pop() | stack.pop()
-	cmd2['^'] = () => stack.push stack.pop() ^ stack.pop()
-	cmd2['>>'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() >> a
-	cmd2['<<'] = () =>
-		a = stack.pop()
-		stack.push stack.pop() << a
-	cmd2['and'] = () =>
-		[a,b] = [stack.pop(),stack.pop()]
-		stack.push digit a!=0 and b!=0
-	cmd2['or'] = () =>
-		[a,b] = [stack.pop(),stack.pop()]
-		stack.push digit a!=0 or b!=0
-	cmd2['xor'] = () =>
-		a = digit stack.pop() != 0
-		b = digit stack.pop() != 0
-		stack.push digit a+b == 1
+	cmd2['swap'] = (a,b) => stack = stack.concat [a,b]
+	cmd2['<'] = (a,b) => stack.push digit b < a
+	cmd2['>'] = (a,b) => stack.push digit b > a
+	cmd2['=='] = (a,b) => stack.push digit b == a
+	cmd2['<='] = (a,b) => stack.push digit b <= a
+	cmd2['>='] = (a,b) => stack.push digit b >= a
+	cmd2['!='] = (a,b) => stack.push digit b != a
+	cmd2['+'] = (a,b) => stack.push b + a
+	cmd2['-'] = (a,b) => stack.push b - a
+	cmd2['*'] = (a,b) => stack.push b * a
+	cmd2['**'] = (a,b) => stack.push b ** a
+	cmd2['/'] = (a,b) => stack.push b / a
+	cmd2['//'] = (a,b) => stack.push b // a
+	cmd2['%'] = (a,b) => stack.push b % a
+	cmd2['%%'] = (a,b) => stack.push b %% a
+	cmd2['bit'] = (a,b) => stack.push b >> a & 1
+	cmd2['&'] = (a,b) => stack.push b & a
+	cmd2['|'] = (a,b) => stack.push b | a
+	cmd2['^'] = (a,b) => stack.push b ^ a
+	cmd2['>>'] = (a,b) =>	stack.push b >> a
+	cmd2['<<'] = (a,b) => stack.push b << a
+	cmd2['and'] = (a,b) => stack.push digit b!=0 and a!=0
+	cmd2['or'] = (a,b) =>	stack.push digit b!=0 or a!=0
+	cmd2['xor'] = (a,b) => stack.push digit b+a == 1
 
 setup = ->
 	c = createCanvas 500,500,WEBGL
@@ -186,7 +155,6 @@ setup = ->
 				pg[index].background f*i, f*j, f*k
 
 digit = (bool) -> if bool then 1 else 0
-
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
 showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 
@@ -200,11 +168,11 @@ evaluate = (traceFlag, line, level='') ->
 			evaluate traceFlag, words[cmd], level + cmd + '.'
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
-			cmd2[cmd]()
+			cmd2[cmd] stack.pop(), stack.pop()
 			if traceFlag==true then showStack level,cmd
 		else if cmd1[cmd]?
 			if stack.length < 1 then throw [level+cmd,'Stack Underflow']
-			cmd1[cmd]()
+			cmd1[cmd] if cmd=='rot' then stack.shift() else stack.pop()
 			if traceFlag==true then showStack level,cmd
 		else if cmd0[cmd]?
 			cmd0[cmd]()
@@ -298,5 +266,3 @@ tableAppend = (t, a, b, col='#C0C0C0') ->
 	cell1.style.backgroundColor = '#808080'
 	cell2.style.backgroundColor = col
 	cell2.style.textAlign = 'right'
-
-
