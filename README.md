@@ -11,10 +11,12 @@ Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går allts
 
 ```coffeescript
 # Ingen operand
-i j k t
+i j k
+t
+drop
 
 # En operand
-not chs inv abs sqrt ~ dup rot
+not chs inv abs sqrt ~ dup rot sign
 biti bitj bitk bitij bitik bitjk bitijk
 
 # Två operander
@@ -34,6 +36,9 @@ and or xor
 -3 abs   3  ==
 9 sqrt   3  ==
 7 ~     -8  ==
+-8 sign -1  ==
+7 sign  1  ==
+0 sign  0  ==
 
 2 3 +    5  ==
 2 3 -   -1  ==

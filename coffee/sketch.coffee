@@ -49,11 +49,13 @@ buildCommands = ->
 	cmd0['j'] = => stack.push j
 	cmd0['k'] = => stack.push k
 	cmd0['t'] = => stack.push t
+	cmd0['drop'] = => stack.pop()
 
 	cmd1['dup'] = (a) => stack = stack.concat [a,a]
 	cmd1['not'] = (a) => stack.push digit a == 0
 	cmd1['inv'] = (a) => stack.push 1 / a
 	cmd1['chs'] = (a) => stack.push -a
+	cmd1['sign'] = (a) => stack.push Math.sign a
 	cmd1['abs'] = (a) => stack.push abs a
 	cmd1['sqrt'] = (a) => stack.push sqrt a
 	cmd1['rot'] = (a) => stack.push a
