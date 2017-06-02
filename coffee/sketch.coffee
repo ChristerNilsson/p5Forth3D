@@ -92,6 +92,9 @@ buildCommands = =>
 	cmd2['+'] = () => stack.push stack.pop() + stack.pop()
 	cmd2['-'] = () => stack.push -stack.pop() + stack.pop()
 	cmd2['*'] = () => stack.push stack.pop() * stack.pop()
+	cmd2['**'] = () =>
+		a = stack.pop()
+		stack.push stack.pop() ** a
 	cmd2['/'] = () =>
 		a = stack.pop()
 		stack.push stack.pop() / a

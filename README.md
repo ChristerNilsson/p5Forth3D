@@ -19,7 +19,7 @@ biti bitj bitk bitij bitik bitjk bitijk
 
 # Två operander
 swap
-+ - * / // % %%
++ - * ** / // % %%
 < > <= >= != ==
 & | ^ >> << bit
 and or xor
@@ -38,6 +38,7 @@ and or xor
 2 3 +    5  ==
 2 3 -   -1  ==
 2 3 *    6  ==
+2 3 **   8  ==
 1 2 /    0.5  ==
 3 2 //   1  ==
 7 2 %    1  ==
@@ -109,7 +110,7 @@ bitijk
 : bitijk dup bitij swap bitk ;
 ```
 
-## Dessutom kan nya ord skapas med : och ; som brukligt är i Forth
+## Dessutom kan nya ord skapas med : och ;
 
 ```coffeescript
 : sq dup * ;
@@ -122,16 +123,16 @@ bitijk
 
 ger följande ögonblicksbilder av stacken:
 
-command     stack
-12          [12]
-5           [12,5]
-dist.sq.dup [12,5,5]
-dist.sq.*   [12,25]
-dist.swap   [25,12]
-dist.sq.dup [25,12,12]
-dist.sq.*   [25,144]
-dist.+      [169]
-dist.sqrt   [13]
+command        stack
+12                12
+5               12 5
+dist.sq.dup   12 5 5
+dist.sq.*      12 25
+dist.swap      25 12
+dist.sq.dup 25 12 12
+dist.sq.*     25 144
+dist.+           169
+dist.sqrt         13
 ```
 Tag bort ett ord så här:
 ```coffeescript
