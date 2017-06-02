@@ -7,17 +7,17 @@ Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan d
 
 Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går alltså att räkna med.
 
-## Följande kommandon finns även i [Forth Haiku](http://forthsalon.appspot.com/word-list):
+## Följande kommandon är tillgängliga
 
 ```coffeescript
-# Kräver ingen operand
+# Ingen operand
 i j k t
 
-# Kräver en operand
+# En operand
 not chs inv abs sqrt ~ dup rot
 biti bitj bitk bitij bitik bitjk bitijk
 
-# Kräver två operander
+# Två operander
 swap
 + - * / // % %%
 < > <= >= != ==
@@ -86,6 +86,10 @@ t   Hämtar frameCount  0..
 rot Hämtar översta elementet på stacken
 //  Heltalsdivision
 %%  Modulo på negativa tal
+bit
+biti bitj bitk
+bitij bitik bitjk
+bitijk
 ```
 
 ## Följande kommandon maskar bitar:
@@ -96,9 +100,6 @@ biti bitj bitk
 bitij bitik bitjk
 bitijk
 ```
-
-## Exempel:
-
 ```coffeescript
 : bit swap >> 1 & ;
 : biti i swap bit ;
@@ -137,6 +138,8 @@ Tag bort ett ord så här:
 : sq ;
 ```
 
+## Kommandon i [Forth Haiku](http://forthsalon.appspot.com/word-list)
+
 ## Övningar
 [Exempel](https://christernilsson.github.io/p5Dojo/ForthHaiku3D.html)
 
@@ -163,6 +166,6 @@ Tag bort ett ord så här:
 Nedre högra delen kan användas för att felsöka ditt Forth-program.
 
 * Välj i,j,k samt t och se hur beräkningen sker, kommando för kommando.
-* Sista raden bör innehålla ett enda värde.
-* Om detta ej är noll ritas kuben ut.
+* Operatorerna arbetar på den högra änden av stacken.
+* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas kuben ut.
 * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
