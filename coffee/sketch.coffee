@@ -27,9 +27,7 @@ fillSelect = (sel, arr) ->
 
 sel1click = (sel) ->
 sel2click = (sel) ->
-sel3click = (sel) ->
-	print sel.value
-	frameRate int sel.value
+sel3click = (sel) -> frameRate int sel.value
 sel4click = (sel) ->
 
 sel5click = (sel) -> trace()
@@ -40,17 +38,13 @@ sel8click = (sel) -> trace()
 trace = ->
 	tableClear()
 	tableAppend tabell, 'command', 'stack'
-	i = parseInt(sel5.value)
-	j = parseInt(sel6.value)
-	k = parseInt(sel7.value)
-	t = parseInt(sel8.value)
+	i = parseInt sel5.value
+	j = parseInt sel6.value
+	k = parseInt sel7.value
+	t = parseInt sel8.value
 	calc true
 
-buildCommands = =>
-	cmd0 = {}
-	cmd1 = {}
-	cmd2 = {}
-
+buildCommands = ->
 	cmd0['i'] = => stack.push i
 	cmd0['j'] = => stack.push j
 	cmd0['k'] = => stack.push k
@@ -103,23 +97,23 @@ setup = ->
 
 	buildCommands()
 
-	code = $('#code')
+	code = $ '#code'
 
-	sel1 = $('#sel1')
-	sel2 = $('#sel2')
-	sel3 = $('#sel3')
-	sel4 = $('#sel4')
-	sel5 = $('#sel5')
-	sel6 = $('#sel6')
-	sel7 = $('#sel7')
-	sel8 = $('#sel8')
-	sel9 = $('#sel9')
+	sel1 = $ '#sel1'
+	sel2 = $ '#sel2'
+	sel3 = $ '#sel3'
+	sel4 = $ '#sel4'
+	sel5 = $ '#sel5'
+	sel6 = $ '#sel6'
+	sel7 = $ '#sel7'
+	sel8 = $ '#sel8'
+	sel9 = $ '#sel9'
 
-	tabell = $('#tabell')
+	tabell = $ '#tabell'
 
-	p1 = $('#p1')
-	p2 = $('#p2')
-	p3 = $('#p3')
+	p1 = $ '#p1'
+	p2 = $ '#p2'
+	p3 = $ '#p3'
 
 	fillSelect sel1, ['free'].concat range 0, 360, 15 # x
 	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
@@ -157,6 +151,7 @@ setup = ->
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
 showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
+mousePressed = -> if 0 < mouseX < width and 0 < mouseY < height then [lightX,lightY] = [mouseX,mouseY]
 
 evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
@@ -169,53 +164,49 @@ evaluate = (traceFlag, line, level='') ->
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
 			cmd2[cmd] stack.pop(), stack.pop()
-			if traceFlag==true then showStack level,cmd
+			if traceFlag then showStack level,cmd
 		else if cmd1[cmd]?
 			if stack.length < 1 then throw [level+cmd,'Stack Underflow']
 			cmd1[cmd] if cmd=='rot' then stack.shift() else stack.pop()
-			if traceFlag==true then showStack level,cmd
+			if traceFlag then showStack level,cmd
 		else if cmd0[cmd]?
 			cmd0[cmd]()
-			if traceFlag==true then showStack level,cmd
+			if traceFlag then showStack level,cmd
 		else
 			nr = parseFloat cmd
 			if _.isNumber(nr) and not _.isNaN nr
 				stack.push nr
-				if traceFlag==true then showStack level,cmd
+				if traceFlag then showStack level,cmd
 			else
-				throw [level+cmd,'Unknown symbol']
+				throw [level+cmd,'Unknown Word']
 
 calc = (traceFlag = false) ->
 	stack = []
 	lines = code.value.split "\n"
 	try
 		for line in lines
-			if line.indexOf(':')==0
+			if 0 == line.indexOf ':'
 				arr = line.split ' '
 				if arr.length == 3 and arr[2] == ';'
 					delete words[arr[1]]
 				else
-					words[arr[1]] = arr[2..-2].join(' ')
+					words[arr[1]] = arr[2..-2].join ' '
 			else
 				evaluate traceFlag, line
 		0 != _.last stack
 	catch e
-		if traceFlag==true then showError e
-
-mousePressed = ->
-	if 0 < mouseX < width then lightX = mouseX
-	if 0 < mouseY < height then lightY = mouseY
+		if traceFlag then showError e
 
 draw = ->
 	if sel4.value == '0' then return
 	bg 0.5
 
 	if 0 < mouseX < width and 0 < mouseY < height
-		locY = (0.5 - mouseY / height) * 2
-		locX = (mouseX / width  - 0.5) * 2
+		locY = 1 - 2 * mouseY / height
+		locX = 2 * mouseX / width - 1
 	else
-		locY = (0.5 - lightY / height) * 2
-		locX = (lightX / width  - 0.5) * 2
+		locY = 1 - 2 * lightY / height
+		locX = 2 * lightX / width - 1
 	pointLight 255, 255, 255, locX,locY,0
 
 	if sel1.value == 'free'
