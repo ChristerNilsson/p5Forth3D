@@ -182,6 +182,9 @@ setup = ->
 
 digit = (bool) -> if bool then 1 else 0
 
+showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
+showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
+
 evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
 	for cmd in arr
@@ -193,21 +196,22 @@ evaluate = (traceFlag, line, level='') ->
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
 			cmd2[cmd]()
-			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+			if traceFlag==true then showStack level,cmd
 		else if cmd1[cmd]?
 			if stack.length < 1 then throw [level+cmd,'Stack Underflow']
 			cmd1[cmd]()
-			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+			if traceFlag==true then showStack level,cmd
 		else if cmd0[cmd]?
 			cmd0[cmd]()
-			if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+			if traceFlag==true then showStack level,cmd
 		else
 			nr = parseFloat cmd
 			if _.isNumber(nr) and not _.isNaN nr
 				stack.push nr
-				if traceFlag==true then tableAppend tabell, level + cmd, '[' + stack.join(',') + ']'
+				if traceFlag==true then showStack level,cmd
 			else
 				throw [level+cmd,'Unknown symbol']
+
 calc = (traceFlag = false) ->
 	stack = []
 	lines = code.value.split "\n"
@@ -223,9 +227,7 @@ calc = (traceFlag = false) ->
 				evaluate traceFlag, line
 		0 != _.last stack
 	catch e
-		if traceFlag==true
-			[cmd, message] = e
-			tableAppend tabell, cmd, message
+		if traceFlag==true then showError e
 
 mousePressed = ->
 	if 0 < mouseX < width then lightX = mouseX
@@ -282,9 +284,14 @@ draw = ->
 
 tableClear = -> $("#tabell tr").remove()
 
-tableAppend = (t, a, b) ->
+tableAppend = (t, a, b, col='#C0C0C0') ->
 	row = t.insertRow -1
 	cell1 = row.insertCell -1
 	cell2 = row.insertCell -1
 	cell1.innerHTML = a
 	cell2.innerHTML = b
+	cell1.style.backgroundColor = '#808080'
+	cell2.style.backgroundColor = col
+	cell2.style.textAlign = 'right'
+
+
