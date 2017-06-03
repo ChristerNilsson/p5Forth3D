@@ -21,7 +21,7 @@ biti bitj bitk bitij bitik bitjk bitijk
 
 # Två operander
 swap
-+ - * ** / // % %%
++ - * ** / // % %% gcd
 < > <= >= != ==
 & | ^ >> << bit
 and or xor
@@ -48,6 +48,7 @@ and or xor
 3 2 //   1  ==
 7 2 %    1  ==
 -7 2 %%  1  ==
+12 15 gcd 3 ==
 
 2 3 <    1  ==
 2 3 >    0  ==
@@ -85,10 +86,10 @@ and or xor
 ## Dessa kommandon finns bara i p5Forth3D:
 
 ```coffeescript
-i   Hämtar i-koordinat 0..9
-j   Hämtar j-koordinat 0..9
-k   Hämtar k-koordinat 0..9
-t   Hämtar frameCount  0..
+i   koordinat 0..9
+j   koordinat 0..9
+k   koordinat 0..9
+t   frameCount 0..
 rot Hämtar översta elementet på stacken
 //  Heltalsdivision
 %%  Modulo på negativa tal

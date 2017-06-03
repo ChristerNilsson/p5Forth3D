@@ -83,6 +83,7 @@ buildCommands = ->
 	cmd2['//'] = (a,b) => stack.push b // a
 	cmd2['%'] = (a,b) => stack.push b % a
 	cmd2['%%'] = (a,b) => stack.push b %% a
+	cmd2['gcd'] = (a,b) => stack.push gcd a,b
 	cmd2['bit'] = (a,b) => stack.push b >> a & 1
 	cmd2['&'] = (a,b) => stack.push b & a
 	cmd2['|'] = (a,b) => stack.push b | a
@@ -154,12 +155,12 @@ digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
 showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 mousePressed = -> if 0 < mouseX < width and 0 < mouseY < height then [lightX,lightY] = [mouseX,mouseY]
+gcd = (x, y) -> if y == 0 then x else gcd y, x % y
 
 evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
 	for cmd in arr
-		if cmd==''
-			# do nothing
+		if cmd=='' then # do nothing
 		else if words[cmd]?
 			if level.indexOf('.'+cmd+'.') != -1 then throw [level+cmd,'Recursion not allowed']
 			evaluate traceFlag, words[cmd], level + cmd + '.'
@@ -215,15 +216,13 @@ draw = ->
 		yVinkel += sel4.value/500
 		yVinkel %= TWO_PI
 		rotateY yVinkel
-	else
-		rotateY radians sel1.value
+	else rotateY radians sel1.value
 
 	if sel2.value == 'free'
 		xVinkel += sel4.value/500
 		xVinkel %= TWO_PI
 		rotateX xVinkel
-	else
-		rotateX radians sel2.value
+	else rotateX radians sel2.value
 
 	t = frameCount
 	count = 0
