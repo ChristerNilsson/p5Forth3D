@@ -2,8 +2,8 @@ N = 10
 SIZE = 250/N
 
 pg = Array N*N*N
-lightX = 0
-lightY = 0
+lightX = 250
+lightY = 250
 
 cmd0 = {}
 cmd1 = {}
