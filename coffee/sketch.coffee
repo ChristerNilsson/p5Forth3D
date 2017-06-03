@@ -25,6 +25,7 @@ fillSelect = (sel, arr) ->
 	for key in arr
 		sel.append($("<option>").attr('value', key).text(key))
 
+sel0click = (sel) ->
 sel1click = (sel) ->
 sel2click = (sel) ->
 sel3click = (sel) -> frameRate int sel.value
@@ -102,6 +103,7 @@ setup = ->
 
 	code = $ '#code'
 
+	sel0 = $ '#sel0'
 	sel1 = $ '#sel1'
 	sel2 = $ '#sel2'
 	sel3 = $ '#sel3'
@@ -118,6 +120,7 @@ setup = ->
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
+	fillSelect sel0, range 2, 27 # radius
 	fillSelect sel1, ['free'].concat range 0, 360, 15 # x
 	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
 	fillSelect sel3, range 1,26 # frameRate
@@ -131,6 +134,7 @@ setup = ->
 
 	frameRate 10
 
+	sel0.val("12").change() # radius
 	sel1.val("free").change() # x
 	sel2.val("free").change() # y
 	sel3.val("10").change() # fps
@@ -227,6 +231,7 @@ draw = ->
 
 	t = frameCount
 	count = 0
+	radius = sel0.value
 	for i in range N
 		for j in range N
 			for k in range N
@@ -235,7 +240,7 @@ draw = ->
 				if calc()
 					index = N*N*k+N*j+i
 					texture pg[index]
-					sphere int(SIZE/2),int(SIZE/2),int(SIZE/2)
+					sphere radius,radius,radius
 					count++
 				else
 					texture pg[N*N*N-1]
