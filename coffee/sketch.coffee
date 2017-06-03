@@ -45,54 +45,54 @@ trace = ->
 	calc true
 
 buildCommands = ->
-	cmd0['i'] = => stack.push i
-	cmd0['j'] = => stack.push j
-	cmd0['k'] = => stack.push k
-	cmd0['t'] = => stack.push t
+	cmd0['i']    = => stack.push i
+	cmd0['j']    = => stack.push j
+	cmd0['k']    = => stack.push k
+	cmd0['t']    = => stack.push t
 	cmd0['drop'] = => stack.pop()
 
-	cmd1['dup'] = (a) => stack = stack.concat [a,a]
-	cmd1['not'] = (a) => stack.push digit a == 0
-	cmd1['inv'] = (a) => stack.push 1 / a
-	cmd1['chs'] = (a) => stack.push -a
-	cmd1['sign'] = (a) => stack.push Math.sign a
-	cmd1['abs'] = (a) => stack.push abs a
-	cmd1['sqrt'] = (a) => stack.push sqrt a
-	cmd1['rot'] = (a) => stack.push a
-	cmd1['~'] = (a) => stack.push ~a
-	cmd1['biti'] = (a) => stack.push a >> i & 1
-	cmd1['bitj'] = (a) => stack.push a >> j & 1
-	cmd1['bitk'] = (a) => stack.push a >> k & 1
-	cmd1['bitij'] = (a) => stack = stack.concat [a >> i & 1, a >> j & 1]
-	cmd1['bitik'] = (a) => stack = stack.concat [a >> i & 1, a >> k & 1]
-	cmd1['bitjk'] = (a) => stack = stack.concat [a >> j & 1, a >> k & 1]
+	cmd1['dup']    = (a) => stack = stack.concat [a,a]
+	cmd1['not']    = (a) => stack.push digit a == 0
+	cmd1['inv']    = (a) => stack.push 1 / a
+	cmd1['chs']    = (a) => stack.push -a
+	cmd1['sign']   = (a) => stack.push Math.sign a
+	cmd1['abs']    = (a) => stack.push abs a
+	cmd1['sqrt']   = (a) => stack.push sqrt a
+	cmd1['rot']    = (a) => stack.push a
+	cmd1['~']      = (a) => stack.push ~a
+	cmd1['biti']   = (a) => stack.push a >> i & 1
+	cmd1['bitj']   = (a) => stack.push a >> j & 1
+	cmd1['bitk']   = (a) => stack.push a >> k & 1
+	cmd1['bitij']  = (a) => stack = stack.concat [a >> i & 1, a >> j & 1]
+	cmd1['bitik']  = (a) => stack = stack.concat [a >> i & 1, a >> k & 1]
+	cmd1['bitjk']  = (a) => stack = stack.concat [a >> j & 1, a >> k & 1]
 	cmd1['bitijk'] = (a) => stack = stack.concat [a >> i & 1, a >> j & 1, a >> k & 1]
 
 	cmd2['swap'] = (a,b) => stack = stack.concat [a,b]
-	cmd2['<'] = (a,b) => stack.push digit b < a
-	cmd2['>'] = (a,b) => stack.push digit b > a
-	cmd2['=='] = (a,b) => stack.push digit b == a
-	cmd2['<='] = (a,b) => stack.push digit b <= a
-	cmd2['>='] = (a,b) => stack.push digit b >= a
-	cmd2['!='] = (a,b) => stack.push digit b != a
-	cmd2['+'] = (a,b) => stack.push b + a
-	cmd2['-'] = (a,b) => stack.push b - a
-	cmd2['*'] = (a,b) => stack.push b * a
-	cmd2['**'] = (a,b) => stack.push b ** a
-	cmd2['/'] = (a,b) => stack.push b / a
-	cmd2['//'] = (a,b) => stack.push b // a
-	cmd2['%'] = (a,b) => stack.push b % a
-	cmd2['%%'] = (a,b) => stack.push b %% a
-	cmd2['gcd'] = (a,b) => stack.push gcd a,b
-	cmd2['bit'] = (a,b) => stack.push b >> a & 1
-	cmd2['&'] = (a,b) => stack.push b & a
-	cmd2['|'] = (a,b) => stack.push b | a
-	cmd2['^'] = (a,b) => stack.push b ^ a
-	cmd2['>>'] = (a,b) =>	stack.push b >> a
-	cmd2['<<'] = (a,b) => stack.push b << a
-	cmd2['and'] = (a,b) => stack.push digit b!=0 and a!=0
-	cmd2['or'] = (a,b) =>	stack.push digit b!=0 or a!=0
-	cmd2['xor'] = (a,b) => stack.push digit b+a == 1
+	cmd2['<']    = (a,b) => stack.push digit b < a
+	cmd2['>']    = (a,b) => stack.push digit b > a
+	cmd2['==']   = (a,b) => stack.push digit b == a
+	cmd2['<=']   = (a,b) => stack.push digit b <= a
+	cmd2['>=']   = (a,b) => stack.push digit b >= a
+	cmd2['!=']   = (a,b) => stack.push digit b != a
+	cmd2['+']    = (a,b) => stack.push b + a
+	cmd2['-']    = (a,b) => stack.push b - a
+	cmd2['*']    = (a,b) => stack.push b * a
+	cmd2['**']   = (a,b) => stack.push b ** a
+	cmd2['/']    = (a,b) => stack.push b / a
+	cmd2['//']   = (a,b) => stack.push b // a
+	cmd2['%']    = (a,b) => stack.push b % a
+	cmd2['%%']   = (a,b) => stack.push b %% a
+	cmd2['gcd']  = (a,b) => stack.push gcd a,b
+	cmd2['bit']  = (a,b) => stack.push b >> a & 1
+	cmd2['&']    = (a,b) => stack.push b & a
+	cmd2['|']    = (a,b) => stack.push b | a
+	cmd2['^']    = (a,b) => stack.push b ^ a
+	cmd2['>>']   = (a,b) =>	stack.push b >> a
+	cmd2['<<']   = (a,b) => stack.push b << a
+	cmd2['and']  = (a,b) => stack.push digit b!=0 and a!=0
+	cmd2['or']   = (a,b) =>	stack.push digit b!=0 or a!=0
+	cmd2['xor']  = (a,b) => stack.push digit b+a == 1
 
 setup = ->
 	c = createCanvas 500,500,WEBGL
@@ -210,7 +210,6 @@ draw = ->
 	else
 		locY = 1 - 2 * lightY / height
 		locX = 2 * lightX / width - 1
-	pointLight 255, 255, 255, locX,locY,0
 
 	if sel1.value == 'free'
 		yVinkel += sel4.value/500
@@ -223,6 +222,8 @@ draw = ->
 		xVinkel %= TWO_PI
 		rotateX xVinkel
 	else rotateX radians sel2.value
+
+	pointLight 255, 255, 255, locX,locY,0
 
 	t = frameCount
 	count = 0
