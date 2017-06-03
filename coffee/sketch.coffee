@@ -205,11 +205,11 @@ draw = ->
 	bg 0.5
 
 	if 0 < mouseX < width and 0 < mouseY < height
-		locY = 1 - 2 * mouseY / height
-		locX = 2 * mouseX / width - 1
+		locX = 1 - 2 * mouseX / height
+		locY = 2 * mouseY / width - 1
 	else
-		locY = 1 - 2 * lightY / height
-		locX = 2 * lightX / width - 1
+		locX = 1 - 2 * lightX / height
+		locY = 2 * lightY / width - 1
 
 	if sel1.value == 'free'
 		yVinkel += sel4.value/500
@@ -235,11 +235,11 @@ draw = ->
 				if calc()
 					index = N*N*k+N*j+i
 					texture pg[index]
-					box SIZE,SIZE,SIZE
+					sphere int(SIZE/2),int(SIZE/2),int(SIZE/2)
 					count++
 				else
 					texture pg[N*N*N-1]
-					box 2,2,2
+					sphere 2,2,2
 				pop()
 
 	p1.innerHTML = 'Words: ' + code.value.replace(/\n/g,' ').split(' ').length

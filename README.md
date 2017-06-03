@@ -1,7 +1,7 @@
 # p5Forth3D
 
 Detta program kombinerar ForthHaiku med tredimensionella färgkuber.
-För varje pixel i,j,k räknar ett Forthprogram ut om kuben ska vara med eller inte. Du skriver detta program.
+För varje pixel i,j,k räknar ett Forthprogram ut om kulan ska vara med eller inte. Du skriver detta program.
 
 Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan du går vidare. Förutom att ForthSalon är 2D, kan man där ange färgen på varje pixel individuellt. Med p5Forth3D kan man inte styra över färgen.
 
@@ -174,5 +174,5 @@ Nedre högra delen kan användas för att felsöka ditt Forth-program.
 
 * Välj i,j,k samt t och se hur beräkningen sker, kommando för kommando.
 * Operatorerna arbetar på den högra änden av stacken.
-* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas kuben ut.
+* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas kulan ut.
 * Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
