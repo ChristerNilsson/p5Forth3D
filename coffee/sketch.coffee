@@ -45,54 +45,54 @@ trace = ->
 	calc true
 
 buildCommands = ->
-	cmd0['i']    = => stack.push i
-	cmd0['j']    = => stack.push j
-	cmd0['k']    = => stack.push k
-	cmd0['t']    = => stack.push t
-	cmd0['drop'] = => stack.pop()
+	cmd0['i']          = => [i]
+	cmd0['j']          = => [j]
+	cmd0['k']          = => [k]
+	cmd0['t']          = => [t]
 
-	cmd1['dup']    = (a) => stack = stack.concat [a,a]
-	cmd1['not']    = (a) => stack.push digit a == 0
-	cmd1['inv']    = (a) => stack.push 1 / a
-	cmd1['chs']    = (a) => stack.push -a
-	cmd1['sign']   = (a) => stack.push Math.sign a
-	cmd1['abs']    = (a) => stack.push abs a
-	cmd1['sqrt']   = (a) => stack.push sqrt a
-	cmd1['rot']    = (a) => stack.push a
-	cmd1['~']      = (a) => stack.push ~a
-	cmd1['biti']   = (a) => stack.push a >> i & 1
-	cmd1['bitj']   = (a) => stack.push a >> j & 1
-	cmd1['bitk']   = (a) => stack.push a >> k & 1
-	cmd1['bitij']  = (a) => stack = stack.concat [a >> i & 1, a >> j & 1]
-	cmd1['bitik']  = (a) => stack = stack.concat [a >> i & 1, a >> k & 1]
-	cmd1['bitjk']  = (a) => stack = stack.concat [a >> j & 1, a >> k & 1]
-	cmd1['bitijk'] = (a) => stack = stack.concat [a >> i & 1, a >> j & 1, a >> k & 1]
+	cmd1['drop']   = (a) => []
+	cmd1['dup']    = (a) => [a,a]
+	cmd1['not']    = (a) => [digit a == 0]
+	cmd1['inv']    = (a) => [1 / a]
+	cmd1['chs']    = (a) => [-a]
+	cmd1['sign']   = (a) => [Math.sign a]
+	cmd1['abs']    = (a) => [abs a]
+	cmd1['sqrt']   = (a) => [sqrt a]
+	cmd1['rot']    = (a) => [a]
+	cmd1['~']      = (a) => [~a]
+	cmd1['biti']   = (a) => [a >> i & 1]
+	cmd1['bitj']   = (a) => [a >> j & 1]
+	cmd1['bitk']   = (a) => [a >> k & 1]
+	cmd1['bitij']  = (a) => [a >> i & 1, a >> j & 1]
+	cmd1['bitik']  = (a) => [a >> i & 1, a >> k & 1]
+	cmd1['bitjk']  = (a) => [a >> j & 1, a >> k & 1]
+	cmd1['bitijk'] = (a) => [a >> i & 1, a >> j & 1, a >> k & 1]
 
-	cmd2['swap'] = (a,b) => stack = stack.concat [a,b]
-	cmd2['<']    = (a,b) => stack.push digit b < a
-	cmd2['>']    = (a,b) => stack.push digit b > a
-	cmd2['==']   = (a,b) => stack.push digit b == a
-	cmd2['<=']   = (a,b) => stack.push digit b <= a
-	cmd2['>=']   = (a,b) => stack.push digit b >= a
-	cmd2['!=']   = (a,b) => stack.push digit b != a
-	cmd2['+']    = (a,b) => stack.push b + a
-	cmd2['-']    = (a,b) => stack.push b - a
-	cmd2['*']    = (a,b) => stack.push b * a
-	cmd2['**']   = (a,b) => stack.push b ** a
-	cmd2['/']    = (a,b) => stack.push b / a
-	cmd2['//']   = (a,b) => stack.push b // a
-	cmd2['%']    = (a,b) => stack.push b % a
-	cmd2['%%']   = (a,b) => stack.push b %% a
-	cmd2['gcd']  = (a,b) => stack.push gcd a,b
-	cmd2['bit']  = (a,b) => stack.push b >> a & 1
-	cmd2['&']    = (a,b) => stack.push b & a
-	cmd2['|']    = (a,b) => stack.push b | a
-	cmd2['^']    = (a,b) => stack.push b ^ a
-	cmd2['>>']   = (a,b) =>	stack.push b >> a
-	cmd2['<<']   = (a,b) => stack.push b << a
-	cmd2['and']  = (a,b) => stack.push digit b!=0 and a!=0
-	cmd2['or']   = (a,b) =>	stack.push digit b!=0 or a!=0
-	cmd2['xor']  = (a,b) => stack.push digit b+a == 1
+	cmd2['swap'] = (a,b) => [a,b]
+	cmd2['<']    = (a,b) => [digit b < a]
+	cmd2['>']    = (a,b) => [digit b > a]
+	cmd2['==']   = (a,b) => [digit b == a]
+	cmd2['<=']   = (a,b) => [digit b <= a]
+	cmd2['>=']   = (a,b) => [digit b >= a]
+	cmd2['!=']   = (a,b) => [digit b != a]
+	cmd2['+']    = (a,b) => [b + a]
+	cmd2['-']    = (a,b) => [b - a]
+	cmd2['*']    = (a,b) => [b * a]
+	cmd2['**']   = (a,b) => [b ** a]
+	cmd2['/']    = (a,b) => [b / a]
+	cmd2['//']   = (a,b) => [b // a]
+	cmd2['%']    = (a,b) => [b % a]
+	cmd2['%%']   = (a,b) => [b %% a]
+	cmd2['gcd']  = (a,b) => [gcd a,b]
+	cmd2['bit']  = (a,b) => [b >> a & 1]
+	cmd2['&']    = (a,b) => [b & a]
+	cmd2['|']    = (a,b) => [b | a]
+	cmd2['^']    = (a,b) => [b ^ a]
+	cmd2['>>']   = (a,b) =>	[b >> a]
+	cmd2['<<']   = (a,b) => [b << a]
+	cmd2['and']  = (a,b) => [digit b!=0 and a!=0]
+	cmd2['or']   = (a,b) =>	[digit b!=0 or a!=0]
+	cmd2['xor']  = (a,b) => [digit b+a == 1]
 
 setup = ->
 	c = createCanvas 500,500,WEBGL
@@ -166,14 +166,14 @@ evaluate = (traceFlag, line, level='') ->
 			evaluate traceFlag, words[cmd], level + cmd + '.'
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
-			cmd2[cmd] stack.pop(), stack.pop()
+			stack = stack.concat cmd2[cmd] stack.pop(), stack.pop()
 			if traceFlag then showStack level,cmd
 		else if cmd1[cmd]?
 			if stack.length < 1 then throw [level+cmd,'Stack Underflow']
-			cmd1[cmd] if cmd=='rot' then stack.shift() else stack.pop()
+			stack = stack.concat cmd1[cmd] if cmd=='rot' then stack.shift() else stack.pop()
 			if traceFlag then showStack level,cmd
 		else if cmd0[cmd]?
-			cmd0[cmd]()
+			stack = stack.concat cmd0[cmd]()
 			if traceFlag then showStack level,cmd
 		else
 			nr = parseFloat cmd
