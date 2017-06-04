@@ -1,7 +1,6 @@
 N = 10
 SIZE = 250/N
 
-pg = Array N*N*N
 lightX = 250
 lightY = 250
 
@@ -30,19 +29,23 @@ sel1click = (sel) ->
 sel2click = (sel) ->
 sel3click = (sel) -> frameRate int sel.value
 sel4click = (sel) ->
+sel5click = (sel) ->
+sel6click = (sel) ->
+sel7click = (sel) ->
+sel8click = (sel) ->
 
-sel5click = (sel) -> trace()
-sel6click = (sel) -> trace()
-sel7click = (sel) -> trace()
-sel8click = (sel) -> trace()
+sel15click = (sel) -> trace()
+sel16click = (sel) -> trace()
+sel17click = (sel) -> trace()
+sel18click = (sel) -> trace()
 
 trace = ->
 	tableClear()
 	tableAppend tabell, 'command', 'stack'
-	i = parseInt sel5.value
-	j = parseInt sel6.value
-	k = parseInt sel7.value
-	t = parseInt sel8.value
+	i = parseInt sel15.value
+	j = parseInt sel16.value
+	k = parseInt sel17.value
+	t = parseInt sel18.value
 	calc true
 
 buildCommands = ->
@@ -112,7 +115,12 @@ setup = ->
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
 	sel8 = $ '#sel8'
-	sel9 = $ '#sel9'
+
+	sel15 = $ '#sel15'
+	sel16 = $ '#sel16'
+	sel17 = $ '#sel17'
+	sel18 = $ '#sel18'
+	sel19 = $ '#sel19'
 
 	tabell = $ '#tabell'
 
@@ -125,12 +133,16 @@ setup = ->
 	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
 	fillSelect sel3, range 1,26 # frameRate
 	fillSelect sel4, range 25 # speed
+	fillSelect sel5, '0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
+	fillSelect sel6, ['sphere','box'] # fig
+	fillSelect sel7, ['yes','no'] # grid
+	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
 
-	fillSelect sel5, range 10 #
-	fillSelect sel6, range 10 # i
-	fillSelect sel7, range 10 # j
-	fillSelect sel8, range 10 # k
-	fillSelect sel9, [1,2,4,8,16,32,64,128,256,512]
+	fillSelect sel15, range 10 #
+	fillSelect sel16, range 10 # i
+	fillSelect sel17, range 10 # j
+	fillSelect sel18, range 10 # k
+	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
 
 	frameRate 10
 
@@ -139,21 +151,17 @@ setup = ->
 	sel2.val("free").change() # y
 	sel3.val("10").change() # fps
 	sel4.val("10").change() # speed
+	sel5.val("1.0").change() # alpha
+	sel6.val("sphere").change() # fig
+	sel7.val("yes").change() # grid
+	sel8.val("0.5").change() # bg
 
-	sel5.val("0").change() # i
-	sel6.val("0").change() # j
-	sel7.val("0").change() # k
-	sel8.val("0").change() # t
+	sel15.val("0").change() # i
+	sel16.val("0").change() # j
+	sel17.val("0").change() # k
+	sel18.val("0").change() # t
 
 	trace()
-
-	f = 255/(N-1)
-	for i in range N
-		for j in range N
-			for k in range N
-				index = N*N*k+N*j+i
-				pg[index] = createGraphics 1, 1
-				pg[index].background f*i, f*j, f*k
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -205,8 +213,9 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
+	trace()
 	if sel4.value == '0' then return
-	bg 0.5
+	bg sel8.value
 
 	if 0 < mouseX < width and 0 < mouseY < height
 		locX = 1 - 2 * mouseX / height
@@ -237,14 +246,13 @@ draw = ->
 			for k in range N
 				push()
 				translate SIZE*(0.5+i-N/2),SIZE*(0.5+j-N/2),SIZE*(0.5+k-N/2)
+				f = 255/(N-1)
+				specularMaterial f*i, f*j, f*k, 255*sel5.value
 				if calc()
-					index = N*N*k+N*j+i
-					texture pg[index]
-					sphere radius,radius,radius
+					if sel6.value == 'sphere' then sphere radius,radius,radius else	box 2*radius,2*radius,2*radius
 					count++
 				else
-					texture pg[N*N*N-1]
-					sphere 2,2,2
+					if sel7.value == 'yes' then	sphere 2,2,2
 				pop()
 
 	p1.innerHTML = 'Words: ' + code.value.replace(/\n/g,' ').split(' ').length
