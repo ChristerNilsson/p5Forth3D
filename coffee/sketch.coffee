@@ -16,8 +16,6 @@ i = 0
 j = 0
 k = 0
 t = 0
-xVinkel = 0 # radians
-yVinkel = 0 # radians
 timestamp = 0
 
 words = {}
@@ -30,10 +28,7 @@ fillSelect = (sel, arr) ->
 codechange = (sel) -> draw()
 
 sel0click = (sel) ->
-sel1click = (sel) ->
-sel2click = (sel) ->
 sel3click = (sel) -> frameRate int sel.value
-sel4click = (sel) ->
 sel5click = (sel) ->
 sel6click = (sel) ->
 sel7click = (sel) ->
@@ -119,10 +114,7 @@ setup = ->
 	code = $ '#code'
 
 	sel0 = $ '#sel0'
-	sel1 = $ '#sel1'
-	sel2 = $ '#sel2'
 	sel3 = $ '#sel3'
-	sel4 = $ '#sel4'
 	sel5 = $ '#sel5'
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
@@ -140,12 +132,9 @@ setup = ->
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
-	fillSelect sel0, range 2, 27 # radius
-	fillSelect sel1, ['free'].concat range 0, 360, 15 # x
-	fillSelect sel2, ['free'].concat range 0, 360, 15 # y
-	fillSelect sel3, range 1,26 # frameRate
-	fillSelect sel4, range 25 # speed
-	fillSelect sel5, '0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
+	fillSelect sel0, range 1, 21 # radius
+	fillSelect sel3, range 1,21 # frameRate
+	fillSelect sel5, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
@@ -159,10 +148,7 @@ setup = ->
 	frameRate 10
 
 	sel0.val("12").change() # radius
-	sel1.val("free").change() # x
-	sel2.val("free").change() # y
 	sel3.val("10").change() # fps
-	sel4.val("10").change() # speed
 	sel5.val("1.0").change() # alpha
 	sel6.val("sphere").change() # fig
 	sel7.val("yes").change() # grid
@@ -178,7 +164,6 @@ setup = ->
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
 showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
-mousePressed = -> if 0 < mouseX < width and 0 < mouseY < height then [lightX,lightY] = [mouseX,mouseY]
 gcd = (x, y) -> if y == 0 then x else gcd y, x % y
 
 evaluate = (traceFlag, line, level='') ->
@@ -233,8 +218,9 @@ calc = (traceFlag = false) ->
 draw = ->
 
 	trace()
-	#if sel4.value == '0' then return
 	bg sel8.value
+
+	orbitControl()
 
 	if 0 < mouseX < width and 0 < mouseY < height
 		locX = 1 - 2 * mouseX / height
@@ -243,21 +229,8 @@ draw = ->
 		locX = 1 - 2 * lightX / height
 		locY = 2 * lightY / width - 1
 
-	if sel1.value == 'free'
-		yVinkel += sel4.value/500
-		yVinkel %= TWO_PI
-		rotateY yVinkel
-	else rotateY radians sel1.value
-
-	if sel2.value == 'free'
-		xVinkel += sel4.value/500
-		xVinkel %= TWO_PI
-		rotateX xVinkel
-	else rotateX radians sel2.value
-
 	alpha = sel5.value
 
-	#ambientLight 255, 255, 255 #, alpha
 	pointLight 255, 255, 255, locX,locY,0
 
 	t = frameCount
