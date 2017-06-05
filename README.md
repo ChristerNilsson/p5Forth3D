@@ -1,22 +1,22 @@
 # p5Forth3D
 
 Detta program kombinerar ForthHaiku med tredimensionella färgkuber.
-För varje pixel i,j,k räknar ett Forthprogram ut om kulan ska vara med eller inte. Du skriver detta program.
+För varje pixel i,j,k räknar forthkoden ut om sfären/boxen ska vara med eller inte. Du skriver denna kod.
 
 Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan du går vidare. Förutom att ForthSalon är 2D, kan man där ange färgen på varje pixel individuellt. Med p5Forth3D kan man inte styra över färgen.
 
 Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går alltså att räkna med.
 
-## Följande kommandon är tillgängliga
+## Följande ord är tillgängliga
 
 ```coffeescript
 # Ingen operand
 i j k
 t
-drop
+drop pop
 
 # En operand
-not chs inv abs sqrt ~ dup sign
+not chs inv abs sqrt ~ dup sign push
 biti bitj bitk bitij bitik bitjk bitijk
 
 # Två operander
@@ -84,17 +84,19 @@ rot -rot
 0 1 xor  1  ==
 1 0 xor  1  ==
 1 1 xor  0  ==
+
+rot   Hämtar tredje elementet på stacken
+-rot  Motsatsen
+
 ```
 
-## Dessa kommandon finns bara i p5Forth3D:
+## Dessa ord finns bara i p5Forth3D:
 
 ```coffeescript
 i   koordinat 0..9
 j   koordinat 0..9
 k   koordinat 0..9
 t   frameCount 0..
-rot Hämtar tredje elementet på stacken
--rot Motsatsen
 //  Heltalsdivision
 %%  Modulo på negativa tal
 bit
@@ -103,7 +105,7 @@ bitij bitik bitjk
 bitijk
 ```
 
-## Följande kommandon maskar bitar:
+## Följande ord maskar bitar:
 
 ```coffeescript
 bit
@@ -120,7 +122,7 @@ bitijk
 : bitijk dup bitij swap bitk ;
 ```
 
-## Dessutom kan nya ord skapas med : och ;
+## Dessutom kan nya ord skapas med :
 
 ```coffeescript
 : sq dup * ;
@@ -152,6 +154,14 @@ Tag bort ett ord så här:
 ## Kommandon i [Forth Haiku](http://forthsalon.appspot.com/word-list)
 
 ## Övningar
+
+Inledande kod
+```coffeescript
+513 bitijk and and
+```
+innebär att bit 0 och 9 visas för alla tre dimensioner med bitijk.
+Notera att 1000000001 binärt är lika med 513.
+
 [Exempel](https://christernilsson.github.io/p5Dojo/ForthHaiku3D.html)
 
 ## Koordinater
@@ -165,18 +175,14 @@ Tag bort ett ord så här:
 ## Utritning
 
 * Om editorn känns seg, dra ner på fps till 75% av maximal FPS.
-* Sätt speed=0 för att stänga av omritning helt.
-* Ändringar i editorn ritas ut direkt om speed >= 1.
+* Sätt fps=0 för att stänga av omritning helt.
+* Ändringar i editorn ritas ut direkt.
 * Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
-* x = free innebär att kuben roterar vänster till höger
-* y = free innebär att kuben roterar uppifrån och ner.
-* Övriga värden för x och y innebär fryst rotation i en viss vinkel.
 
 ## Felsökning
 
 Nedre högra delen kan användas för att felsöka ditt Forth-program.
 
-* Välj i,j,k samt t och se hur beräkningen sker, kommando för kommando.
+* Välj i,j,k samt t och se hur beräkningen sker, ord för ord.
 * Operatorerna arbetar på den högra änden av stacken.
-* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas kulan ut.
-* Klicka på något värde för att uppdatera tabellen med kommandon och ögonblicksbilder av stacken.
+* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas sfären/boxen ut.
