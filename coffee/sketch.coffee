@@ -7,6 +7,7 @@ lightY = 250
 cmd0 = {}
 cmd1 = {}
 cmd2 = {}
+cmd3 = {}
 
 stack = []
 i = 0
@@ -98,6 +99,9 @@ buildCommands = ->
 	cmd2['or']   = (a,b) =>	[digit b!=0 or a!=0]
 	cmd2['xor']  = (a,b) => [digit b+a == 1]
 
+	cmd3['rot']  = (c,b,a) => [b,c,a]
+	cmd3['-rot'] = (c,b,a) => [c,a,b]
+
 setup = ->
 	c = createCanvas 500,500,WEBGL
 	c.parent 'canvas'
@@ -176,6 +180,10 @@ evaluate = (traceFlag, line, level='') ->
 		else if words[cmd]?
 			if level.indexOf('.'+cmd+'.') != -1 then throw [level+cmd,'Recursion not allowed']
 			evaluate traceFlag, words[cmd], level + cmd + '.'
+		else if cmd3[cmd]?
+			if stack.length < 3 then throw [level+cmd,'Stack Underflow']
+			stack = stack.concat cmd3[cmd] stack.pop(), stack.pop(), stack.pop()
+			if traceFlag then showStack level,cmd
 		else if cmd2[cmd]?
 			if stack.length < 2 then throw [level+cmd,'Stack Underflow']
 			stack = stack.concat cmd2[cmd] stack.pop(), stack.pop()
@@ -196,6 +204,7 @@ evaluate = (traceFlag, line, level='') ->
 				throw [level+cmd,'Unknown Word']
 
 calc = (traceFlag = false) ->
+	words = {}
 	stack = []
 	lines = code.value.split "\n"
 	try
@@ -213,6 +222,7 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
+
 	trace()
 	if sel4.value == '0' then return
 	bg sel8.value
@@ -236,7 +246,9 @@ draw = ->
 		rotateX xVinkel
 	else rotateX radians sel2.value
 
-	pointLight 255, 255, 255, locX,locY,0
+	alpha = sel5.value
+
+	pointLight 255, 255, 255, alpha, locX,locY,0
 
 	t = frameCount
 	count = 0
@@ -246,8 +258,10 @@ draw = ->
 			for k in range N
 				push()
 				translate SIZE*(0.5+i-N/2),SIZE*(0.5+j-N/2),SIZE*(0.5+k-N/2)
+
 				f = 255/(N-1)
 				specularMaterial f*i, f*j, f*k, 255*sel5.value
+
 				if calc()
 					if sel6.value == 'sphere' then sphere radius,radius,radius else	box 2*radius,2*radius,2*radius
 					count++

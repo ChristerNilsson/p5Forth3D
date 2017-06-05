@@ -16,7 +16,7 @@ t
 drop
 
 # En operand
-not chs inv abs sqrt ~ dup rot sign
+not chs inv abs sqrt ~ dup sign
 biti bitj bitk bitij bitik bitjk bitijk
 
 # Två operander
@@ -25,6 +25,9 @@ swap
 < > <= >= != ==
 & | ^ >> << bit
 and or xor
+
+# Tre operander
+rot -rot
 ```
 
 ```coffeescript
@@ -90,7 +93,8 @@ i   koordinat 0..9
 j   koordinat 0..9
 k   koordinat 0..9
 t   frameCount 0..
-rot Hämtar översta elementet på stacken
+rot Hämtar tredje elementet på stacken
+-rot Motsatsen
 //  Heltalsdivision
 %%  Modulo på negativa tal
 bit
