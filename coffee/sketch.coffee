@@ -211,7 +211,7 @@ calc = (traceFlag = false) ->
 					words[arr[1]] = arr[2..-2].join ' '
 			else
 				evaluate traceFlag, line
-		0 != _.last stack
+		stack.length==1 and 0 != _.last stack
 	catch e
 		if traceFlag then showError e
 
@@ -223,14 +223,15 @@ draw = ->
 	orbitControl()
 
 	if 0 < mouseX < width and 0 < mouseY < height
-		locX = 1 - 2 * mouseX / height
-		locY = 2 * mouseY / width - 1
+		locY = (1 - 2 * mouseY / height)
+		locX = (2 * mouseX / width - 1)
 	else
 		locX = 1 - 2 * lightX / height
 		locY = 2 * lightY / width - 1
 
 	alpha = sel5.value
 
+	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0
 
 	t = frameCount
