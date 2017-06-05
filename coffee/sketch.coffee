@@ -25,7 +25,7 @@ fillSelect = (sel, arr) ->
 	for key in arr
 		sel.append($("<option>").attr('value', key).text(key))
 
-codechange = (sel) -> draw()
+codechange = (sel) ->	trace()
 
 sel0click = (sel) ->
 sel3click = (sel) -> frameRate int sel.value
@@ -200,23 +200,26 @@ calc = (traceFlag = false) ->
 	words = {}
 	stack = []
 	rstack = []
-	lines = code.value.split "\n"
+	arr = code.value.replace(/\n/g,' ').split ' '
+	state = 'normal'
+	defWords = []
 	try
-		for line in lines
-			if 0 == line.indexOf ':'
-				arr = line.split ' '
-				if arr.length == 3 and arr[2] == ';'
-					delete words[arr[1]]
-				else
-					words[arr[1]] = arr[2..-2].join ' '
+		for cmd in arr
+			if cmd == '' then # do nothing
+			if cmd == ':' then state = 'defining'
+			if state == 'defining'
+				defWords.push cmd
+				if cmd == ';'
+					if defWords.length == 3 then delete words[defWords[0]]
+					else words[defWords[1]] = defWords[2..-2].join ' '
+					state = 'normal'
 			else
-				evaluate traceFlag, line
+				evaluate traceFlag, cmd
 		stack.length==1 and 0 != _.last stack
 	catch e
 		if traceFlag then showError e
 
 draw = ->
-
 	trace()
 	bg sel8.value
 
