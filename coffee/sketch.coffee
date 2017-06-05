@@ -10,6 +10,8 @@ cmd2 = {}
 cmd3 = {}
 
 stack = []
+rstack = [] # return stack
+
 i = 0
 j = 0
 k = 0
@@ -24,6 +26,8 @@ fillSelect = (sel, arr) ->
 	sel.empty()
 	for key in arr
 		sel.append($("<option>").attr('value', key).text(key))
+
+codechange = (sel) -> draw()
 
 sel0click = (sel) ->
 sel1click = (sel) ->
@@ -54,7 +58,11 @@ buildCommands = ->
 	cmd0['j']          = => [j]
 	cmd0['k']          = => [k]
 	cmd0['t']          = => [t]
+	cmd0['pop']        = => [rstack.pop()]
 
+	cmd1['push']   = (a) =>
+		rstack.push a
+		[]
 	cmd1['drop']   = (a) => []
 	cmd1['dup']    = (a) => [a,a]
 	cmd1['not']    = (a) => [digit a == 0]
@@ -89,7 +97,7 @@ buildCommands = ->
 	cmd2['%']    = (a,b) => [b % a]
 	cmd2['%%']   = (a,b) => [b %% a]
 	cmd2['gcd']  = (a,b) => [gcd a,b]
-	cmd2['bit']  = (a,b) => [b >> a & 1]
+	cmd2['bit']  = (a,b) => [a >> b & 1]
 	cmd2['&']    = (a,b) => [b & a]
 	cmd2['|']    = (a,b) => [b | a]
 	cmd2['^']    = (a,b) => [b ^ a]
@@ -206,6 +214,7 @@ evaluate = (traceFlag, line, level='') ->
 calc = (traceFlag = false) ->
 	words = {}
 	stack = []
+	rstack = []
 	lines = code.value.split "\n"
 	try
 		for line in lines
@@ -224,7 +233,7 @@ calc = (traceFlag = false) ->
 draw = ->
 
 	trace()
-	if sel4.value == '0' then return
+	#if sel4.value == '0' then return
 	bg sel8.value
 
 	if 0 < mouseX < width and 0 < mouseY < height
@@ -248,7 +257,8 @@ draw = ->
 
 	alpha = sel5.value
 
-	pointLight 255, 255, 255, alpha, locX,locY,0
+	#ambientLight 255, 255, 255 #, alpha
+	pointLight 255, 255, 255, locX,locY,0
 
 	t = frameCount
 	count = 0
@@ -269,7 +279,9 @@ draw = ->
 					if sel7.value == 'yes' then	sphere 2,2,2
 				pop()
 
-	p1.innerHTML = 'Words: ' + code.value.replace(/\n/g,' ').split(' ').length
+	arr = code.value.replace(/\n/g,' ').split(' ')
+	arr = (item for item in arr when item.length > 0)
+	p1.innerHTML = 'Words: ' + arr.length
 	p2.innerHTML = 'Cubes: ' + count
 	if millis() > timestamp
 		p3.innerHTML = 'FPS: ' + int frameRate()
