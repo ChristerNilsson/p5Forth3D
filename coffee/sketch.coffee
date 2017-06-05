@@ -4,6 +4,12 @@ SIZE = 250/N
 lightX = 250
 lightY = 250
 
+vinkelX = 90 # grader
+vinkelY = 0
+
+lastX = 0
+lastY = 0
+
 cmd0 = {}
 cmd1 = {}
 cmd2 = {}
@@ -133,7 +139,7 @@ setup = ->
 	p3 = $ '#p3'
 
 	fillSelect sel0, range 1, 21 # radius
-	fillSelect sel3, range 1,21 # frameRate
+	fillSelect sel3, range 20 # frameRate
 	fillSelect sel5, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
@@ -165,6 +171,17 @@ digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
 showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 gcd = (x, y) -> if y == 0 then x else gcd y, x % y
+
+mousePressed = ->
+	lastX=mouseX
+	lastY=mouseY
+mouseDragged = ->
+	dx = mouseX-lastX
+	dy = mouseY-lastY
+	vinkelX += dx/4
+	vinkelY += dy/4
+	lastX=mouseX
+	lastY=mouseY
 
 evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
@@ -205,13 +222,14 @@ calc = (traceFlag = false) ->
 	defWords = []
 	try
 		for cmd in arr
-			if cmd == '' then # do nothing
+			if cmd == '' then continue
 			if cmd == ':' then state = 'defining'
 			if state == 'defining'
 				defWords.push cmd
 				if cmd == ';'
 					if defWords.length == 3 then delete words[defWords[0]]
 					else words[defWords[1]] = defWords[2..-2].join ' '
+					defWords = []
 					state = 'normal'
 			else
 				evaluate traceFlag, cmd
@@ -220,10 +238,9 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
+	if sel3.value == '0' then return
 	trace()
 	bg sel8.value
-
-	orbitControl()
 
 	if 0 < mouseX < width and 0 < mouseY < height
 		locY = (1 - 2 * mouseY / height)
@@ -232,10 +249,13 @@ draw = ->
 		locX = 1 - 2 * lightX / height
 		locY = 2 * lightY / width - 1
 
+	rotateX radians vinkelY
+	rotateY radians vinkelX
+
 	alpha = sel5.value
 
 	ambientLight 128, 128,128
-	pointLight 255, 255, 255, locX,locY,0
+	pointLight 255, 255, 255, locX,locY,0.25
 
 	t = frameCount
 	count = 0
