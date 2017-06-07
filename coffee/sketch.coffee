@@ -289,7 +289,7 @@ draw = ->
 	arr = code.value.replace(/\n/g,' ').split(' ')
 	arr = (item for item in arr when item.length > 0)
 	p1.innerHTML = 'Words: ' + arr.length
-	p2.innerHTML = 'Cubes: ' + count
+	p2.innerHTML = 'Spheres: ' + count
 	if millis() > timestamp
 		p3.innerHTML = 'FPS: ' + int frameRate()
 		timestamp = millis() + 1000
