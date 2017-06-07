@@ -1,9 +1,6 @@
 N = 10
 SIZE = 250/N
 
-lightX = 250
-lightY = 250
-
 vinkelX = 90 # grader
 vinkelY = 0
 
@@ -262,11 +259,11 @@ draw = ->
 	bg sel8.value
 
 	if 0 < mouseX < width and 0 < mouseY < height
-		locY = (1 - 2 * mouseY / height)
-		locX = (2 * mouseX / width - 1)
+		locX = 2 * mouseX / width - 1
+		locY = 1 - 2 * mouseY / height
 	else
-		locX = 1 - 2 * lightX / height
-		locY = 2 * lightY / width - 1
+		locX = -(1 - 2 * lastX / height)
+		locY = -(2 * lastY / width - 1)
 
 	rotateX radians vinkelY
 	rotateY radians vinkelX
