@@ -31,19 +31,31 @@ fillSelect = (sel, arr) ->
 	for key in arr
 		sel.append($("<option>").attr('value', key).text(key))
 
-codechange = (sel) ->	trace()
+codechange = (textarea) ->
+	localStorage.code = textarea.value
+	trace()
 
-sel0click = (sel) ->
-sel3click = (sel) -> frameRate int sel.value
-sel5click = (sel) ->
-sel6click = (sel) ->
-sel7click = (sel) ->
-sel8click = (sel) ->
+sel0click = (sel) -> localStorage.radius = sel.value
+sel3click = (sel) ->
+	localStorage.fps = sel.value
+	frameRate int sel.value
+#sel5click = (sel) -> localStorage.alpha = sel.value
+sel6click = (sel) -> localStorage.fig = sel.value
+sel7click = (sel) -> localStorage.grid = sel.value
+sel8click = (sel) -> localStorage.bg = sel.value
 
-sel15click = (sel) -> trace()
-sel16click = (sel) -> trace()
-sel17click = (sel) -> trace()
-sel18click = (sel) -> trace()
+sel15click = (sel) ->
+	localStorage.i = sel.value
+	trace()
+sel16click = (sel) ->
+	localStorage.j = sel.value
+	trace()
+sel17click = (sel) ->
+	localStorage.k = sel.value
+	trace()
+sel18click = (sel) ->
+	localStorage.t = sel.value
+	trace()
 
 trace = ->
 	tableClear()
@@ -111,8 +123,11 @@ buildCommands = ->
 	cmd3['rot']  = (c,b,a) => [b,c,a]
 	cmd3['-rot'] = (c,b,a) => [c,a,b]
 
+standard = (name,value) -> if localStorage[name]? then localStorage[name] else value
+
 setup = ->
 	c = createCanvas 500,500,WEBGL
+
 	c.parent 'canvas'
 
 	buildCommands()
@@ -121,7 +136,7 @@ setup = ->
 
 	sel0 = $ '#sel0'
 	sel3 = $ '#sel3'
-	sel5 = $ '#sel5'
+	#sel5 = $ '#sel5'
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
 	sel8 = $ '#sel8'
@@ -139,33 +154,34 @@ setup = ->
 	p3 = $ '#p3'
 
 	fillSelect sel0, range 1, 21 # radius
-	fillSelect sel3, range 20 # frameRate
-	fillSelect sel5, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
+	fillSelect sel3, range 20 # fps
+	#fillSelect sel5, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
 
-	fillSelect sel15, range 10 #
-	fillSelect sel16, range 10 # i
-	fillSelect sel17, range 10 # j
-	fillSelect sel18, range 10 # k
+	fillSelect sel15, range 10 # i
+	fillSelect sel16, range 10 # j
+	fillSelect sel17, range 10 # k
+	fillSelect sel18, range 10 # t
 	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
 
-	frameRate 10
+	sel0.val standard "radius",'12'
+	sel3.val standard "fps",'10'
+	#sel5.val standard "alpha",'1.0'
+	sel6.val standard "fig",'sphere'
+	sel7.val standard "grid",'yes'
+	sel8.val standard "bg",'0.5'
 
-	sel0.val("12").change() # radius
-	sel3.val("10").change() # fps
-	sel5.val("1.0").change() # alpha
-	sel6.val("sphere").change() # fig
-	sel7.val("yes").change() # grid
-	sel8.val("0.5").change() # bg
+	sel15.val standard "i",'0'
+	sel16.val standard "j",'0'
+	sel17.val standard "k",'0'
+	sel18.val standard "t",'0'
 
-	sel15.val("0").change() # i
-	sel16.val("0").change() # j
-	sel17.val("0").change() # k
-	sel18.val("0").change() # t
+	code.val standard 'code', '513 bitijk and and'
 
-	trace()
+	frameRate int localStorage.fps
+
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -252,7 +268,7 @@ draw = ->
 	rotateX radians vinkelY
 	rotateY radians vinkelX
 
-	alpha = sel5.value
+	#alpha = parseFloat sel5.value
 
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
@@ -267,7 +283,7 @@ draw = ->
 				translate SIZE*(0.5+i-N/2),SIZE*(0.5+j-N/2),SIZE*(0.5+k-N/2)
 
 				f = 255/(N-1)
-				specularMaterial f*i, f*j, f*k, 255*sel5.value
+				specularMaterial f*i, f*j, f*k
 
 				if calc()
 					if sel6.value == 'sphere' then sphere radius,radius,radius else	box 2*radius,2*radius,2*radius

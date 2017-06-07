@@ -160,7 +160,7 @@ Inledande kod
 513 bitijk and and
 ```
 innebär att bit 0 och 9 visas för alla tre dimensioner med bitijk.
-Notera att 1000000001 binärt är lika med 513.
+Notera att 1000000001 binärt är lika med 513. Detta innebär att enbart de åtta hörnen med rena färger visas. Svart är origo.
 
 [Exempel](https://christernilsson.github.io/p5Dojo/ForthHaiku3D.html)
 
