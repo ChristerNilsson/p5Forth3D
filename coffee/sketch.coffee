@@ -35,25 +35,30 @@ codechange = (textarea) ->
 	localStorage.code = textarea.value
 	trace()
 
-sel0click = (sel) -> localStorage.radius = sel.value
+setSetting = (name,value) -> localStorage["Forth3D/"+name] = value
+getSetting = (name,value) ->
+	v = localStorage["Forth3D/"+name]
+	if v? then v else value
+
+sel0click = (sel) -> setSetting 'radius', sel.value
 sel3click = (sel) ->
-	localStorage.fps = sel.value
+	setSetting 'fps', sel.value
 	frameRate int sel.value
-sel6click = (sel) -> localStorage.fig = sel.value
-sel7click = (sel) -> localStorage.grid = sel.value
-sel8click = (sel) -> localStorage.bg = sel.value
+sel6click = (sel) -> setSetting 'fig', sel.value
+sel7click = (sel) -> setSetting 'grid', sel.value
+sel8click = (sel) -> setSetting 'bg', sel.value
 
 sel15click = (sel) ->
-	localStorage.i = sel.value
+	setSetting 'i', sel.value
 	trace()
 sel16click = (sel) ->
-	localStorage.j = sel.value
+	setSetting 'j', sel.value
 	trace()
 sel17click = (sel) ->
-	localStorage.k = sel.value
+	setSetting 'k', sel.value
 	trace()
 sel18click = (sel) ->
-	localStorage.t = sel.value
+	setSetting 't', sel.value
 	trace()
 
 trace = ->
@@ -163,21 +168,23 @@ setup = ->
 	fillSelect sel18, range 10 # t
 	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
 
-	sel0.val standard "radius",'12'
-	sel3.val standard "fps",'10'
-	sel6.val standard "fig",'sphere'
-	sel7.val standard "grid",'yes'
-	sel8.val standard "bg",'0.5'
+	sel0.val getSetting "radius",'12'
+	sel3.val getSetting "fps",'10'
+	sel6.val getSetting "fig",'sphere'
+	sel7.val getSetting "grid",'yes'
+	sel8.val getSetting "bg",'0.5'
 
-	sel15.val standard "i",'0'
-	sel16.val standard "j",'0'
-	sel17.val standard "k",'0'
-	sel18.val standard "t",'0'
+	sel15.val getSetting "i",'0'
+	sel16.val getSetting "j",'0'
+	sel17.val getSetting "k",'0'
+	sel18.val getSetting "t",'0'
 
-	code.val standard 'code', '513 bitijk and and'
+	code.val getSetting 'code', '513 bitijk and and'
 
-	frameRate int localStorage.fps
+	frameRate int getSetting 'fps', 10
 
+	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
+	texture createGraphics 1,1
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
