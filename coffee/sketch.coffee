@@ -29,7 +29,7 @@ fillSelect = (sel, arr) ->
 		sel.append($("<option>").attr('value', key).text(key))
 
 codechange = (textarea) ->
-	localStorage.code = textarea.value
+	setSetting 'code', textarea.value
 	trace()
 
 setSetting = (name,value) -> localStorage["Forth3D/"+name] = value
