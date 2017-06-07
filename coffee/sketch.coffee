@@ -39,7 +39,6 @@ sel0click = (sel) -> localStorage.radius = sel.value
 sel3click = (sel) ->
 	localStorage.fps = sel.value
 	frameRate int sel.value
-#sel5click = (sel) -> localStorage.alpha = sel.value
 sel6click = (sel) -> localStorage.fig = sel.value
 sel7click = (sel) -> localStorage.grid = sel.value
 sel8click = (sel) -> localStorage.bg = sel.value
@@ -136,7 +135,6 @@ setup = ->
 
 	sel0 = $ '#sel0'
 	sel3 = $ '#sel3'
-	#sel5 = $ '#sel5'
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
 	sel8 = $ '#sel8'
@@ -155,7 +153,6 @@ setup = ->
 
 	fillSelect sel0, range 1, 21 # radius
 	fillSelect sel3, range 20 # fps
-	#fillSelect sel5, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # alpha
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
@@ -168,7 +165,6 @@ setup = ->
 
 	sel0.val standard "radius",'12'
 	sel3.val standard "fps",'10'
-	#sel5.val standard "alpha",'1.0'
 	sel6.val standard "fig",'sphere'
 	sel7.val standard "grid",'yes'
 	sel8.val standard "bg",'0.5'
@@ -267,8 +263,6 @@ draw = ->
 
 	rotateX radians vinkelY
 	rotateY radians vinkelX
-
-	#alpha = parseFloat sel5.value
 
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
