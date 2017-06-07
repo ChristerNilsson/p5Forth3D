@@ -189,15 +189,17 @@ showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 gcd = (x, y) -> if y == 0 then x else gcd y, x % y
 
 mousePressed = ->
-	lastX=mouseX
-	lastY=mouseY
+	if 0 < mouseX < width and 0 < mouseY < height
+		lastX=mouseX
+		lastY=mouseY
 mouseDragged = ->
-	dx = mouseX-lastX
-	dy = mouseY-lastY
-	vinkelX += dx/4
-	vinkelY += dy/4
-	lastX=mouseX
-	lastY=mouseY
+	if 0 < mouseX < width and 0 < mouseY < height
+		dx = mouseX-lastX
+		dy = mouseY-lastY
+		vinkelX += dx/4
+		vinkelY += dy/4
+		lastX=mouseX
+		lastY=mouseY
 
 evaluate = (traceFlag, line, level='') ->
 	arr = line.split ' '
