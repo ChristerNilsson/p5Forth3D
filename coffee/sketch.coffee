@@ -44,6 +44,7 @@ sel3click = (sel) ->
 sel6click = (sel) -> setSetting 'fig', sel.value
 sel7click = (sel) -> setSetting 'grid', sel.value
 sel8click = (sel) -> setSetting 'bg', sel.value
+sel9click = (sel) -> setSetting 'rotate', sel.value
 
 sel15click = (sel) ->
 	setSetting 'i', sel.value
@@ -140,6 +141,7 @@ setup = ->
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
 	sel8 = $ '#sel8'
+	sel9 = $ '#sel9'
 
 	sel15 = $ '#sel15'
 	sel16 = $ '#sel16'
@@ -158,6 +160,7 @@ setup = ->
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
+	fillSelect sel9, ['yes','no'] # rotate
 
 	fillSelect sel15, range 10 # i
 	fillSelect sel16, range 10 # j
@@ -170,6 +173,7 @@ setup = ->
 	sel6.val getSetting "fig",'sphere'
 	sel7.val getSetting "grid",'yes'
 	sel8.val getSetting "bg",'0.5'
+	sel9.val getSetting "rotate",'no'
 
 	sel15.val getSetting "i",'0'
 	sel16.val getSetting "j",'0'
@@ -267,6 +271,10 @@ draw = ->
 		locX = -(1 - 2 * lastX / height)
 		locY = -(2 * lastY / width - 1)
 
+	if 'yes' == getSetting 'rotate','no'
+		vinkelY += 0.5
+		vinkelX += 0.4
+
 	rotateX radians vinkelY
 	rotateY radians vinkelX
 
@@ -292,10 +300,10 @@ draw = ->
 					if sel7.value == 'yes' then	sphere 2,2,2
 				pop()
 
-	arr = code.value.replace(/\n/g,' ').split(' ')
+	arr = code.value.replace(/\n/g,' ').split ' '
 	arr = (item for item in arr when item.length > 0)
 	p1.innerHTML = 'Words: ' + arr.length
-	p2.innerHTML = 'Spheres: ' + count
+	p2.innerHTML = 'Figures: ' + count
 	if millis() > timestamp
 		p3.innerHTML = 'FPS: ' + int frameRate()
 		timestamp = millis() + 1000
