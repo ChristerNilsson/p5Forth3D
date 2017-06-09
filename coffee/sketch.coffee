@@ -1,4 +1,4 @@
-N = 10
+N = 27
 SIZE = 250/N
 
 vinkelX = 90 # grader
@@ -38,6 +38,10 @@ getSetting = (name,value) ->
 	if v? then v else value
 
 sel0click = (sel) -> setSetting 'radius', sel.value
+sel1click = (sel) ->
+	setSetting 'n', sel.value
+	N = int sel.value
+	SIZE = 250/N
 sel3click = (sel) ->
 	setSetting 'fps', sel.value
 	frameRate int sel.value
@@ -137,6 +141,7 @@ setup = ->
 	code = $ '#code'
 
 	sel0 = $ '#sel0'
+	sel1 = $ '#sel1'
 	sel3 = $ '#sel3'
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
@@ -156,6 +161,7 @@ setup = ->
 	p3 = $ '#p3'
 
 	fillSelect sel0, range 1, 21 # radius
+	fillSelect sel1, range 2, 28 # n
 	fillSelect sel3, range 20 # fps
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
@@ -169,6 +175,7 @@ setup = ->
 	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
 
 	sel0.val getSetting "radius",'12'
+	sel1.val getSetting "n",'10'
 	sel3.val getSetting "fps",'10'
 	sel6.val getSetting "fig",'sphere'
 	sel7.val getSetting "grid",'yes'
@@ -182,6 +189,8 @@ setup = ->
 
 	code.val getSetting 'code', '513 bitijk and and'
 
+	N = getSetting 'n', 10
+	SIZE = 250/N
 	frameRate int getSetting 'fps', 10
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
@@ -294,7 +303,8 @@ draw = ->
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					if sel6.value == 'sphere' then sphere radius,radius,radius else	box 2*radius,2*radius,2*radius
+					s = int radius/40 * SIZE
+					if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
 					count++
 				else
 					if sel7.value == 'yes' then	sphere 2,2,2
