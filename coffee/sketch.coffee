@@ -272,8 +272,8 @@ draw = ->
 		locY = -(2 * lastY / width - 1)
 
 	if 'yes' == getSetting 'rotate','no'
-		vinkelY += 0.5
-		vinkelX += 0.4
+		vinkelY += 0.50
+		vinkelX += 0.25
 
 	rotateX radians vinkelY
 	rotateY radians vinkelX
@@ -305,8 +305,9 @@ draw = ->
 	p1.innerHTML = 'Words: ' + arr.length
 	p2.innerHTML = 'Figures: ' + count
 	if millis() > timestamp
-		p3.innerHTML = 'FPS: ' + int frameRate()
+		p3.innerHTML = "FPS: #{int frameRate()}  #{frameCount}  #{vinkelX}  #{vinkelY}"
 		timestamp = millis() + 1000
+	#if frameCount < 100 then save "out-#{frameCount}.png"
 
 tableClear = -> $("#tabell tr").remove()
 
