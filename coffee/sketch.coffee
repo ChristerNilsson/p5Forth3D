@@ -1,4 +1,4 @@
-N = 27
+N = 10
 SIZE = 250/N
 
 vinkelX = 90 # grader
@@ -162,7 +162,7 @@ setup = ->
 
 	fillSelect sel0, range 1, 21 # radius
 	fillSelect sel1, range 2, 28 # n
-	fillSelect sel3, range 20 # fps
+	fillSelect sel3, range 26 # fps
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
@@ -303,8 +303,8 @@ draw = ->
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					s = int radius/40 * SIZE
-					if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
+					s = int radius/20 * SIZE
+					if sel6.value == 'sphere' then sphere s,s,s else box s,s,s
 					count++
 				else
 					if sel7.value == 'yes' then	sphere 2,2,2
@@ -315,7 +315,7 @@ draw = ->
 	p1.innerHTML = 'Words: ' + arr.length
 	p2.innerHTML = 'Figures: ' + count
 	if millis() > timestamp
-		p3.innerHTML = "FPS: #{int frameRate()}  #{frameCount}  #{vinkelX}  #{vinkelY}"
+		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}  #{frameCount}  #{vinkelX}  #{vinkelY}"
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
 
