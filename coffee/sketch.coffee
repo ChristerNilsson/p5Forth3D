@@ -50,6 +50,9 @@ sel7click = (sel) -> setSetting 'grid', sel.value
 sel8click = (sel) -> setSetting 'bg', sel.value
 sel9click = (sel) -> setSetting 'rotate', sel.value
 
+sel14click = (sel) ->
+	setSetting 'font', sel.value
+	document.getElementById("code").style.fontSize = sel.value + 'px'
 sel15click = (sel) ->
 	setSetting 'i', sel.value
 	trace()
@@ -148,6 +151,7 @@ setup = ->
 	sel8 = $ '#sel8'
 	sel9 = $ '#sel9'
 
+	sel14 = $ '#sel14'
 	sel15 = $ '#sel15'
 	sel16 = $ '#sel16'
 	sel17 = $ '#sel17'
@@ -168,6 +172,7 @@ setup = ->
 	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
 	fillSelect sel9, ['yes','no'] # rotate
 
+	fillSelect sel14, range 16,36,2 # font
 	fillSelect sel15, range 10 # i
 	fillSelect sel16, range 10 # j
 	fillSelect sel17, range 10 # k
@@ -182,12 +187,15 @@ setup = ->
 	sel8.val getSetting "bg",'0.5'
 	sel9.val getSetting "rotate",'no'
 
+	sel14.val getSetting "font",'26'
 	sel15.val getSetting "i",'0'
 	sel16.val getSetting "j",'0'
 	sel17.val getSetting "k",'0'
 	sel18.val getSetting "t",'0'
 
 	code.val getSetting 'code', '513 bitijk and and'
+
+	document.getElementById("code").style.fontSize = sel14.value + 'px'
 
 	N = getSetting 'n', 10
 	SIZE = 250/N
@@ -251,17 +259,21 @@ calc = (traceFlag = false) ->
 	arr = code.value.replace(/\n/g,' ').split ' '
 	state = 'normal'
 	defWords = []
+	stateStack = []
 	try
 		for cmd in arr
+			if cmd == '(' then stateStack.push '('
 			if cmd == '' then continue
-			if cmd == ':' then state = 'defining'
-			if state == 'defining'
+			if cmd == ':' then stateStack.push ':'
+			if _.last(stateStack) == '('
+				if cmd == ')' then stateStack.pop()
+			else if _.last(stateStack) == ':'
 				defWords.push cmd
 				if cmd == ';'
 					if defWords.length == 3 then delete words[defWords[0]]
 					else words[defWords[1]] = defWords[2..-2].join ' '
 					defWords = []
-					state = 'normal'
+					stateStack.pop()
 			else
 				evaluate traceFlag, cmd
 		stack.length==1 and 0 != _.last stack
@@ -281,8 +293,8 @@ draw = ->
 		locY = -(2 * lastY / width - 1)
 
 	if 'yes' == getSetting 'rotate','no'
-		vinkelY += 0.50
-		vinkelX += 0.25
+		vinkelY += 1
+		vinkelX += 0.5
 
 	rotateX radians vinkelY
 	rotateY radians vinkelX
@@ -304,10 +316,14 @@ draw = ->
 
 				if calc()
 					s = int radius/20 * SIZE
+					s = _.max [s,3]
 					if sel6.value == 'sphere' then sphere s,s,s else box s,s,s
 					count++
 				else
-					if sel7.value == 'yes' then	sphere 2,2,2
+					if sel7.value == 'yes'
+						s = int radius/160 * SIZE
+						s = _.max [s,3]
+						if sel6.value == 'sphere' then sphere s,s,s else box s,s,s
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
@@ -315,7 +331,8 @@ draw = ->
 	p1.innerHTML = 'Words: ' + arr.length
 	p2.innerHTML = 'Figures: ' + count
 	if millis() > timestamp
-		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}  #{frameCount}  #{vinkelX}  #{vinkelY}"
+		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}"
+		#p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}  #{frameCount}  #{vinkelX}  #{vinkelY}"
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
 

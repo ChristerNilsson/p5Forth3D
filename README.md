@@ -1,32 +1,35 @@
 # p5Forth3D
 
-Detta program kombinerar ForthHaiku med tredimensionella färgkuber.
-För varje pixel i,j,k räknar forthkoden ut om sfären/boxen ska vara med eller inte. Du skriver denna kod.
+This program combines Forth SAlon with three-dimensional color cubes.
+For each pixel (i,j,k), a small forth code calculates if it should be visible or not.
+This code is written by you.
 
-Tag en titt på [ForthSalon](http://forthsalon.appspot.com/haiku-editor) innan du går vidare. Förutom att ForthSalon är 2D, kan man där ange färgen på varje pixel individuellt. Med p5Forth3D kan man inte styra över färgen.
+Have a quick look at [Forth Salon](http://forthsalon.appspot.com/haiku-editor) before continuing.
+Forth Salon is 2D and you can set the color for each pixel individually.
+With p5Forth3D it is not possible to choose color.
 
-Notera att logiska värden har värdena 1 (sant) eller 0 (falskt). De går alltså att räkna med.
+Please note, logical values (false,true) are (0,1). You can make arithmetical calculations with them.
 
-## Följande ord är tillgängliga
+## The following words are available
 
 ```coffeescript
-# Ingen operand
+# No operand
 i j k
 t
 drop pop
 
-# En operand
+# One operand
 not chs inv abs sqrt ~ dup sign push
 biti bitj bitk bitij bitik bitjk bitijk
 
-# Två operander
+# Two operands
 swap
 + - * ** / // % %% gcd
 < > <= >= != ==
 & | ^ >> << bit
 and or xor
 
-# Tre operander
+# Three operands
 rot -rot
 ```
 
@@ -85,27 +88,27 @@ rot -rot
 1 0 xor  1  ==
 1 1 xor  0  ==
 
-rot   Hämtar tredje elementet på stacken
--rot  Motsatsen
+rot   Fetches the third element of the stack
+-rot  The opposit
 
 ```
 
-## Dessa ord finns bara i p5Forth3D:
+## This words are only defined in p5Forth3D:
 
 ```coffeescript
-i   koordinat 0..9
-j   koordinat 0..9
-k   koordinat 0..9
+i   coordinate 0 .. n-1
+j   coordinate 0 .. n-1
+k   coordinate 0 .. n-1
 t   frameCount 0..
-//  Heltalsdivision
-%%  Modulo på negativa tal
+//  integer division
+%%  negative number modulo
 bit
 biti bitj bitk
 bitij bitik bitjk
 bitijk
 ```
 
-## Följande ord maskar bitar:
+## Words masking bits:
 
 ```coffeescript
 bit
@@ -122,7 +125,7 @@ bitijk
 : bitijk dup bitij swap bitk ;
 ```
 
-## Dessutom kan nya ord skapas med :
+## New words are created with :
 
 ```coffeescript
 : sq dup * ;
@@ -133,7 +136,7 @@ bitijk
 
 12 5 dist
 
-ger följande ögonblicksbilder av stacken:
+gives this stack snapshot:
 
 command        stack
 12                12
@@ -146,43 +149,42 @@ dist.sq.*     25 144
 dist.+           169
 dist.sqrt         13
 ```
-Tag bort ett ord så här:
+Remove a word:
 ```coffeescript
 : sq ;
 ```
 
-## Kommandon i [Forth Haiku](http://forthsalon.appspot.com/word-list)
+## Words in [Forth Salon](http://forthsalon.appspot.com/word-list)
 
-## Övningar
+## Exercises
 
-Inledande kod
 ```coffeescript
 513 bitijk and and
 ```
-innebär att bit 0 och 9 visas för alla tre dimensioner med bitijk.
-Notera att 1000000001 binärt är lika med 513. Detta innebär att enbart de åtta hörnen med rena färger visas. Svart är origo.
+Bit 0 and 9 are visible for all three dimensions.
+Please note, the binary number 1000000001 is 513 in decimal.
+The eight corners shows clean colors. The origin is black.
 
-[Exempel](https://christernilsson.github.io/p5Dojo/ForthHaiku3D.html)
+[Examples](https://christernilsson.github.io/p5Forth3D/examples.html)
 
-## Koordinater
+## Coordinates
 
-* Svarta hörnet motsvarar origo = 0,0,0
-* Vita hörnet motsvarar 9,9,9
-* röd axel motsvarar i
-* grön axel motsvarar j
-* blå axel motsvarar k
+* The black corner is the origin = 0,0,0
+* The white corner is 9,9,9 or n-1,n-1,n-1
+* i is the red axis
+* j is the green axis
+* k is the blue axis
 
-## Utritning
+## Drawing
 
-* Om editorn känns seg, dra ner på fps till 75% av maximal FPS.
-* Sätt fps=0 för att stänga av omritning helt.
-* Ändringar i editorn ritas ut direkt.
-* Du kan använda olika belysningsplaceringar med musen. Klicka för den du placering du vill ha.
+* If the program is slow, reduce fps or n.
+* Set fps to 0 to stop drawing.
+* You can place the light with the mouse. Click to remember the position.
 
-## Felsökning
+## Debugging
 
-Nedre högra delen kan användas för att felsöka ditt Forth-program.
+The right lower part can be used to debug your forth code
 
-* Välj i,j,k samt t och se hur beräkningen sker, ord för ord.
-* Operatorerna arbetar på den högra änden av stacken.
-* Sista raden bör innehålla ett enda värde. Om detta ej är noll ritas sfären/boxen ut.
+* Select i,j,k and t and inspect the calculation, word by word.
+* The words works on the right end of the stack.
+* THe last line should contain exactly one value. If this is 1, a sphere och box is drawn for this pixel.
