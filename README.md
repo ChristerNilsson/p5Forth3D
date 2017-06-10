@@ -1,6 +1,6 @@
 # p5Forth3D
 
-This program combines Forth SAlon with three-dimensional color cubes.
+This program combines Forth Salon with three-dimensional color cubes.
 For each pixel (i,j,k), a small forth code calculates if it should be visible or not.
 This code is written by you.
 
@@ -188,3 +188,9 @@ The right lower part can be used to debug your forth code
 * Select i,j,k and t and inspect the calculation, word by word.
 * The words works on the right end of the stack.
 * THe last line should contain exactly one value. If this is 1, a sphere och box is drawn for this pixel.
+
+## Thanks!
+
+* [p5js](https://p5js.org)
+* [Coffeescript](http://coffeescript.org)
+* [Forth Haiku Salon](http://forthsalon.appspot.com)

@@ -23,6 +23,8 @@ timestamp = 0
 
 words = {}
 
+saveCanvasCount = 0
+
 fillSelect = (sel, arr) ->
 	sel.empty()
 	for key in arr
@@ -65,6 +67,8 @@ sel17click = (sel) ->
 sel18click = (sel) ->
 	setSetting 't', sel.value
 	trace()
+
+btn19click = -> saveCanvasCount++
 
 trace = ->
 	tableClear()
@@ -335,6 +339,9 @@ draw = ->
 		#p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}  #{frameCount}  #{vinkelX}  #{vinkelY}"
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
+	if saveCanvasCount > 0
+		saveCanvas 'p5Forth3D', 'png'
+		saveCanvasCount--
 
 tableClear = -> $("#tabell tr").remove()
 
