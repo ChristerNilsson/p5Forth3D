@@ -23,43 +23,43 @@
 
   </head>
   <body bgcolor="#909090">
-    <textarea id="code" wrap="soft" style="font-family:monospace; font-size:26px;position:absolute; top:0px; left:500px; width:500px; height:495px" oninput="codechange(this);"></textarea>
-    <div id="canvas" style="position:absolute; top:0px; left:0px; width:211px; height:635px"></div>
+    <textarea id="code" wrap="soft" style="font-family:monospace; font-size:26px;position:absolute; top:0px; left:0px; width:500px; height:300px" oninput="codechange(this);"></textarea>
+    <div id="canvas" style="position:absolute; top:0px; left:480px; width:100px; height:100px"></div>
 
-    <table id="links" style="font-family:monospace; font-size:16px; position:absolute; top:700px; left:155px;" border="0px"></table>
+    <table id="links" style="font-family:monospace; font-size:16px; position:absolute; top:360px; left:125px;" border="0px"></table>
 
-    <p id="p1" style="position:absolute; top:790px; left:160px">Cubes: 234</p>
-    <p id="p2" style="position:absolute; top:810px; left:160px">Words: 23</p>
-    <p id="p3" style="position:absolute; top:830px; left:160px">FPS: 23</p>
+    <p id="p1" style="position:absolute; top:450px; left:130px">Cubes: 234</p>
+    <p id="p2" style="position:absolute; top:470px; left:130px">Words: 23</p>
+    <p id="p3" style="position:absolute; top:490px; left:130px">FPS: 23</p>
 
-    <button disabled id="btn0" style="position: absolute; top:500px; left:  0px; width:40px">size</button>
-    <button disabled id="btn1" style="position: absolute; top:500px; left: 40px; width:40px">n</button>
-    <button disabled id="btn3" style="position: absolute; top:500px; left: 80px; width:40px">fps</button>
-    <button disabled id="btn6" style="position: absolute; top:500px; left:160px; width:100px">fig</button>
-    <button disabled id="btn7" style="position: absolute; top:560px; left:160px; width:100px">grid</button>
-    <button disabled id="btn9" style="position: absolute; top:620px; left:160px; width:100px">rotate</button>
+    <button disabled id="btn0" style="position: absolute; top:305px; left:  0px; width:40px">size</button>
+    <button disabled id="btn1" style="position: absolute; top:305px; left: 40px; width:40px">n</button>
+    <button disabled id="btn3" style="position: absolute; top:305px; left: 80px; width:40px">fps</button>
+    <button disabled id="btn6" style="position: absolute; top:305px; left:120px; width:50px">fig</button>
+    <button disabled id="btn7" style="position: absolute; top:305px; left:170px; width:50px">grid</button>
+    <button disabled id="btn9" style="position: absolute; top:305px; left:220px; width:50px">rotate</button>
 
-    <select onclick="sel0click(this)" id='sel0' size="11" style="position: absolute; top:520px; left:0px; width:40px"></select>
-    <select onclick="sel1click(this)" id='sel1' size="26" style="position: absolute; top:520px; left:40px; width:40px"></select>
-    <select onclick="sel3click(this)" id='sel3' size="26" style="position: absolute; top:520px; left: 80px; width:40px"></select>
-    <select onclick="sel6click(this)" id='sel6' size="2"  style="position: absolute; top:520px; left:160px; width:100px"></select>
-    <select onclick="sel7click(this)" id='sel7' size="2"  style="position: absolute; top:580px; left:160px; width:100px"></select>
-    <select onclick="sel9click(this)" id='sel9' size="2"  style="position: absolute; top:640px; left:160px; width:100px"></select>
+    <select onclick="sel0click(this)" id='sel0' size="11" style="position: absolute; top:325px; left:0px; width:40px"></select>
+    <select onclick="sel1click(this)" id='sel1' size="26" style="position: absolute; top:325px; left:40px; width:40px"></select>
+    <select onclick="sel3click(this)" id='sel3' size="26" style="position: absolute; top:325px; left: 80px; width:40px"></select>
+    <select onclick="sel6click(this)" id='sel6' size="2"  style="position: absolute; top:325px; left:120px; width:50px"></select>
+    <select onclick="sel7click(this)" id='sel7' size="2"  style="position: absolute; top:325px; left:170px; width:50px"></select>
+    <select onclick="sel9click(this)" id='sel9' size="2"  style="position: absolute; top:325px; left:220px; width:50px"></select>
 
-    <button onclick="btn19click()" id="btn19" style="position: absolute; top:500px; left:300px; width:40px">save</button>
-    <button disabled id="btn15" style="position: absolute; top:500px; left:340px; width:30px">i</button>
-    <button disabled id="btn16" style="position: absolute; top:500px; left:370px; width:30px">j</button>
-    <button disabled id="btn17" style="position: absolute; top:500px; left:400px; width:30px">k</button>
-    <button disabled id="btn18" style="position: absolute; top:500px; left:430px; width:30px">t</button>
-    <button disabled id="btn14" style="position: absolute; top:500px; left:460px; width:40px">font</button>
+    <button onclick="btn19click()" id="btn19" style="position: absolute; top:305px; left:270px; width:70px">save</button>
+    <button disabled id="btn15" style="position: absolute; top:305px; left:340px; width:25px">i</button>
+    <button disabled id="btn16" style="position: absolute; top:305px; left:365px; width:25px">j</button>
+    <button disabled id="btn17" style="position: absolute; top:305px; left:390px; width:25px">k</button>
+    <button disabled id="btn18" style="position: absolute; top:305px; left:415px; width:25px">t</button>
+    <button disabled id="btn14" style="position: absolute; top:305px; left:440px; width:40px">font</button>
 
-    <select disabled                   id='sel19' size="10" style="position: absolute; top:520px; left:300px; width:40px"></select>
-    <select onclick="sel15click(this)" id='sel15' size="10" style="position: absolute; top:520px; left:340px; width:30px; background-color:red; color:white"></select>
-    <select onclick="sel16click(this)" id='sel16' size="10" style="position: absolute; top:520px; left:370px; width:30px; background-color:green; color:white""></select>
-    <select onclick="sel17click(this)" id='sel17' size="10" style="position: absolute; top:520px; left:400px; width:30px; background-color:blue; color:white""></select>
-    <select onclick="sel18click(this)" id='sel18' size="10" style="position: absolute; top:520px; left:430px; width:30px"></select>
-    <select onclick="sel14click(this)" id='sel14' size="10" style="position: absolute; top:520px; left:460px; width:40px"></select>
+    <select disabled                   id='sel19' size="27" style="position: absolute; top:325px; left:270px; width:70px"></select>
+    <select onclick="sel15click(this)" id='sel15' size="27" style="position: absolute; top:325px; left:340px; width:25px; background-color:red; color:white"></select>
+    <select onclick="sel16click(this)" id='sel16' size="27" style="position: absolute; top:325px; left:365px; width:25px; background-color:green; color:white""></select>
+    <select onclick="sel17click(this)" id='sel17' size="27" style="position: absolute; top:325px; left:390px; width:25px; background-color:blue; color:white""></select>
+    <select onclick="sel18click(this)" id='sel18' size="10" style="position: absolute; top:325px; left:415px; width:25px"></select>
+    <select onclick="sel14click(this)" id='sel14' size="10" style="position: absolute; top:325px; left:440px; width:40px"></select>
 
-    <table id="tabell" style="font-family:monospace; font-size:20px; position:absolute; top:500px; left:500px;" border="0px"></table>
+    <table id="tabell" style="font-family:monospace; font-size:20px; position:absolute; top:0px; left:480px;" border="0px"></table>
    </body>
 </html>

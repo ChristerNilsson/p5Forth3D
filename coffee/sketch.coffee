@@ -1,5 +1,5 @@
 N = 10
-SIZE = 250/N
+SIZE = 400/N
 
 vinkelX = 90 # grader
 vinkelY = 0
@@ -43,13 +43,20 @@ sel0click = (sel) -> setSetting 'size', sel.value
 sel1click = (sel) ->
 	setSetting 'n', sel.value
 	N = int sel.value
-	SIZE = 250/N
+	SIZE = int 400/N
+	fillSelect $('#sel19'), (2 ** i for i in range N)
+	fillSelect $('#sel15'), range N # i
+	fillSelect $('#sel16'), range N # j
+	fillSelect $('#sel17'), range N # k
+	$('#sel15').val '0'
+	$('#sel16').val '0'
+	$('#sel17').val '0'
+
 sel3click = (sel) ->
 	setSetting 'fps', sel.value
 	frameRate int sel.value
 sel6click = (sel) -> setSetting 'fig', sel.value
 sel7click = (sel) -> setSetting 'grid', sel.value
-#sel8click = (sel) -> setSetting 'bg', sel.value
 sel9click = (sel) -> setSetting 'rotate', sel.value
 
 sel14click = (sel) ->
@@ -124,10 +131,10 @@ buildCommands = ->
 	cmd2['swap'] = (a,b) => [a,b]
 	cmd2['<']    = (a,b) => [digit b < a]
 	cmd2['>']    = (a,b) => [digit b > a]
-	cmd2['==']   = (a,b) => [digit b == a]
+	cmd2['=']   = (a,b) => [digit b == a]
 	cmd2['<=']   = (a,b) => [digit b <= a]
 	cmd2['>=']   = (a,b) => [digit b >= a]
-	cmd2['!=']   = (a,b) => [digit b != a]
+	cmd2['<>']   = (a,b) => [digit b != a]
 	cmd2['+']    = (a,b) => [b + a]
 	cmd2['-']    = (a,b) => [b - a]
 	cmd2['*']    = (a,b) => [b * a]
@@ -153,7 +160,7 @@ buildCommands = ->
 standard = (name,value) -> if localStorage[name]? then localStorage[name] else value
 
 setup = ->
-	c = createCanvas 500,500,WEBGL
+	c = createCanvas 800,800,WEBGL
 
 	c.parent 'canvas'
 
@@ -183,6 +190,8 @@ setup = ->
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
+	N = getSetting "n",'10'
+
 	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # size
 	fillSelect sel1, range 2, 28 # n
 	fillSelect sel3, range 26 # fps
@@ -192,11 +201,11 @@ setup = ->
 	fillSelect sel9, ['yes','no'] # rotate
 
 	fillSelect sel14, range 16,36,2 # font
-	fillSelect sel15, range 10 # i
-	fillSelect sel16, range 10 # j
-	fillSelect sel17, range 10 # k
+	fillSelect sel15, range N # i
+	fillSelect sel16, range N # j
+	fillSelect sel17, range N # k
 	fillSelect sel18, range 10 # t
-	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
+	fillSelect sel19, (2 ** i for i in range N)
 
 	sel0.val getSetting "size",'1.0'
 	sel1.val getSetting "n",'10'
@@ -212,7 +221,7 @@ setup = ->
 	sel17.val getSetting "k",'0'
 	sel18.val getSetting "t",'0'
 
-	code.val getSetting 'code', '513 bitijk and and'
+	code.val getSetting 'code', '5 bitijk + + 3 ='
 
 	document.getElementById("code").style.fontSize = sel14.value + 'px'
 
@@ -222,7 +231,7 @@ setup = ->
 	linkAppend links, "examples.html", "Examples"
 
 	N = getSetting 'n', 10
-	SIZE = 250/N
+	SIZE = int 400/N
 	frameRate int getSetting 'fps', 10
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
@@ -339,9 +348,10 @@ draw = ->
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					s = int size * SIZE/2
+					s = int size * SIZE
 					s = _.max [s,5]
-					if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
+					t = int s/2
+					if sel6.value == 'sphere' then sphere t,t,t else box s,s,s
 					count++
 				else
 					if sel7.value == 'yes'
@@ -365,12 +375,13 @@ draw = ->
 
 tableClear = -> $("#tabell tr").remove()
 
-tableAppend = (t, a, b, col='#C0C0C0') ->
+tableAppend = (t, a, b, col='#C0C0C000') ->
 	row = t.insertRow -1
 	cell1 = row.insertCell -1
 	cell2 = row.insertCell -1
 	cell1.innerHTML = a
 	cell2.innerHTML = b
-	cell1.style.backgroundColor = '#808080'
-	cell2.style.backgroundColor = col
+	cell1.style.backgroundColor = col
+	cell1.style.color = '#FFFFFF'
+	cell2.style.backgroundColor = '#80808000'
 	cell2.style.textAlign = 'right'

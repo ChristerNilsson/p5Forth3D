@@ -8,8 +8,8 @@ K: 4 48 bitijk or or
 C: 5 i k + 9 <=
 L: 6 771 bitijk + + 2 >=
 M: 6 252 bitijk + + 2 >=
-D: 7 i j k + + 9 ==
-E: 7 i j k + + 13 ==
+D: 7 i j k + + 9 =
+E: 7 i j k + + 13 =
 F: 7 i j k + + 2 %
 G: 7 i j k + + 3 %
 S: 8 128 biti 16 bitj 2 bitk and and
@@ -63,25 +63,25 @@ words 2  3  4  5  6  7 reps
 
 14 biti 65 bitj and
 17 biti 62 bitj and or
-k 0 == and t 4 % 0 == and
+k 0 = and t 4 % 0 = and
 
 4 biti 127 bitj and
 14 biti 64 bitj and or
 2 biti 2 bitj and or
-k 1 == and t 4 % 1 == and or
+k 1 = and t 4 % 1 = and or
 
 14 biti 1 bitj and
 16 biti 6 bitj and or
 i j + 66 bit or
 64 bitj or
-k 2 == and t 4 % 2 == and or
+k 2 = and t 4 % 2 = and or
 
 14 biti 65 bitj and
 16 biti 54 bitj and or
 i j + 2 bit or
 8 biti 8 bitj and or
 1 biti 32 bitj and or
-k 3 == and t 4 % 3 == and or
+k 3 = and t 4 % 3 = and or
 
 127 bitj and
 31 biti and
@@ -113,7 +113,7 @@ k 3 == and t 4 % 3 == and or
 325 3 1008 xx
 881 3 63 xx
 892 63 48 xx
-k t 10 % == and
+k t 10 % = and
 
 ####################################
 
@@ -122,11 +122,11 @@ Y: 2j2.7i5k7I 7K5J7k 7j5i7J 7I5K7i 7k5j7K 7J5I7
 ====== 2x2x2 ======
 1: 1 bitijk and and         (svart)
 2: 1 bitij and              (svart blå)
-2: i j + 5 bit k 0 == and   (svart gul)
-2: i j == j k == and        (svart vit)
+2: i j + 5 bit k 0 = and   (svart gul)
+2: i j = j k = and        (svart vit)
 3: 1 bitijk or and          (svart grön blå)
 3: i j 2 * + k 4 * + 37 bit (svart grön magenta)
-3: i j k + + 1 ==           (röd grön blå)
+3: i j k + + 1 =           (röd grön blå)
 4: 1 biti                   (svart grön blå cyan)
 4: i j + 2 % not            (svart blå gul vit)
 4: i j k + + 10 bit         (röd grön blå vit)

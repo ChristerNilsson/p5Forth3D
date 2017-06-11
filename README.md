@@ -26,7 +26,7 @@ biti bitj bitk bitij bitik bitjk bitijk
 # Two operands
 swap
 + - * ** / // % %% gcd
-< > <= >= != ==
+< > <= >= <> =
 & | ^ >> << bit
 and or xor
 
@@ -35,59 +35,59 @@ rot -rot
 ```
 
 ```coffeescript
-1 not    0  ==
-0 not    1  ==
+1 not    0  =
+0 not    1  =
 
-3 chs    -3  ==
-2 inv    0.5  ==
--3 abs   3  ==
-9 sqrt   3  ==
-7 ~     -8  ==
--8 sign -1  ==
-7 sign  1  ==
-0 sign  0  ==
+3 chs    -3  =
+2 inv    0.5  =
+-3 abs   3  =
+9 sqrt   3  =
+7 ~     -8  =
+-8 sign -1  =
+7 sign  1  =
+0 sign  0  =
 
-2 3 +    5  ==
-2 3 -   -1  ==
-2 3 *    6  ==
-2 3 **   8  ==
-1 2 /    0.5  ==
-3 2 //   1  ==
-7 2 %    1  ==
--7 2 %%  1  ==
-12 15 gcd 3 ==
+2 3 +    5  =
+2 3 -   -1  =
+2 3 *    6  =
+2 3 **   8  =
+1 2 /    0.5  =
+3 2 //   1  =
+7 2 %    1  =
+-7 2 %%  1  =
+12 15 gcd 3 =
 
-2 3 <    1  ==
-2 3 >    0  ==
-2 3 <=   1  ==
-2 3 >=   0  ==
-2 3 !=   1  ==
-2 3 ==   0  ==
+2 3 <    1  =
+2 3 >    0  =
+2 3 <=   1  =
+2 3 >=   0  =
+2 3 <>   1  =
+2 3 =  0  =
 
-7 12 &   4  ==
-7 12 |  15  ==
-7 12 ^  11  ==
-7 2 >>  1   ==
-2 3 <<  16  ==
-0 5 bit  1  ==
-1 5 bit  0  ==
-2 5 bit  1  ==
-3 5 bit  0  ==
+7 12 &   4  =
+7 12 |  15  =
+7 12 ^  11  =
+7 2 >>  1   =
+2 3 <<  16  =
+0 5 bit  1  =
+1 5 bit  0  =
+2 5 bit  1  =
+3 5 bit  0  =
 
-0 0 and  0  ==
-0 1 and  0  ==
-1 0 and  0  ==
-1 1 and  1  ==
+0 0 and  0  =
+0 1 and  0  =
+1 0 and  0  =
+1 1 and  1  =
 
-0 0 or   0  ==
-0 1 or   1  ==
-1 0 or   1  ==
-1 1 or   1  ==
+0 0 or   0  =
+0 1 or   1  =
+1 0 or   1  =
+1 1 or   1  =
 
-0 0 xor  0  ==
-0 1 xor  1  ==
-1 0 xor  1  ==
-1 1 xor  0  ==
+0 0 xor  0  =
+0 1 xor  1  =
+1 0 xor  1  =
+1 1 xor  0  =
 
 rot   Fetches the third element of the stack
 -rot  The opposite
@@ -132,8 +132,8 @@ bitijk
 : sq dup * ;
 : dist sq swap sq + sqrt ;
 
-6 sq     36  ==
-3 4 dist  5  ==
+6 sq     36  =
+3 4 dist  5  =
 
 12 5 dist
 
