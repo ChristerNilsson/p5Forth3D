@@ -1,14 +1,15 @@
 # p5Forth3D
 
-This program combines Forth Salon with three-dimensional color cubes.
-For each pixel (i,j,k), a small forth code calculates if it should be visible or not.
-This code is written by you.
+* This program combines Forth Salon with three-dimensional color cubes.
+* For each pixel (i,j,k), a small forth code calculates if it should be visible or not.
+* This code is written by you.
 
-Have a quick look at [Forth Salon](http://forthsalon.appspot.com/haiku-editor) before continuing.
-Forth Salon is 2D and you can set the color for each pixel individually.
-With p5Forth3D it is not possible to choose color.
+* Have a quick look at [Forth Salon](http://forthsalon.appspot.com/haiku-editor) before continuing.
+* Forth Salon is 2D and you can set the color for each pixel individually.
+* With p5Forth3D it is not possible to choose color.
 
-Please note, logical values (false,true) are (0,1). You can make arithmetical calculations with them.
+* Please note, logical values (false,true) are (0,1).
+* You can make arithmetical calculations with them.
 
 ## The following words are available
 
@@ -89,7 +90,7 @@ rot -rot
 1 1 xor  0  ==
 
 rot   Fetches the third element of the stack
--rot  The opposit
+-rot  The opposite
 
 ```
 
@@ -187,7 +188,7 @@ The right lower part can be used to debug your forth code
 
 * Select i,j,k and t and inspect the calculation, word by word.
 * The words works on the right end of the stack.
-* THe last line should contain exactly one value. If this is 1, a sphere och box is drawn for this pixel.
+* The last line should contain exactly one value. If this is a 1, a sphere or box is drawn for this pixel.
 
 ## Thanks!
 

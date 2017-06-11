@@ -39,7 +39,7 @@ getSetting = (name,value) ->
 	v = localStorage["Forth3D/"+name]
 	if v? then v else value
 
-sel0click = (sel) -> setSetting 'radius', sel.value
+sel0click = (sel) -> setSetting 'size', sel.value
 sel1click = (sel) ->
 	setSetting 'n', sel.value
 	N = int sel.value
@@ -49,7 +49,7 @@ sel3click = (sel) ->
 	frameRate int sel.value
 sel6click = (sel) -> setSetting 'fig', sel.value
 sel7click = (sel) -> setSetting 'grid', sel.value
-sel8click = (sel) -> setSetting 'bg', sel.value
+#sel8click = (sel) -> setSetting 'bg', sel.value
 sel9click = (sel) -> setSetting 'rotate', sel.value
 
 sel14click = (sel) ->
@@ -78,6 +78,20 @@ trace = ->
 	k = parseInt sel17.value
 	t = parseInt sel18.value
 	calc true
+
+linkAppend = (t, link, text) -> # exakt en kolumn
+	d = (s) -> "'" + s + "'"
+	dd = (s) -> '"' + s + '"'
+	row = t.insertRow -1
+	cell1 = row.insertCell -1
+	s = '<a href=' + d(link)
+	s += ' target=' + d('_blank')
+	s += ' onmouseover=' + d('this.style.color=' + dd('yellow') + ';')
+	s += ' onmouseout='  + d('this.style.color=' + dd('black') + ';')
+	s += '>'
+	s += text
+	s += '</a>'
+	cell1.innerHTML = s
 
 buildCommands = ->
 	cmd0['i']          = => [i]
@@ -152,7 +166,7 @@ setup = ->
 	sel3 = $ '#sel3'
 	sel6 = $ '#sel6'
 	sel7 = $ '#sel7'
-	sel8 = $ '#sel8'
+	#sel8 = $ '#sel8'
 	sel9 = $ '#sel9'
 
 	sel14 = $ '#sel14'
@@ -163,17 +177,18 @@ setup = ->
 	sel19 = $ '#sel19'
 
 	tabell = $ '#tabell'
+	#links = $ '#links' # Sätts tydligen automatiskt utifrån id
 
 	p1 = $ '#p1'
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
-	fillSelect sel0, range 1, 21 # radius
+	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # size
 	fillSelect sel1, range 2, 28 # n
 	fillSelect sel3, range 26 # fps
 	fillSelect sel6, ['sphere','box'] # fig
 	fillSelect sel7, ['yes','no'] # grid
-	fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
+	#fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
 	fillSelect sel9, ['yes','no'] # rotate
 
 	fillSelect sel14, range 16,36,2 # font
@@ -183,12 +198,12 @@ setup = ->
 	fillSelect sel18, range 10 # t
 	fillSelect sel19, [1,2,4,8,16,32,64,128,256,512]
 
-	sel0.val getSetting "radius",'12'
+	sel0.val getSetting "size",'1.0'
 	sel1.val getSetting "n",'10'
 	sel3.val getSetting "fps",'10'
 	sel6.val getSetting "fig",'sphere'
 	sel7.val getSetting "grid",'yes'
-	sel8.val getSetting "bg",'0.5'
+	#sel8.val getSetting "bg",'0.5'
 	sel9.val getSetting "rotate",'no'
 
 	sel14.val getSetting "font",'26'
@@ -200,6 +215,11 @@ setup = ->
 	code.val getSetting 'code', '513 bitijk and and'
 
 	document.getElementById("code").style.fontSize = sel14.value + 'px'
+
+	linkAppend links, "https://github.com/ChristerNilsson/p5Forth3D#p5forth3d", "Help"
+	linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
+	linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
+	linkAppend links, "examples.html", "Examples"
 
 	N = getSetting 'n', 10
 	SIZE = 250/N
@@ -287,7 +307,7 @@ calc = (traceFlag = false) ->
 draw = ->
 	if sel3.value == '0' then return
 	trace()
-	bg sel8.value
+	bg 0.5 #sel8.value
 
 	if 0 < mouseX < width and 0 < mouseY < height
 		locX = 2 * mouseX / width - 1
@@ -308,7 +328,7 @@ draw = ->
 
 	t = frameCount
 	count = 0
-	radius = sel0.value
+	size = sel0.value
 	for i in range N
 		for j in range N
 			for k in range N
@@ -319,15 +339,15 @@ draw = ->
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					s = int radius/20 * SIZE
-					s = _.max [s,3]
-					if sel6.value == 'sphere' then sphere s,s,s else box s,s,s
+					s = int size * SIZE/2
+					s = _.max [s,5]
+					if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
 					count++
 				else
 					if sel7.value == 'yes'
-						s = int radius/160 * SIZE
-						s = _.max [s,3]
-						if sel6.value == 'sphere' then sphere s,s,s else box s,s,s
+						s = int size * SIZE/10
+						s = _.max [s,2]
+						if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '

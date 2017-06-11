@@ -15,7 +15,7 @@
       body {padding: 0; margin: 0;}
       canvas {vertical-align: top;}
       th, td {padding: 2px;}
-      a:link {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif;}
+      a:link {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif; }
       a:hover {color: #FFFF00;}
       a:visited {color: #000000;}
       p {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif;}
@@ -26,25 +26,24 @@
     <textarea id="code" wrap="soft" style="font-family:monospace; font-size:26px;position:absolute; top:0px; left:500px; width:500px; height:495px" oninput="codechange(this);"></textarea>
     <div id="canvas" style="position:absolute; top:0px; left:0px; width:211px; height:635px"></div>
 
-    <a style="position:absolute; top:710px; left:200px" href='https://github.com/ChristerNilsson/p5Forth3D#p5forth3d' target='_blank' >Help</a>
-    <p id="p1" style="position:absolute; top:720px; left:200px">Cubes: 234</p>
-    <p id="p2" style="position:absolute; top:740px; left:200px">Words: 23</p>
-    <p id="p3" style="position:absolute; top:760px; left:200px">FPS: 23</p>
+    <table id="links" style="font-family:monospace; font-size:16px; position:absolute; top:700px; left:155px;" border="0px"></table>
+
+    <p id="p1" style="position:absolute; top:790px; left:160px">Cubes: 234</p>
+    <p id="p2" style="position:absolute; top:810px; left:160px">Words: 23</p>
+    <p id="p3" style="position:absolute; top:830px; left:160px">FPS: 23</p>
 
     <button disabled id="btn0" style="position: absolute; top:500px; left:  0px; width:40px">size</button>
     <button disabled id="btn1" style="position: absolute; top:500px; left: 40px; width:40px">n</button>
     <button disabled id="btn3" style="position: absolute; top:500px; left: 80px; width:40px">fps</button>
     <button disabled id="btn6" style="position: absolute; top:500px; left:160px; width:100px">fig</button>
     <button disabled id="btn7" style="position: absolute; top:560px; left:160px; width:100px">grid</button>
-    <button disabled id="btn8" style="position: absolute; top:500px; left:120px; width:40px">bg</button>
     <button disabled id="btn9" style="position: absolute; top:620px; left:160px; width:100px">rotate</button>
 
-    <select onclick="sel0click(this)" id='sel0' size="20" style="position: absolute; top:520px; left:0px; width:40px"></select>
+    <select onclick="sel0click(this)" id='sel0' size="11" style="position: absolute; top:520px; left:0px; width:40px"></select>
     <select onclick="sel1click(this)" id='sel1' size="26" style="position: absolute; top:520px; left:40px; width:40px"></select>
     <select onclick="sel3click(this)" id='sel3' size="26" style="position: absolute; top:520px; left: 80px; width:40px"></select>
     <select onclick="sel6click(this)" id='sel6' size="2"  style="position: absolute; top:520px; left:160px; width:100px"></select>
     <select onclick="sel7click(this)" id='sel7' size="2"  style="position: absolute; top:580px; left:160px; width:100px"></select>
-    <select onclick="sel8click(this)" id='sel8' size="11" style="position: absolute; top:520px; left:120px; width:40px"></select>
     <select onclick="sel9click(this)" id='sel9' size="2"  style="position: absolute; top:640px; left:160px; width:100px"></select>
 
     <button onclick="btn19click()" id="btn19" style="position: absolute; top:500px; left:300px; width:40px">save</button>
