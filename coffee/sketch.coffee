@@ -25,6 +25,8 @@ words = {}
 
 saveCanvasCount = 0
 
+debug = true
+
 fillSelect = (sel, arr) ->
 	sel.empty()
 	for key in arr
@@ -74,6 +76,19 @@ sel17click = (sel) ->
 sel18click = (sel) ->
 	setSetting 't', sel.value
 	trace()
+
+btn8click = ->
+	debug = not debug
+	if debug then $('#btn15').show() else $('#btn15').hide()
+	if debug then $('#btn16').show() else $('#btn16').hide()
+	if debug then $('#btn17').show() else $('#btn17').hide()
+	if debug then $('#btn18').show() else $('#btn18').hide()
+	if debug then $('#sel15').show() else $('#sel15').hide()
+	if debug then $('#sel16').show() else $('#sel16').hide()
+	if debug then $('#sel17').show() else $('#sel17').hide()
+	if debug then $('#sel18').show() else $('#sel18').hide()
+	if debug then $('#sel19').show() else $('#sel19').hide()
+	if debug then $('#tabell').show() else $('#tabell').hide()
 
 btn19click = -> saveCanvasCount++
 
@@ -236,6 +251,7 @@ setup = ->
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 	texture createGraphics 1,1
+	btn8click()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -335,6 +351,10 @@ draw = ->
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
 
+	i0 = parseInt sel15.value
+	j0 = parseInt sel16.value
+	k0 = parseInt sel17.value
+
 	t = frameCount
 	count = 0
 	size = sel0.value
@@ -350,14 +370,17 @@ draw = ->
 				if calc()
 					s = int size * SIZE
 					s = _.max [s,5]
-					t = int s/2
-					if sel6.value == 'sphere' then sphere t,t,t else box s,s,s
+					u = int s/2
+					if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
+					showSelected i0,j0,k0,i,j,k,u
 					count++
 				else
 					if sel7.value == 'yes'
-						s = int size * SIZE/10
-						s = _.max [s,2]
-						if sel6.value == 'sphere' then sphere s,s,s else box 2*s,2*s,2*s
+						s = int size * 2*SIZE/10
+						s = _.max [s,5]
+						u = int s/2
+						if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
+						showSelected i0,j0,k0,i,j,k,u
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
@@ -370,11 +393,25 @@ draw = ->
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
 	if saveCanvasCount > 0
-		tabell = $ "#tabell"
-		tabell.hide()
 		saveCanvas 'p5Forth3D', 'png'
-		tabell.show()
 		saveCanvasCount--
+
+showSelected = (i0,j0,k0,i,j,k,u) ->
+	if not debug then return
+	if i0 != i then return
+	if j0 != j then return
+	if k0 != k then return
+	#fill 0,255,0
+	specularMaterial 0,255,0
+	cylinder u/5,2.2*u
+	rotateX radians 90
+	#fill 0,0,255
+	specularMaterial 0,0,255
+	cylinder u/5,2.2*u
+	rotateZ radians 90
+	#fill 255,0,0
+	specularMaterial 255,0,0
+	cylinder u/5,2.2*u
 
 tableClear = -> $("#tabell tr").remove()
 
