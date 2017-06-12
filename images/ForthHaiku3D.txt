@@ -23,13 +23,55 @@ P: 19 i 4.5 - dup * j 4.5 - dup * k 4.5 - dup * + + 38 >
 R: 27 i 5 // j 5 // k 5 // xor xor dup i 5 % 10 bit and swap not j 5 % 10 bit and or
 Y: 66 129 bitij or 512 bitk and 516 bitij or 1 bitk and or 129 bitjk or 512 biti and 516 bitjk or 1 biti and or 129 bitik or 512 bitj and 516 bitik or 1 bitj and or or or 3 bitij and 3 bitik and or 3 bitjk and or 768 bitij and or 768 bitik and or 768 bitjk and or not and
 
+############################### n = 3
+2 bitijk = =
+############################### n = 4
+3 bitijk = =
+5 bitijk = =
+6 bitijk = =
+9 bitijk = =
+10 bitijk = =
+12 bitijk = =
 ############################### n = 5
+4 bitijk = =
+10 bitijk = =
+14 bitijk = =
+17 bitijk = =
+21 bitijk = =
+27 bitijk = =
+
 # Jerusalem Cross
 : dist abs swap abs + ;
 i 2 - j 2 - dist 1 <=
 j 2 - k 2 - dist 1 <=
 i 2 - k 2 - dist 1 <=
 or or not
+
+############################### n = 6
+7 bitijk = =
+12 bitijk = =
+18 bitijk = =
+21 bitijk = =
+30 bitijk = =
+
+############################### n = 7
+8 bitijk = =
+20 bitijk = =
+28 bitijk = =
+34 bitijk = =
+42 bitijk = =
+62 bitijk = =
+
+############################### n = 8
+15 bitijk = =
+24 bitijk = =
+36 bitijk = =
+51 bitijk = =
+60 bitijk = =
+66 bitijk = =
+85 bitijk = =
+102 bitijk = =
+126 bitijk = =
 
 ############################### n = 9
 Z: 14 menger sponge

@@ -370,18 +370,21 @@ draw = ->
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
 	if saveCanvasCount > 0
+		tabell = $ "#tabell"
+		tabell.hide()
 		saveCanvas 'p5Forth3D', 'png'
+		tabell.show()
 		saveCanvasCount--
 
 tableClear = -> $("#tabell tr").remove()
 
-tableAppend = (t, a, b, col='#C0C0C000') ->
+tableAppend = (t, a, b, col='#80808000') ->
 	row = t.insertRow -1
 	cell1 = row.insertCell -1
 	cell2 = row.insertCell -1
 	cell1.innerHTML = a
 	cell2.innerHTML = b
-	cell1.style.backgroundColor = col
+	cell1.style.backgroundColor = '#C0C0C000'
 	cell1.style.color = '#FFFFFF'
-	cell2.style.backgroundColor = '#80808000'
+	cell2.style.backgroundColor = col
 	cell2.style.textAlign = 'right'
