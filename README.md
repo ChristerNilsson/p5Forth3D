@@ -195,3 +195,7 @@ The right lower part can be used to debug your forth code
 * [p5js](https://p5js.org)
 * [Coffeescript](http://coffeescript.org)
 * [Forth Haiku Salon](http://forthsalon.appspot.com)
+
+## Interesting links
+
+* [Menger Sponge Fractal](https://youtu.be/LG8ZK-rRkXo)
