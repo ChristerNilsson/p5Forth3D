@@ -330,9 +330,28 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
+	drawFigure = (s) ->
+		s = _.max [int(s),5]
+		u = int s/2
+		if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
+		showSelected u
+	showSelected = (u) ->
+		if not debug then return
+		if i0 != i then return
+		if j0 != j then return
+		if k0 != k then return
+		specularMaterial 0,255,0
+		cylinder u/5,2.2*u
+		rotateX radians 90
+		specularMaterial 0,0,255
+		cylinder u/5,2.2*u
+		rotateZ radians 90
+		specularMaterial 255,0,0
+		cylinder u/5,2.2*u
+
 	if sel3.value == '0' then return
 	trace()
-	bg 0.5 #sel8.value
+	bg 0.5
 
 	if 0 < mouseX < width and 0 < mouseY < height
 		locX = 2 * mouseX / width - 1
@@ -368,19 +387,10 @@ draw = ->
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					s = int size * SIZE
-					s = _.max [s,5]
-					u = int s/2
-					if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
-					showSelected i0,j0,k0,i,j,k,u
+					drawFigure size * SIZE
 					count++
 				else
-					if sel7.value == 'yes'
-						s = int size * 2*SIZE/10
-						s = _.max [s,5]
-						u = int s/2
-						if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
-						showSelected i0,j0,k0,i,j,k,u
+					if sel7.value == 'yes' then drawFigure size * 2*SIZE/10
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
@@ -389,29 +399,11 @@ draw = ->
 	p2.innerHTML = 'Figures: ' + count
 	if millis() > timestamp
 		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}"
-		#p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}  #{frameCount}  #{vinkelX}  #{vinkelY}"
 		timestamp = millis() + 1000
 	#if frameCount < 100 then save "out-#{frameCount}.png"
 	if saveCanvasCount > 0
 		saveCanvas 'p5Forth3D', 'png'
 		saveCanvasCount--
-
-showSelected = (i0,j0,k0,i,j,k,u) ->
-	if not debug then return
-	if i0 != i then return
-	if j0 != j then return
-	if k0 != k then return
-	#fill 0,255,0
-	specularMaterial 0,255,0
-	cylinder u/5,2.2*u
-	rotateX radians 90
-	#fill 0,0,255
-	specularMaterial 0,0,255
-	cylinder u/5,2.2*u
-	rotateZ radians 90
-	#fill 255,0,0
-	specularMaterial 255,0,0
-	cylinder u/5,2.2*u
 
 tableClear = -> $("#tabell tr").remove()
 
