@@ -1,5 +1,3 @@
-N = 10
-SIZE = 400/N
 
 vinkelX = 90 # grader
 vinkelY = 0
@@ -15,17 +13,17 @@ cmd3 = {}
 stack = []
 rstack = [] # return stack
 
-i = 0
-j = 0
-k = 0
-t = 0
 timestamp = 0
 
 words = {}
 
 saveCanvasCount = 0
 
-debug = true
+settings = {}
+i=0
+j=0
+k=0
+t=0
 
 fillSelect = (sel, arr) ->
 	sel.empty()
@@ -33,62 +31,99 @@ fillSelect = (sel, arr) ->
 		sel.append($("<option>").attr('value', key).text(key))
 
 codechange = (textarea) ->
-	setSetting 'code', textarea.value
+	settings.code = textarea.value
+	saveSettings()
 	trace()
 
-setSetting = (name,value) -> localStorage["Forth3D/"+name] = value
-getSetting = (name,value) ->
+loadInt = (name,value) ->
 	v = localStorage["Forth3D/"+name]
-	if v? then v else value
+	settings[name] = if v? then int(v) else value
 
-sel0click = (sel) -> setSetting 'size', sel.value
+loadString = (name,value) ->
+	v = localStorage["Forth3D/"+name]
+	settings[name] = if v? then v else value
+
+loadSettings = -> # från localStorage till settings, fixar default
+	loadString 'code', '5 bitijk + + 3 ='
+	loadInt 'font', 32
+	loadInt 'n', 3
+	loadInt 'fps', 10
+	loadInt 'fig', 0 # sphere or box
+	loadInt 'grid', 1
+	loadInt 'rotate', 0
+	loadInt 'debug', 0
+	loadInt 'i', 0
+	loadInt 'j', 0
+	loadInt 'k', 0
+	loadInt 't', 0
+	loadInt 'SIZE', 400/settings.n
+	loadString 'scaling', '1.0'
+
+saveSettings = ->
+	for name,value of settings
+		localStorage["Forth3D/"+name] = value
+
+sel0click = (sel) ->
+	settings.scaling = sel.value
+	saveSettings()
+
 sel1click = (sel) ->
-	setSetting 'n', sel.value
-	N = int sel.value
-	SIZE = int 400/N
-	fillSelect $('#sel19'), (2 ** i for i in range N)
-	fillSelect $('#sel15'), range N # i
-	fillSelect $('#sel16'), range N # j
-	fillSelect $('#sel17'), range N # k
+	settings.n = int sel.value
+	settings.SIZE = int 400/settings.n
+	saveSettings()
+	fillSelect $('#sel19'), (2 ** i for i in range settings.n)
+	fillSelect $('#sel15'), range settings.n # i
+	fillSelect $('#sel16'), range settings.n # j
+	fillSelect $('#sel17'), range settings.n # k
 	$('#sel15').val '0'
 	$('#sel16').val '0'
 	$('#sel17').val '0'
 
 sel3click = (sel) ->
-	setSetting 'fps', sel.value
-	frameRate int sel.value
-sel6click = (sel) -> setSetting 'fig', sel.value
-sel7click = (sel) -> setSetting 'grid', sel.value
-sel9click = (sel) -> setSetting 'rotate', sel.value
+	settings.fps = int sel.value
+	saveSettings()
+	frameRate settings.fps
 
 sel14click = (sel) ->
-	setSetting 'font', sel.value
-	document.getElementById("code").style.fontSize = sel.value + 'px'
+	settings.font = sel.value
+	document.getElementById("code").style.fontSize = settings.font + 'px'
+	saveSettings()
 sel15click = (sel) ->
-	setSetting 'i', sel.value
+	settings.i = int sel.value
+	saveSettings()
 	trace()
 sel16click = (sel) ->
-	setSetting 'j', sel.value
+	settings.j = int sel.value
+	saveSettings()
 	trace()
 sel17click = (sel) ->
-	setSetting 'k', sel.value
+	settings.k = int sel.value
+	saveSettings()
 	trace()
 sel18click = (sel) ->
-	setSetting 't', sel.value
+	settings.t = int sel.value
+	saveSettings()
 	trace()
 
+btn6click = ->
+	settings.fig = 1 - settings.fig
+	saveSettings()
+btn7click = ->
+	settings.grid = 1 - settings.grid
+	saveSettings()
+btn9click = ->
+	settings.rotate = 1 - settings.rotate
+	saveSettings()
+
 btn8click = ->
-	debug = not debug
-	if debug then $('#btn15').show() else $('#btn15').hide()
-	if debug then $('#btn16').show() else $('#btn16').hide()
-	if debug then $('#btn17').show() else $('#btn17').hide()
-	if debug then $('#btn18').show() else $('#btn18').hide()
-	if debug then $('#sel15').show() else $('#sel15').hide()
-	if debug then $('#sel16').show() else $('#sel16').hide()
-	if debug then $('#sel17').show() else $('#sel17').hide()
-	if debug then $('#sel18').show() else $('#sel18').hide()
-	if debug then $('#sel19').show() else $('#sel19').hide()
-	if debug then $('#tabell').show() else $('#tabell').hide()
+	settings.debug = 1 - settings.debug
+	saveSettings()
+	displayDebug()
+
+displayDebug = ->
+	for id in '#btn15 #btn16 #btn17 #btn18 #sel15 #sel16 #sel17 #sel18 #sel19 #tabell'.split ' '
+		control = $ id
+		if settings.debug==1 then control.show() else control.hide()
 
 btn19click = -> saveCanvasCount++
 
@@ -146,7 +181,7 @@ buildCommands = ->
 	cmd2['swap'] = (a,b) => [a,b]
 	cmd2['<']    = (a,b) => [digit b < a]
 	cmd2['>']    = (a,b) => [digit b > a]
-	cmd2['=']   = (a,b) => [digit b == a]
+	cmd2['=']    = (a,b) => [digit b == a]
 	cmd2['<=']   = (a,b) => [digit b <= a]
 	cmd2['>=']   = (a,b) => [digit b >= a]
 	cmd2['<>']   = (a,b) => [digit b != a]
@@ -186,10 +221,6 @@ setup = ->
 	sel0 = $ '#sel0'
 	sel1 = $ '#sel1'
 	sel3 = $ '#sel3'
-	sel6 = $ '#sel6'
-	sel7 = $ '#sel7'
-	#sel8 = $ '#sel8'
-	sel9 = $ '#sel9'
 
 	sel14 = $ '#sel14'
 	sel15 = $ '#sel15'
@@ -205,53 +236,45 @@ setup = ->
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
-	N = getSetting "n",'10'
+	loadSettings()
+	print settings
 
-	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # size
+	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # scaling
 	fillSelect sel1, range 2, 28 # n
 	fillSelect sel3, range 26 # fps
-	fillSelect sel6, ['sphere','box'] # fig
-	fillSelect sel7, ['yes','no'] # grid
-	#fillSelect sel8, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # bg
-	fillSelect sel9, ['yes','no'] # rotate
 
 	fillSelect sel14, range 16,36,2 # font
-	fillSelect sel15, range N # i
-	fillSelect sel16, range N # j
-	fillSelect sel17, range N # k
+	fillSelect sel15, range settings.n # i
+	fillSelect sel16, range settings.n # j
+	fillSelect sel17, range settings.n # k
 	fillSelect sel18, range 10 # t
-	fillSelect sel19, (2 ** i for i in range N)
+	fillSelect sel19, (2 ** i for i in range settings.n)
 
-	sel0.val getSetting "size",'1.0'
-	sel1.val getSetting "n",'10'
-	sel3.val getSetting "fps",'10'
-	sel6.val getSetting "fig",'sphere'
-	sel7.val getSetting "grid",'yes'
-	#sel8.val getSetting "bg",'0.5'
-	sel9.val getSetting "rotate",'no'
+	sel0.val settings.scaling
+	sel1.val settings.n
+	sel3.val settings.fps
 
-	sel14.val getSetting "font",'26'
-	sel15.val getSetting "i",'0'
-	sel16.val getSetting "j",'0'
-	sel17.val getSetting "k",'0'
-	sel18.val getSetting "t",'0'
+	sel14.val settings.font
 
-	code.val getSetting 'code', '5 bitijk + + 3 ='
+	sel15.val settings.i
+	sel16.val settings.j
+	sel17.val settings.k
+	sel18.val settings.t
 
-	document.getElementById("code").style.fontSize = sel14.value + 'px'
+	code.val settings.code
+
+	document.getElementById("code").style.fontSize = settings.font + 'px'
 
 	linkAppend links, "https://github.com/ChristerNilsson/p5Forth3D#p5forth3d", "Help"
 	linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
 	linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
 	linkAppend links, "examples.html", "Examples"
 
-	N = getSetting 'n', 10
-	SIZE = int 400/N
-	frameRate int getSetting 'fps', 10
+	frameRate settings.fps
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 	texture createGraphics 1,1
-	btn8click()
+	displayDebug()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -333,10 +356,10 @@ draw = ->
 	drawFigure = (s) ->
 		s = _.max [int(s),5]
 		u = int s/2
-		if sel6.value == 'sphere' then sphere u,u,u else box s,s,s
+		if settings.fig == 0 then sphere u,u,u else box s,s,s
 		showSelected u
 	showSelected = (u) ->
-		if not debug then return
+		if settings.debug == 0 then return
 		if i0 != i then return
 		if j0 != j then return
 		if k0 != k then return
@@ -349,7 +372,7 @@ draw = ->
 		specularMaterial 255,0,0
 		cylinder u/5,2.2*u
 
-	if sel3.value == '0' then return
+	if settings.fps == 0 then return
 	trace()
 	bg 0.5
 
@@ -360,7 +383,7 @@ draw = ->
 		locX = -(1 - 2 * lastX / height)
 		locY = -(2 * lastY / width - 1)
 
-	if 'yes' == getSetting 'rotate','no'
+	if settings.rotate == 1
 		vinkelY += 1
 		vinkelX += 0.5
 
@@ -370,27 +393,30 @@ draw = ->
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
 
-	i0 = parseInt sel15.value
-	j0 = parseInt sel16.value
-	k0 = parseInt sel17.value
+	i0 = settings.i
+	j0 = settings.j
+	k0 = settings.k
 
 	t = frameCount
 	count = 0
-	size = sel0.value
-	for i in range N
-		for j in range N
-			for k in range N
+	scaling = parseFloat settings.scaling
+	for i in range settings.n
+		for j in range settings.n
+			for k in range settings.n
 				push()
-				translate SIZE*(0.5+i-N/2),SIZE*(0.5+j-N/2),SIZE*(0.5+k-N/2)
+				x = settings.SIZE * (0.5+i-settings.n/2)
+				y = settings.SIZE * (0.5+j-settings.n/2)
+				z = settings.SIZE * (0.5+k-settings.n/2)
+				translate x,y,z
 
-				f = 255/(N-1)
+				f = 255/(settings.n-1)
 				specularMaterial f*i, f*j, f*k
 
 				if calc()
-					drawFigure size * SIZE
+					drawFigure scaling * settings.SIZE
 					count++
 				else
-					if sel7.value == 'yes' then drawFigure size * 2*SIZE/10
+					if settings.grid == 1 then drawFigure scaling * 2*settings.SIZE/10
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
