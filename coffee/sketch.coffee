@@ -1,3 +1,17 @@
+class Settings
+	constructor : -> @get = {}
+
+	load : (name,value) ->
+		v = localStorage["Forth3D/"+name]
+		@get[name] = if v? then v else value
+
+	loadInt : (name,value) ->
+		v = int localStorage["Forth3D/"+name]
+		@get[name] = if v? then v else value
+
+	set : (name,value) ->
+		localStorage["Forth3D/"+name] = value
+		@get[name] = value
 
 vinkelX = 90 # grader
 vinkelY = 0
@@ -19,7 +33,7 @@ words = {}
 
 saveCanvasCount = 0
 
-settings = {}
+settings = new Settings
 i=0
 j=0
 k=0
@@ -31,99 +45,70 @@ fillSelect = (sel, arr) ->
 		sel.append($("<option>").attr('value', key).text(key))
 
 codechange = (textarea) ->
-	settings.code = textarea.value
-	saveSettings()
+	settings.set 'code', textarea.value
 	trace()
 
-loadInt = (name,value) ->
-	v = localStorage["Forth3D/"+name]
-	settings[name] = if v? then int(v) else value
-
-loadString = (name,value) ->
-	v = localStorage["Forth3D/"+name]
-	settings[name] = if v? then v else value
-
 loadSettings = -> # från localStorage till settings, fixar default
-	loadString 'code', '5 bitijk + + 3 ='
-	loadInt 'font', 32
-	loadInt 'n', 3
-	loadInt 'fps', 10
-	loadInt 'fig', 0 # sphere or box
-	loadInt 'grid', 1
-	loadInt 'rotate', 0
-	loadInt 'debug', 0
-	loadInt 'i', 0
-	loadInt 'j', 0
-	loadInt 'k', 0
-	loadInt 't', 0
-	loadInt 'SIZE', 400/settings.n
-	loadString 'scaling', '1.0'
-
-saveSettings = ->
-	for name,value of settings
-		localStorage["Forth3D/"+name] = value
+	settings.load 'code', '5 bitijk + + 3 ='
+	settings.loadInt 'font', 32
+	settings.loadInt 'n', 3
+	settings.loadInt 'fps', 10
+	settings.loadInt 'fig', 0 # sphere or box
+	settings.loadInt 'grid', 1
+	settings.loadInt 'rotate', 0
+	settings.loadInt 'debug', 0
+	settings.loadInt 'i', 0
+	settings.loadInt 'j', 0
+	settings.loadInt 'k', 0
+	settings.loadInt 't', 0
+	settings.loadInt 'SIZE', 400/settings.get.n
+	settings.load 'scaling', '1.0'
 
 sel0click = (sel) ->
-	settings.scaling = sel.value
-	saveSettings()
+	settings.set 'scaling', sel.value
 
 sel1click = (sel) ->
-	settings.n = int sel.value
-	settings.SIZE = int 400/settings.n
-	saveSettings()
-	fillSelect $('#sel19'), (2 ** i for i in range settings.n)
-	fillSelect $('#sel15'), range settings.n # i
-	fillSelect $('#sel16'), range settings.n # j
-	fillSelect $('#sel17'), range settings.n # k
+	settings.set 'n', int sel.value
+	settings.set 'SIZE', int 400/settings.get.n
+	fillSelect $('#sel19'), (2 ** i for i in range settings.get.n)
+	fillSelect $('#sel15'), range settings.get.n # i
+	fillSelect $('#sel16'), range settings.get.n # j
+	fillSelect $('#sel17'), range settings.get.n # k
 	$('#sel15').val '0'
 	$('#sel16').val '0'
 	$('#sel17').val '0'
 
 sel3click = (sel) ->
-	settings.fps = int sel.value
-	saveSettings()
-	frameRate settings.fps
+	settings.set 'fps', int sel.value
+	frameRate settings.get.fps
 
 sel14click = (sel) ->
-	settings.font = sel.value
-	document.getElementById("code").style.fontSize = settings.font + 'px'
-	saveSettings()
+	settings.set 'font', sel.value
+	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 sel15click = (sel) ->
-	settings.i = int sel.value
-	saveSettings()
+	settings.set 'i', int sel.value
 	trace()
 sel16click = (sel) ->
-	settings.j = int sel.value
-	saveSettings()
+	settings.set 'j', int sel.value
 	trace()
 sel17click = (sel) ->
-	settings.k = int sel.value
-	saveSettings()
+	settings.set 'k', int sel.value
 	trace()
 sel18click = (sel) ->
-	settings.t = int sel.value
-	saveSettings()
+	settings.set 't', int sel.value
 	trace()
 
-btn6click = ->
-	settings.fig = 1 - settings.fig
-	saveSettings()
-btn7click = ->
-	settings.grid = 1 - settings.grid
-	saveSettings()
-btn9click = ->
-	settings.rotate = 1 - settings.rotate
-	saveSettings()
-
+btn6click = -> settings.set 'fig', 1 - settings.get.fig
+btn7click = -> settings.set 'grid', 1 - settings.get.grid
+btn9click = -> settings.set 'rotate', 1 - settings.get.rotate
 btn8click = ->
-	settings.debug = 1 - settings.debug
-	saveSettings()
+	settings.set 'debug', 1 - settings.get.debug
 	displayDebug()
 
 displayDebug = ->
 	for id in '#btn15 #btn16 #btn17 #btn18 #sel15 #sel16 #sel17 #sel18 #sel19 #tabell'.split ' '
 		control = $ id
-		if settings.debug==1 then control.show() else control.hide()
+		if settings.get.debug ==1 then control.show() else control.hide()
 
 btn19click = -> saveCanvasCount++
 
@@ -237,40 +222,39 @@ setup = ->
 	p3 = $ '#p3'
 
 	loadSettings()
-	print settings
 
 	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # scaling
 	fillSelect sel1, range 2, 28 # n
 	fillSelect sel3, range 26 # fps
 
 	fillSelect sel14, range 16,36,2 # font
-	fillSelect sel15, range settings.n # i
-	fillSelect sel16, range settings.n # j
-	fillSelect sel17, range settings.n # k
+	fillSelect sel15, range settings.get.n # i
+	fillSelect sel16, range settings.get.n # j
+	fillSelect sel17, range settings.get.n # k
 	fillSelect sel18, range 10 # t
-	fillSelect sel19, (2 ** i for i in range settings.n)
+	fillSelect sel19, (2 ** i for i in range settings.get.n)
 
-	sel0.val settings.scaling
-	sel1.val settings.n
-	sel3.val settings.fps
+	sel0.val settings.get.scaling
+	sel1.val settings.get.n
+	sel3.val settings.get.fps
 
-	sel14.val settings.font
+	sel14.val settings.get.font
 
-	sel15.val settings.i
-	sel16.val settings.j
-	sel17.val settings.k
-	sel18.val settings.t
+	sel15.val settings.get.i
+	sel16.val settings.get.j
+	sel17.val settings.get.k
+	sel18.val settings.get.t
 
-	code.val settings.code
+	code.val settings.get.code
 
-	document.getElementById("code").style.fontSize = settings.font + 'px'
+	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
 	linkAppend links, "https://github.com/ChristerNilsson/p5Forth3D#p5forth3d", "Help"
 	linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
 	linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
 	linkAppend links, "examples.html", "Examples"
 
-	frameRate settings.fps
+	frameRate settings.get.fps
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 	texture createGraphics 1,1
@@ -356,23 +340,23 @@ draw = ->
 	drawFigure = (s) ->
 		s = _.max [int(s),5]
 		u = int s/2
-		if settings.fig == 0 then sphere u,u,u else box s,s,s
+		if settings.get.fig == 0 then sphere u,u,u else box s,s,s
 		showSelected u
 	showSelected = (u) ->
-		if settings.debug == 0 then return
+		if settings.get.debug == 0 then return
 		if i0 != i then return
 		if j0 != j then return
 		if k0 != k then return
-		specularMaterial 0,255,0
+		specularMaterial 0,255,0 #,128
 		cylinder u/5,2.2*u
 		rotateX radians 90
-		specularMaterial 0,0,255
+		specularMaterial 0,0,255 #,128
 		cylinder u/5,2.2*u
 		rotateZ radians 90
-		specularMaterial 255,0,0
+		specularMaterial 255,0,0 #,128
 		cylinder u/5,2.2*u
 
-	if settings.fps == 0 then return
+	if settings.get.fps == 0 then return
 	trace()
 	bg 0.5
 
@@ -383,7 +367,7 @@ draw = ->
 		locX = -(1 - 2 * lastX / height)
 		locY = -(2 * lastY / width - 1)
 
-	if settings.rotate == 1
+	if settings.get.rotate == 1
 		vinkelY += 1
 		vinkelX += 0.5
 
@@ -393,30 +377,30 @@ draw = ->
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
 
-	i0 = settings.i
-	j0 = settings.j
-	k0 = settings.k
+	i0 = settings.get.i
+	j0 = settings.get.j
+	k0 = settings.get.k
 
 	t = frameCount
 	count = 0
-	scaling = parseFloat settings.scaling
-	for i in range settings.n
-		for j in range settings.n
-			for k in range settings.n
+	scaling = parseFloat settings.get.scaling
+	for i in range settings.get.n
+		for j in range settings.get.n
+			for k in range settings.get.n
 				push()
-				x = settings.SIZE * (0.5+i-settings.n/2)
-				y = settings.SIZE * (0.5+j-settings.n/2)
-				z = settings.SIZE * (0.5+k-settings.n/2)
+				x = settings.get.SIZE * (0.5+i-settings.get.n/2)
+				y = settings.get.SIZE * (0.5+j-settings.get.n/2)
+				z = settings.get.SIZE * (0.5+k-settings.get.n/2)
 				translate x,y,z
 
-				f = 255/(settings.n-1)
-				specularMaterial f*i, f*j, f*k
+				f = 255/(settings.get.n-1)
+				specularMaterial f*i, f*j, f*k #,alpha
 
 				if calc()
-					drawFigure scaling * settings.SIZE
+					drawFigure scaling * settings.get.SIZE
 					count++
 				else
-					if settings.grid == 1 then drawFigure scaling * 2*settings.SIZE/10
+					if settings.get.grid == 1 then drawFigure scaling * 2*settings.get.SIZE/10
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
