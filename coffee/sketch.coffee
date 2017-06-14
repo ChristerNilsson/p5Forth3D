@@ -68,6 +68,7 @@ sel0click = (sel) ->
 	settings.set 'scaling', sel.value
 
 sel1click = (sel) ->
+	print 'sel1click'
 	settings.set 'n', int sel.value
 	settings.set 'SIZE', int 400/settings.get.n
 	fillSelect $('#sel19'), (2 ** i for i in range settings.get.n)
@@ -77,6 +78,9 @@ sel1click = (sel) ->
 	$('#sel15').val '0'
 	$('#sel16').val '0'
 	$('#sel17').val '0'
+	sel15click sel15
+	sel16click sel16
+	sel17click sel17
 
 sel3click = (sel) ->
 	settings.set 'fps', int sel.value
@@ -86,6 +90,7 @@ sel14click = (sel) ->
 	settings.set 'font', sel.value
 	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 sel15click = (sel) ->
+	print 'sel15click',sel.value
 	settings.set 'i', int sel.value
 	trace()
 sel16click = (sel) ->
@@ -337,11 +342,11 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
-	drawFigure = (s) ->
+	drawFigure = (s) =>
 		s = _.max [int(s),5]
 		u = int s/2
 		if settings.get.fig == 0 then sphere u,u,u else box s,s,s
-	showAxes = ->
+	showAxes = =>
 		if settings.get.debug == 0 then return
 		if i0 != i then return
 		if j0 != j then return
