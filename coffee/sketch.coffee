@@ -341,8 +341,7 @@ draw = ->
 		s = _.max [int(s),5]
 		u = int s/2
 		if settings.get.fig == 0 then sphere u,u,u else box s,s,s
-		showSelected u
-	showSelected = (u) ->
+	showAxes = ->
 		if settings.get.debug == 0 then return
 		if i0 != i then return
 		if j0 != j then return
@@ -415,7 +414,9 @@ draw = ->
 					drawFigure scaling * settings.get.SIZE
 					count++
 				else
-					if settings.get.grid == 1 then drawFigure scaling * 2*settings.get.SIZE/10
+					if settings.get.grid == 1
+						drawFigure scaling * 2*settings.get.SIZE/10
+				showAxes()
 				pop()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
