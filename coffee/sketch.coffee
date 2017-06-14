@@ -347,14 +347,29 @@ draw = ->
 		if i0 != i then return
 		if j0 != j then return
 		if k0 != k then return
-		specularMaterial 0,255,0 #,128
-		cylinder u/5,2.2*u
+
+		size = settings.get.SIZE
+		len = (settings.get.n-1) * size
+
+		push() # y
+		translate 0,size * (settings.get.n/2 - 1/2 - j),0
+		specularMaterial 0,255,0
+		cylinder size/50,len
+		pop()
+
+		push() # z
+		translate 0,0,size * (settings.get.n/2 - 1/2 - k)
 		rotateX radians 90
-		specularMaterial 0,0,255 #,128
-		cylinder u/5,2.2*u
+		specularMaterial 0,0,255
+		cylinder size/50,len
+		pop()
+
+		push() # x
+		translate size * (settings.get.n/2 - 1/2 - i),0,0
 		rotateZ radians 90
-		specularMaterial 255,0,0 #,128
-		cylinder u/5,2.2*u
+		specularMaterial 255,0,0
+		cylinder size/50,len
+		pop()
 
 	if settings.get.fps == 0 then return
 	trace()
