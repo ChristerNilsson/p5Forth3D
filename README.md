@@ -158,19 +158,20 @@ Remove a word:
 ## Words in [Forth Salon](http://forthsalon.appspot.com/word-list)
 
 ## Exercises
-Set n=10.
+Set n=3
 
 ```coffeescript
-513 bitijk and and
+5 bitijk + + 3 =
 ```
-Bit 0 and 9 are visible for all three dimensions.
-Please note, the binary number 1000000001 is 512 + 1 = 513 in decimal.
+Bit 0 and 2 are visible for all three dimensions.
+Please note, the binary number 101 is 4 + 1 = 5 in decimal.
 The eight corners shows clean colors. The origin is black.
+Try changing the digit 3 to 0,1 or 2. Compare with Rubik's cube.
 
 ## Coordinates
 
 * The black corner is the origin = 0,0,0
-* The white corner is 9,9,9 or n-1,n-1,n-1
+* The white corner is 2,2,2 or n-1,n-1,n-1
 * i is the red axis
 * j is the green axis
 * k is the blue axis
@@ -196,6 +197,16 @@ The upper middle part (i,j,k,command,stack) can be used to debug your forth code
     18     19      20      21      22      23       24       25       26
 262144 524288 1048576 2097152 4194304 8388608 16777216 33554432 67108864
 ```
+
+## Forth Example
+Make a simple resistance calculator.
+Define s for serial resistances.
+Define p for parallel resistances.
+```forth
+2 2 s 4 =
+2 2 p 1 =
+```
+
 ## Thanks!
 
 * [p5js](https://p5js.org)
