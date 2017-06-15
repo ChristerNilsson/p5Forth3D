@@ -94,7 +94,7 @@ rot   Fetches the third element of the stack
 
 ```
 
-## This words are only defined in p5Forth3D:
+## These words are only defined in p5Forth3D:
 
 ```coffeescript
 i   coordinate 0 .. n-1
@@ -158,15 +158,14 @@ Remove a word:
 ## Words in [Forth Salon](http://forthsalon.appspot.com/word-list)
 
 ## Exercises
+Set n=10.
 
 ```coffeescript
 513 bitijk and and
 ```
 Bit 0 and 9 are visible for all three dimensions.
-Please note, the binary number 1000000001 is 513 in decimal.
+Please note, the binary number 1000000001 is 512 + 1 = 513 in decimal.
 The eight corners shows clean colors. The origin is black.
-
-[Examples](https://christernilsson.github.io/p5Forth3D/examples.html)
 
 ## Coordinates
 
@@ -184,12 +183,19 @@ The eight corners shows clean colors. The origin is black.
 
 ## Debugging
 
-The right lower part can be used to debug your forth code
+The upper middle part (i,j,k,command,stack) can be used to debug your forth code
 
 * Select i,j,k and t and inspect the calculation, word by word.
 * The words works on the right end of the stack.
 * The last line should contain exactly one value. If this is a 1, a sphere or box is drawn for this pixel.
 
+## Powers of two
+```coffeescript
+0 1 2 3  4  5  6   7   8   9   10   11   12   13    14    15    16     17
+1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384 32768 65536 131072
+    18     19      20      21      22      23       24       25       26
+262144 524288 1048576 2097152 4194304 8388608 16777216 33554432 67108864
+```
 ## Thanks!
 
 * [p5js](https://p5js.org)
