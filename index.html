@@ -11,26 +11,30 @@
 
     <script src="js/sketch.js"></script>
     <style>
-      select {overflow-y: auto; font-family:monospace; text-align:right }
-      body {padding: 0; margin: 0;}
-      canvas {vertical-align: top;}
-      th, td {padding: 2px;}
-      a:link {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif; }
-      a:hover {color: #FFFF00;}
-      a:visited {color: #000000;}
+      select {overflow-y: auto; font-family:monospace; text-align:right; }
+      body {padding:0; margin:0;}
+      canvas {vertical-align:top;}
+      th, td {padding:2px;}
+      a:link {color:#000000; text-decoration:none; font-family:Arial, Helvetica, sans-serif; }
+      a:hover {color:#FFFF00;}
+      a:visited {color:#000000;}
       p {color: #000000; text-decoration: none; font-family: Arial, Helvetica, sans-serif;}
     </style>
 
   </head>
   <body bgcolor="#909090">
-    <textarea id="code" wrap="soft" style="font-family:monospace; font-size:26px;position:absolute; top:0px; left:0px; width:500px; height:300px" oninput="codechange(this);"></textarea>
+    <textarea id="code" wrap="soft" style="font-family:monospace; font-size:26px;position:absolute; top:100px; left:0px; width:500px; height:600px" oninput="codechange(this);"></textarea>
     <div id="canvas" style="position:absolute; top:0px; left:480px; width:100px; height:100px"></div>
 
-    <table id="links" style="font-family:monospace; font-size:16px; position:absolute; top:360px; left:165px;" border="0px"></table>
+    <table id="links" style="font-family:monospace; font-size:16px; position:absolute; top:710px; left:0px;" border="0px"></table>
 
-    <p id="p1" style="position:absolute; top:390px; left:380px">Cubes: 234</p>
-    <p id="p2" style="position:absolute; top:410px; left:380px">Words: 23</p>
-    <p id="p3" style="position:absolute; top:430px; left:380px">FPS: 23</p>
+    <a style="position:absolute; top:10px; left:250px" href='https://github.com/ChristerNilsson/p5Forth3D#p5forth3d' target="_blank"
+    onmouseover="this.style.color='yellow'";
+    onmouseout="this.style.color='black'";>Help</a>
+
+    <p id="p1" style="position:absolute; top:15px; left:250px">Cubes: 234</p>
+    <p id="p2" style="position:absolute; top:35px; left:250px">Words: 23</p>
+    <p id="p3" style="position:absolute; top:55px; left:250px">FPS: 23</p>
 
     <table id="tabell" style="font-family:monospace; font-size:20px; position:absolute; top:0px; left:480px;" border="0px"></table>
    </body>

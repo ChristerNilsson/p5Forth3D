@@ -86,19 +86,19 @@ codechange = (textarea) ->
 	trace()
 
 loadSettings = -> # från localStorage till settings, fixar default
-	settings.load 'code', '5 bitijk + + 3 ='
 	settings.loadInt 'font', 32
 	settings.loadInt 'n', 3
 	settings.loadInt 'fps', 10
-	settings.load 'fig', 'sphere' # sphere or box
-	settings.load 'grid', 'yes'
-	settings.load 'rotate', 'yes'
-	settings.loadInt 'debug', 0
 	settings.loadInt 'i', 0
 	settings.loadInt 'j', 0
 	settings.loadInt 'k', 0
 	settings.loadInt 't', 0
 	settings.loadInt 'SIZE', 400/settings.get.n
+	settings.load 'code', '5 bitijk + + 3 ='
+	settings.load 'fig', 'sphere' # sphere or box
+	settings.load 'grid', 'yes'
+	settings.load 'rotate', 'yes'
+	settings.load 'debug', 'no'
 	settings.load 'scaling', '1.0'
 
 trace = ->
@@ -200,7 +200,6 @@ setup = ->
 
 	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
-	linkAppend links, "https://github.com/ChristerNilsson/p5Forth3D#p5forth3d", "Help"
 	linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
 	linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
 	linkAppend links, "examples.html", "Examples"
@@ -210,72 +209,81 @@ setup = ->
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 	texture createGraphics 1,1
 
-	new Button 0,305,50,20,'font',range(16,40,2), settings.get.font, () ->
+###########################
+
+	new Button 0,0,50,20,'font',range(16,40,2), settings.get.font, () ->
 		settings.set 'font', @value()
 		document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
-	new Button 0,325,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
+	new Button 0,20,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
 
-	new Button 0,345,50,20,'n',range(2,28), settings.get.n, () ->
+	new Button 0,40,50,20,'n',range(2,28), settings.get.n, () ->
 		settings.set 'n', int @value()
 		btni.setLst range settings.get.n
 		btnj.setLst range settings.get.n
 		btnk.setLst range settings.get.n
 		settings.set 'SIZE', int 400/settings.get.n
 
-	new Button 0,365,50,20,'fps',range(26), settings.get.fps, () ->
+	new Button 0,60,50,20,'fps',range(26), settings.get.fps, () ->
 		settings.set 'fps', int @value()
 		frameRate settings.get.fps
 
-	btni = new Button 380,305,50,20,'i',range(settings.get.n), settings.get.i, () ->
-		settings.set 'i', int @value()
-		trace()
+###########################
 
-	btnj = new Button 380,325,50,20,'j',range(settings.get.n), settings.get.j, () ->
-		settings.set 'j', int @value()
-		trace()
-
-	btnk = new Button 380,345,50,20,'k',range(settings.get.n), settings.get.k, () ->
-		settings.set 'k', int @value()
-		trace()
-
-	btni.button2.style 'color','red'
-	btnj.button2.style 'color','green'
-	btnk.button2.style 'color','blue'
-
-	btnt = new Button 380,365,50,20,'t',range(10), settings.get.t, () ->
-		settings.set 't', int @value()
-		trace()
-
-	new Button 0,400,50,20,'fig', 'sphere box'.split(' '), settings.get.fig, () ->
+	new Button 120,0,50,20,'figure', 'sphere box'.split(' '), settings.get.fig, () ->
 		settings.set 'fig', @value()
 		trace()
 
-	new Button 0,420,50,20,'grid', 'yes no'.split(' '), settings.get.grid, () ->
-		settings.set 'grid', @value()
-		trace()
-
-	new Button 0,440,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
+	new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
 		settings.set 'rotate', @value()
 		trace()
 
-	new NormalButton 0,460,50,20,'save', () ->
+	new Button 120,40,50,20,'grid', 'yes no'.split(' '), settings.get.grid, () ->
+		settings.set 'grid', @value()
+		trace()
+
+	new Button 120,60,50,20,'debug', 'yes no'.split(' '), settings.get.debug, () ->
+		settings.set 'debug', @value()
+		displayDebug()
+
+	new NormalButton 120,80,100,20,'snapshot', () ->
 		saveCanvasCount++
 
-	new NormalButton 0,480,50,20,'debug', () ->
-		settings.set 'debug', 1 - settings.get.debug
-		displayDebug()
+###########################
+
+	btni = new Button 380,0,50,20,'i',range(settings.get.n), settings.get.i, () ->
+		settings.set 'i', int @value()
+		trace()
+
+	btnj = new Button 380,20,50,20,'j',range(settings.get.n), settings.get.j, () ->
+		settings.set 'j', int @value()
+		trace()
+
+	btnk = new Button 380,40,50,20,'k',range(settings.get.n), settings.get.k, () ->
+		settings.set 'k', int @value()
+		trace()
+
+	btnt = new Button 380,60,50,20,'t',range(10), settings.get.t, () ->
+		settings.set 't', int @value()
+		trace()
+
+	btni.button1.style 'color','white'
+	btnj.button1.style 'color','white'
+	btnk.button1.style 'color','white'
+	btni.button1.style 'background-color','red'
+	btnj.button1.style 'background-color','green'
+	btnk.button1.style 'background-color','blue'
 
 	displayDebug()
 
 displayDebug = =>
-	if settings.get.debug == 1 then btni.show() else btni.hide()
-	if settings.get.debug == 1 then btnj.show() else btnj.hide()
-	if settings.get.debug == 1 then btnk.show() else btnk.hide()
-	if settings.get.debug == 1 then btnt.show() else btnt.hide()
+	if settings.get.debug == 'yes' then btni.show() else btni.hide()
+	if settings.get.debug == 'yes' then btnj.show() else btnj.hide()
+	if settings.get.debug == 'yes' then btnk.show() else btnk.hide()
+	if settings.get.debug == 'yes' then btnt.show() else btnt.hide()
 	for id in '#tabell'.split ' '
 		control = $ id
-		if settings.get.debug == 1 then control.show() else control.hide()
+		if settings.get.debug == 'yes' then control.show() else control.hide()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -359,7 +367,7 @@ draw = ->
 		u = int s/2
 		if settings.get.fig == 'sphere' then sphere u,u,u else box s,s,s
 	showAxes = =>
-		if settings.get.debug == 0 then return
+		if settings.get.debug == 'no' then return
 		if i0 != i then return
 		if j0 != j then return
 		if k0 != k then return
