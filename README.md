@@ -24,7 +24,7 @@ not chs inv abs sqrt ~ dup sign push
 biti bitj bitk bitij bitik bitjk bitijk
 
 # Two operands
-swap
+swap 2dup
 + - * ** / // % %% gcd
 < > <= >= <> =
 & | ^ >> << bit
@@ -200,8 +200,8 @@ The upper middle part (i,j,k,command,stack) can be used to debug your forth code
 
 ## Forth Example
 Make a simple resistance calculator.
-* Define s for serial resistances. r = a+b
-* Define p for parallel resistances. r = a*b/(a+b)
+* Define s for serial resistances. r = a + b
+* Define p for parallel resistances. 1/r = 1/a + 1/b
 ```forth
 2 2 s 4 =
 2 2 p 1 =

@@ -177,6 +177,7 @@ buildCommands = ->
 	cmd2['and']  = (a,b) => [digit b!=0 and a!=0]
 	cmd2['or']   = (a,b) =>	[digit b!=0 or a!=0]
 	cmd2['xor']  = (a,b) => [digit b+a == 1]
+	cmd2['2dup'] = (a,b) => [b,a,b,a]
 
 	cmd3['rot']  = (c,b,a) => [b,c,a]
 	cmd3['-rot'] = (c,b,a) => [c,a,b]
@@ -281,9 +282,8 @@ displayDebug = =>
 	if settings.get.debug == 'yes' then btnj.show() else btnj.hide()
 	if settings.get.debug == 'yes' then btnk.show() else btnk.hide()
 	if settings.get.debug == 'yes' then btnt.show() else btnt.hide()
-	for id in '#tabell'.split ' '
-		control = $ id
-		if settings.get.debug == 'yes' then control.show() else control.hide()
+	control = $ '#tabell'
+	if settings.get.debug == 'yes' then control.show() else control.hide()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -368,30 +368,36 @@ draw = ->
 		if settings.get.fig == 'sphere' then sphere u,u,u else box s,s,s
 	showAxes = =>
 		if settings.get.debug == 'no' then return
-		if i0 != i then return
-		if j0 != j then return
-		if k0 != k then return
+
+		i0 = settings.get.i
+		j0 = settings.get.j
+		k0 = settings.get.k
 
 		size = settings.get.SIZE
-		len = (settings.get.n-1) * size
+		len = size * (settings.get.n-1)
+
+		x = size * (0.5+i0-settings.get.n/2)
+		y = size * (0.5+j0-settings.get.n/2)
+		z = size * (0.5+k0-settings.get.n/2)
+		translate x,y,z
+
+		push() # x
+		translate -x,0,0
+		rotateZ radians 90
+		specularMaterial 255,0,0
+		cylinder size/50,len
+		pop()
 
 		push() # y
-		translate 0,size * (settings.get.n/2 - 1/2 - j),0
+		translate 0,-y,0
 		specularMaterial 0,255,0
 		cylinder size/50,len
 		pop()
 
 		push() # z
-		translate 0,0,size * (settings.get.n/2 - 1/2 - k)
+		translate 0,0,-z
 		rotateX radians 90
 		specularMaterial 0,0,255
-		cylinder size/50,len
-		pop()
-
-		push() # x
-		translate size * (settings.get.n/2 - 1/2 - i),0,0
-		rotateZ radians 90
-		specularMaterial 255,0,0
 		cylinder size/50,len
 		pop()
 
@@ -416,10 +422,6 @@ draw = ->
 	ambientLight 128, 128,128
 	pointLight 255, 255, 255, locX,locY,0.25
 
-	i0 = settings.get.i
-	j0 = settings.get.j
-	k0 = settings.get.k
-
 	t = frameCount
 	count = 0
 	scaling = parseFloat settings.get.scaling
@@ -441,8 +443,8 @@ draw = ->
 				else
 					if settings.get.grid == 'yes'
 						drawFigure scaling * 2*settings.get.SIZE/10
-				showAxes()
 				pop()
+	showAxes()
 
 	arr = code.value.replace(/\n/g,' ').split ' '
 	arr = (item for item in arr when item.length > 0)
@@ -465,6 +467,6 @@ tableAppend = (t, a, b, col='#80808000') ->
 	cell1.innerHTML = a
 	cell2.innerHTML = b
 	cell1.style.backgroundColor = '#C0C0C000'
-	cell1.style.color = '#FFFFFF'
+	cell2.style.color = '#FFFFFF'
 	cell2.style.backgroundColor = col
 	cell2.style.textAlign = 'right'
