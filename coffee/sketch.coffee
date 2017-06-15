@@ -30,16 +30,16 @@ class Button
 			@index = (@index+1) %% @lst.length
 			@button2.html @value()
 			@action()
-	value : () -> @lst[@index]
+	value : -> @lst[@index]
 	setLst : (lst) ->
 		@lst = lst
 		if @index >= @lst.length
 			@index = @lst.length - 1
 			@button2.html @value()
-	hide : () ->
+	hide : ->
 		@button1.hide()
 		@button2.hide()
-	show : () ->
+	show : ->
 		@button1.show()
 		@button2.show()
 
@@ -49,7 +49,6 @@ class NormalButton
 		@button.position x,y
 		@button.size w,h
 		@button.mousePressed () => @action()
-
 
 vinkelX = 90 # grader
 vinkelY = 0
@@ -81,11 +80,6 @@ btni = null
 btnj = null
 btnk = null
 btnt = null
-
-fillSelect = (sel, arr) ->
-	sel.empty()
-	for key in arr
-		sel.append($("<option>").attr('value', key).text(key))
 
 codechange = (textarea) ->
 	settings.set 'code', textarea.value
@@ -244,6 +238,10 @@ setup = ->
 	btnk = new Button 380,345,50,20,'k',range(settings.get.n), settings.get.k, () ->
 		settings.set 'k', int @value()
 		trace()
+
+	btni.button2.style 'color','red'
+	btnj.button2.style 'color','green'
+	btnk.button2.style 'color','blue'
 
 	btnt = new Button 380,365,50,20,'t',range(10), settings.get.t, () ->
 		settings.set 't', int @value()
