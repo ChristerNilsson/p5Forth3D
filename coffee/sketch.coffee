@@ -13,6 +13,44 @@ class Settings
 		localStorage["Forth3D/"+name] = value
 		@get[name] = value
 
+class Button
+	constructor : (x,y,w,h,txt,@lst,val,@action) ->
+		@index = @lst.indexOf val
+		@button1 = createButton txt
+		@button1.position x,y
+		@button1.size w,h
+		@button2 = createButton @value()
+		@button2.position x+w,y
+		@button2.size w,h
+		@button1.mousePressed () =>
+			@index = (@index-1) %% @lst.length
+			@button2.html @value()
+			@action()
+		@button2.mousePressed () =>
+			@index = (@index+1) %% @lst.length
+			@button2.html @value()
+			@action()
+	value : () -> @lst[@index]
+	setLst : (lst) ->
+		@lst = lst
+		if @index >= @lst.length
+			@index = @lst.length - 1
+			@button2.html @value()
+	hide : () ->
+		@button1.hide()
+		@button2.hide()
+	show : () ->
+		@button1.show()
+		@button2.show()
+
+class NormalButton
+	constructor : (x,y,w,h,txt,@action) ->
+		@button = createButton txt
+		@button.position x,y
+		@button.size w,h
+		@button.mousePressed () => @action()
+
+
 vinkelX = 90 # grader
 vinkelY = 0
 
@@ -39,6 +77,11 @@ j=0
 k=0
 t=0
 
+btni = null
+btnj = null
+btnk = null
+btnt = null
+
 fillSelect = (sel, arr) ->
 	sel.empty()
 	for key in arr
@@ -53,9 +96,9 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'font', 32
 	settings.loadInt 'n', 3
 	settings.loadInt 'fps', 10
-	settings.loadInt 'fig', 0 # sphere or box
-	settings.loadInt 'grid', 1
-	settings.loadInt 'rotate', 0
+	settings.load 'fig', 'sphere' # sphere or box
+	settings.load 'grid', 'yes'
+	settings.load 'rotate', 'yes'
 	settings.loadInt 'debug', 0
 	settings.loadInt 'i', 0
 	settings.loadInt 'j', 0
@@ -64,66 +107,13 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'SIZE', 400/settings.get.n
 	settings.load 'scaling', '1.0'
 
-sel0click = (sel) ->
-	settings.set 'scaling', sel.value
-
-sel1click = (sel) ->
-	print 'sel1click'
-	settings.set 'n', int sel.value
-	settings.set 'SIZE', int 400/settings.get.n
-	fillSelect $('#sel19'), (2 ** i for i in range settings.get.n)
-	fillSelect $('#sel15'), range settings.get.n # i
-	fillSelect $('#sel16'), range settings.get.n # j
-	fillSelect $('#sel17'), range settings.get.n # k
-	$('#sel15').val '0'
-	$('#sel16').val '0'
-	$('#sel17').val '0'
-	sel15click sel15
-	sel16click sel16
-	sel17click sel17
-
-sel3click = (sel) ->
-	settings.set 'fps', int sel.value
-	frameRate settings.get.fps
-
-sel14click = (sel) ->
-	settings.set 'font', sel.value
-	document.getElementById("code").style.fontSize = settings.get.font + 'px'
-sel15click = (sel) ->
-	print 'sel15click',sel.value
-	settings.set 'i', int sel.value
-	trace()
-sel16click = (sel) ->
-	settings.set 'j', int sel.value
-	trace()
-sel17click = (sel) ->
-	settings.set 'k', int sel.value
-	trace()
-sel18click = (sel) ->
-	settings.set 't', int sel.value
-	trace()
-
-btn6click = -> settings.set 'fig', 1 - settings.get.fig
-btn7click = -> settings.set 'grid', 1 - settings.get.grid
-btn9click = -> settings.set 'rotate', 1 - settings.get.rotate
-btn8click = ->
-	settings.set 'debug', 1 - settings.get.debug
-	displayDebug()
-
-displayDebug = ->
-	for id in '#btn15 #btn16 #btn17 #btn18 #sel15 #sel16 #sel17 #sel18 #sel19 #tabell'.split ' '
-		control = $ id
-		if settings.get.debug ==1 then control.show() else control.hide()
-
-btn19click = -> saveCanvasCount++
-
 trace = ->
 	tableClear()
 	tableAppend tabell, 'command', 'stack'
-	i = parseInt sel15.value
-	j = parseInt sel16.value
-	k = parseInt sel17.value
-	t = parseInt sel18.value
+	i = btni.value()
+	j = btnj.value()
+	k = btnk.value()
+	# t = parseInt sel18.value
 	calc true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
@@ -201,54 +191,16 @@ standard = (name,value) -> if localStorage[name]? then localStorage[name] else v
 
 setup = ->
 	c = createCanvas 800,800,WEBGL
-
 	c.parent 'canvas'
-
 	buildCommands()
-
 	code = $ '#code'
-
-	sel0 = $ '#sel0'
-	sel1 = $ '#sel1'
-	sel3 = $ '#sel3'
-
-	sel14 = $ '#sel14'
-	sel15 = $ '#sel15'
-	sel16 = $ '#sel16'
-	sel17 = $ '#sel17'
-	sel18 = $ '#sel18'
-	sel19 = $ '#sel19'
-
 	tabell = $ '#tabell'
-	#links = $ '#links' # Sätts tydligen automatiskt utifrån id
 
 	p1 = $ '#p1'
 	p2 = $ '#p2'
 	p3 = $ '#p3'
 
 	loadSettings()
-
-	fillSelect sel0, '0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split ' ' # scaling
-	fillSelect sel1, range 2, 28 # n
-	fillSelect sel3, range 26 # fps
-
-	fillSelect sel14, range 16,36,2 # font
-	fillSelect sel15, range settings.get.n # i
-	fillSelect sel16, range settings.get.n # j
-	fillSelect sel17, range settings.get.n # k
-	fillSelect sel18, range 10 # t
-	fillSelect sel19, (2 ** i for i in range settings.get.n)
-
-	sel0.val settings.get.scaling
-	sel1.val settings.get.n
-	sel3.val settings.get.fps
-
-	sel14.val settings.get.font
-
-	sel15.val settings.get.i
-	sel16.val settings.get.j
-	sel17.val settings.get.k
-	sel18.val settings.get.t
 
 	code.val settings.get.code
 
@@ -263,7 +215,69 @@ setup = ->
 
 	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 	texture createGraphics 1,1
+
+	new Button 0,305,50,20,'font',range(16,40,2), settings.get.font, () ->
+		settings.set 'font', @value()
+		document.getElementById("code").style.fontSize = settings.get.font + 'px'
+
+	new Button 0,325,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
+
+	new Button 0,345,50,20,'n',range(2,28), settings.get.n, () ->
+		settings.set 'n', int @value()
+		btni.setLst range settings.get.n
+		btnj.setLst range settings.get.n
+		btnk.setLst range settings.get.n
+		settings.set 'SIZE', int 400/settings.get.n
+
+	new Button 0,365,50,20,'fps',range(26), settings.get.fps, () ->
+		settings.set 'fps', int @value()
+		frameRate settings.get.fps
+
+	btni = new Button 380,305,50,20,'i',range(settings.get.n), settings.get.i, () ->
+		settings.set 'i', int @value()
+		trace()
+
+	btnj = new Button 380,325,50,20,'j',range(settings.get.n), settings.get.j, () ->
+		settings.set 'j', int @value()
+		trace()
+
+	btnk = new Button 380,345,50,20,'k',range(settings.get.n), settings.get.k, () ->
+		settings.set 'k', int @value()
+		trace()
+
+	btnt = new Button 380,365,50,20,'t',range(10), settings.get.t, () ->
+		settings.set 't', int @value()
+		trace()
+
+	new Button 0,400,50,20,'fig', 'sphere box'.split(' '), settings.get.fig, () ->
+		settings.set 'fig', @value()
+		trace()
+
+	new Button 0,420,50,20,'grid', 'yes no'.split(' '), settings.get.grid, () ->
+		settings.set 'grid', @value()
+		trace()
+
+	new Button 0,440,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
+		settings.set 'rotate', @value()
+		trace()
+
+	new NormalButton 0,460,50,20,'save', () ->
+		saveCanvasCount++
+
+	new NormalButton 0,480,50,20,'debug', () ->
+		settings.set 'debug', 1 - settings.get.debug
+		displayDebug()
+
 	displayDebug()
+
+displayDebug = =>
+	if settings.get.debug == 1 then btni.show() else btni.hide()
+	if settings.get.debug == 1 then btnj.show() else btnj.hide()
+	if settings.get.debug == 1 then btnk.show() else btnk.hide()
+	if settings.get.debug == 1 then btnt.show() else btnt.hide()
+	for id in '#tabell'.split ' '
+		control = $ id
+		if settings.get.debug == 1 then control.show() else control.hide()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -345,7 +359,7 @@ draw = ->
 	drawFigure = (s) =>
 		s = _.max [int(s),5]
 		u = int s/2
-		if settings.get.fig == 0 then sphere u,u,u else box s,s,s
+		if settings.get.fig == 'sphere' then sphere u,u,u else box s,s,s
 	showAxes = =>
 		if settings.get.debug == 0 then return
 		if i0 != i then return
@@ -386,7 +400,7 @@ draw = ->
 		locX = -(1 - 2 * lastX / height)
 		locY = -(2 * lastY / width - 1)
 
-	if settings.get.rotate == 1
+	if settings.get.rotate == 'yes'
 		vinkelY += 1
 		vinkelX += 0.5
 
@@ -419,7 +433,7 @@ draw = ->
 					drawFigure scaling * settings.get.SIZE
 					count++
 				else
-					if settings.get.grid == 1
+					if settings.get.grid == 'yes'
 						drawFigure scaling * 2*settings.get.SIZE/10
 				showAxes()
 				pop()
