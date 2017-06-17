@@ -71,7 +71,7 @@ settings = new Settings
 i=0
 j=0
 k=0
-t=0
+# t=0
 
 btni = null
 btnj = null
@@ -89,8 +89,8 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'i', 0
 	settings.loadInt 'j', 0
 	settings.loadInt 'k', 0
-	settings.loadInt 't', 0
-	settings.loadInt 'SIZE', 400/settings.get.n
+	# settings.loadInt 't', 0
+	settings.loadInt 'SIZE', 200/settings.get.n
 	settings.loadInt 'level', 0
 	settings.load 'dims', '1D'
 	settings.load 'code', '5 bitijk + + 3 ='
@@ -106,7 +106,7 @@ trace = ->
 	i = btni.value()
 	j = btnj.value()
 	k = btnk.value()
-	t = btnt.value()
+	# t = btnt.value()
 	calc true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
@@ -127,7 +127,7 @@ buildCommands = ->
 	cmd0['i']          = => [i]
 	cmd0['j']          = => [j]
 	cmd0['k']          = => [k]
-	cmd0['t']          = => [t]
+	# cmd0['t']          = => [t]
 	cmd0['pop']        = => [rstack.pop()]
 
 	cmd1['push']   = (x) =>
@@ -184,8 +184,9 @@ buildCommands = ->
 standard = (name,value) -> if localStorage[name]? then localStorage[name] else value
 
 setup = ->
-	c = createCanvas 800,800,WEBGL
+	c = createCanvas 400,800,WEBGL
 	c.parent 'canvas'
+
 	buildCommands()
 	code = $ '#code'
 	tabell = $ '#tabell'
@@ -213,15 +214,14 @@ setup = ->
 
 	new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
 		settings.set 'dims', @value()
-		btnj.visible settings.get.dims in ['2D','3D']
-		btnk.visible settings.get.dims == '3D'
+		displayDebug()
 
 	new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
 		settings.set 'n', int @value()
 		btni.setLst range settings.get.n
 		btnj.setLst range settings.get.n
 		btnk.setLst range settings.get.n
-		settings.set 'SIZE', int 400/settings.get.n
+		settings.set 'SIZE', int 200/settings.get.n
 
 	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
 
@@ -256,24 +256,24 @@ setup = ->
 
 ###########################
 
-	btni = new Button 380,0,50,20,'i',range(settings.get.n), settings.get.i, () ->
+	btni = new Button 120,120,50,20,'i',range(settings.get.n), settings.get.i, () ->
 		settings.set 'i', int @value()
 		trace()
 
-	btnj = new Button 380,20,50,20,'j',range(settings.get.n), settings.get.j, () ->
+	btnj = new Button 120,140,50,20,'j',range(settings.get.n), settings.get.j, () ->
 		settings.set 'j', int @value()
 		trace()
 
-	btnk = new Button 380,40,50,20,'k',range(settings.get.n), settings.get.k, () ->
+	btnk = new Button 120,160,50,20,'k',range(settings.get.n), settings.get.k, () ->
 		settings.set 'k', int @value()
 		trace()
 
-	btnt = new Button 380,60,50,20,'t',range(10), settings.get.t, () ->
-		settings.set 't', int @value()
-		trace()
+	# btnt = new Button 120,180,50,20,'t',range(10), settings.get.t, () ->
+	# 	settings.set 't', int @value()
+	# 	trace()
 
-	level = new Button 380,80,50,20,'level',range(100), settings.get.level, () ->
-		settings.set 't', int @value()
+	level = new Button 120,200,50,20,'level',range(100), settings.get.level, () ->
+		settings.set 'level', @value()
 		trace()
 
 	btni.button1.style 'color','white'
@@ -289,7 +289,7 @@ displayDebug = =>
 	btni.visible settings.get.debug == 'yes'
 	btnj.visible settings.get.debug == 'yes' and settings.get.dims >= '2D'
 	btnk.visible settings.get.debug == 'yes' and settings.get.dims >= '3D'
-	btnt.visible settings.get.debug == 'yes'
+	#btnt.visible settings.get.debug == 'yes'
 	control = $ '#tabell'
 	if settings.get.debug == 'yes' then control.show() else control.hide()
 
@@ -370,6 +370,27 @@ calc = (traceFlag = false) ->
 		if traceFlag then showError e
 
 draw = ->
+	bg 0.5
+
+	if 0 < mouseX < width and 0 < mouseY < height
+		locX = 2 * mouseX / width - 1
+		locY = 1 - 2 * mouseY / height
+	else
+		locX = -(1 - 2 * lastX / height)
+		locY = -(2 * lastY / width - 1)
+
+	ambientLight 128, 128,128
+	pointLight 255, 255, 255, locX,locY,0.25
+
+	push()
+	drawOne -200,16
+	pop()
+	push()
+	drawOne 200,-16
+	pop()
+
+drawOne = (yOffset,vOffset) ->
+
 	drawFigure = (s) =>
 		s = _.max [int(s),5]
 		u = int s/2
@@ -442,26 +463,17 @@ draw = ->
 
 	if settings.get.fps == 0 then return
 	trace()
-	bg 0.5
-
-	if 0 < mouseX < width and 0 < mouseY < height
-		locX = 2 * mouseX / width - 1
-		locY = 1 - 2 * mouseY / height
-	else
-		locX = -(1 - 2 * lastX / height)
-		locY = -(2 * lastY / width - 1)
 
 	if settings.get.rotate == 'yes'
 		vinkelY += 1
 		vinkelX += 0.5
 
-	rotateX radians vinkelY
+	translate 0,yOffset,0
+
+	rotateX radians vinkelY+vOffset
 	rotateY radians vinkelX
 
-	ambientLight 128, 128,128
-	pointLight 255, 255, 255, locX,locY,0.25
-
-	t = frameCount
+	# t = frameCount
 	count = 0
 	scaling = parseFloat settings.get.scaling
 	size = settings.get.SIZE
@@ -473,7 +485,7 @@ draw = ->
 			for k in kvalues
 				push()
 				x = size * (0.5+i-n/2)
-				y = size * (0.5+(n-1-j)-n/2)
+				y = size * (0.5+(n-1-j)-n/2)# -200
 				z = size * (0.5+k-n/2)
 				translate z,y,x
 
