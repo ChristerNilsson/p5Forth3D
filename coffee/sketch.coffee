@@ -36,12 +36,9 @@ class Button
 		if @index >= @lst.length
 			@index = @lst.length - 1
 			@button2.html @value()
-	hide : ->
-		@button1.hide()
-		@button2.hide()
-	show : ->
-		@button1.show()
-		@button2.show()
+	visible : (b) ->
+		if b then @button1.show() else @button1.hide()
+		if b then @button2.show() else @button2.hide()
 
 class NormalButton
 	constructor : (x,y,w,h,txt,@action) ->
@@ -94,6 +91,8 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'k', 0
 	settings.loadInt 't', 0
 	settings.loadInt 'SIZE', 400/settings.get.n
+	settings.loadInt 'level', 0
+	settings.load 'dims', '1D'
 	settings.load 'code', '5 bitijk + + 3 ='
 	settings.load 'fig', 'sphere' # sphere or box
 	settings.load 'grid', 'yes'
@@ -107,7 +106,7 @@ trace = ->
 	i = btni.value()
 	j = btnj.value()
 	k = btnk.value()
-	# t = parseInt sel18.value
+	t = btnt.value()
 	calc true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
@@ -115,13 +114,13 @@ linkAppend = (t, link, text) -> # exakt en kolumn
 	dd = (s) -> '"' + s + '"'
 	row = t.insertRow -1
 	cell1 = row.insertCell -1
-	s = '<a href=' + d(link)
+	s = '<x href=' + d(link)
 	s += ' target=' + d('_blank')
 	s += ' onmouseover=' + d('this.style.color=' + dd('yellow') + ';')
 	s += ' onmouseout='  + d('this.style.color=' + dd('black') + ';')
 	s += '>'
 	s += text
-	s += '</a>'
+	s += '</x>'
 	cell1.innerHTML = s
 
 buildCommands = ->
@@ -131,56 +130,56 @@ buildCommands = ->
 	cmd0['t']          = => [t]
 	cmd0['pop']        = => [rstack.pop()]
 
-	cmd1['push']   = (a) =>
-		rstack.push a
+	cmd1['push']   = (x) =>
+		rstack.push x
 		[]
-	cmd1['drop']   = (a) => []
-	cmd1['dup']    = (a) => [a,a]
-	cmd1['not']    = (a) => [digit a == 0]
-	cmd1['inv']    = (a) => [1 / a]
-	cmd1['chs']    = (a) => [-a]
-	cmd1['sign']   = (a) => [Math.sign a]
-	cmd1['abs']    = (a) => [abs a]
-	cmd1['sqrt']   = (a) => [sqrt a]
-	cmd1['rot']    = (a) => [a]
-	cmd1['~']      = (a) => [~a]
-	cmd1['biti']   = (a) => [a >> i & 1]
-	cmd1['bitj']   = (a) => [a >> j & 1]
-	cmd1['bitk']   = (a) => [a >> k & 1]
-	cmd1['bitij']  = (a) => [a >> i & 1, a >> j & 1]
-	cmd1['bitik']  = (a) => [a >> i & 1, a >> k & 1]
-	cmd1['bitjk']  = (a) => [a >> j & 1, a >> k & 1]
-	cmd1['bitijk'] = (a) => [a >> i & 1, a >> j & 1, a >> k & 1]
+	cmd1['drop']   = (x) => []
+	cmd1['dup']    = (x) => [x,x]
+	cmd1['not']    = (x) => [digit x == 0]
+	cmd1['inv']    = (x) => [1 / x]
+	cmd1['chs']    = (x) => [-x]
+	cmd1['sign']   = (x) => [Math.sign x]
+	cmd1['abs']    = (x) => [abs x]
+	cmd1['sqrt']   = (x) => [sqrt x]
+	cmd1['rot']    = (x) => [x]
+	cmd1['~']      = (x) => [~x]
+	cmd1['biti']   = (x) => [x >> i & 1]
+	cmd1['bitj']   = (x) => [x >> j & 1]
+	cmd1['bitk']   = (x) => [x >> k & 1]
+	cmd1['bitij']  = (x) => [x >> i & 1, x >> j & 1]
+	cmd1['bitik']  = (x) => [x >> i & 1, x >> k & 1]
+	cmd1['bitjk']  = (x) => [x >> j & 1, x >> k & 1]
+	cmd1['bitijk'] = (x) => [x >> i & 1, x >> j & 1, x >> k & 1]
 
-	cmd2['swap'] = (a,b) => [a,b]
-	cmd2['<']    = (a,b) => [digit b < a]
-	cmd2['>']    = (a,b) => [digit b > a]
-	cmd2['=']    = (a,b) => [digit b == a]
-	cmd2['<=']   = (a,b) => [digit b <= a]
-	cmd2['>=']   = (a,b) => [digit b >= a]
-	cmd2['<>']   = (a,b) => [digit b != a]
-	cmd2['+']    = (a,b) => [b + a]
-	cmd2['-']    = (a,b) => [b - a]
-	cmd2['*']    = (a,b) => [b * a]
-	cmd2['**']   = (a,b) => [b ** a]
-	cmd2['/']    = (a,b) => [b / a]
-	cmd2['//']   = (a,b) => [b // a]
-	cmd2['%']    = (a,b) => [b % a]
-	cmd2['%%']   = (a,b) => [b %% a]
-	cmd2['gcd']  = (a,b) => [gcd a,b]
-	cmd2['bit']  = (a,b) => [a >> b & 1]
-	cmd2['&']    = (a,b) => [b & a]
-	cmd2['|']    = (a,b) => [b | a]
-	cmd2['^']    = (a,b) => [b ^ a]
-	cmd2['>>']   = (a,b) =>	[b >> a]
-	cmd2['<<']   = (a,b) => [b << a]
-	cmd2['and']  = (a,b) => [digit b!=0 and a!=0]
-	cmd2['or']   = (a,b) =>	[digit b!=0 or a!=0]
-	cmd2['xor']  = (a,b) => [digit b+a == 1]
-	cmd2['2dup'] = (a,b) => [b,a,b,a]
+	cmd2['swap'] = (x,y) => [x,y]
+	cmd2['<']    = (x,y) => [digit y < x]
+	cmd2['>']    = (x,y) => [digit y > x]
+	cmd2['=']    = (x,y) => [digit y == x]
+	cmd2['<=']   = (x,y) => [digit y <= x]
+	cmd2['>=']   = (x,y) => [digit y >= x]
+	cmd2['<>']   = (x,y) => [digit y != x]
+	cmd2['+']    = (x,y) => [y + x]
+	cmd2['-']    = (x,y) => [y - x]
+	cmd2['*']    = (x,y) => [y * x]
+	cmd2['**']   = (x,y) => [y ** x]
+	cmd2['/']    = (x,y) => [y / x]
+	cmd2['//']   = (x,y) => [y // x]
+	cmd2['%']    = (x,y) => [y % x]
+	cmd2['%%']   = (x,y) => [y %% x]
+	cmd2['gcd']  = (x,y) => [gcd y,x]
+	cmd2['bit']  = (x,y) => [x >> y & 1]
+	cmd2['&']    = (x,y) => [y & x]
+	cmd2['|']    = (x,y) => [y | x]
+	cmd2['^']    = (x,y) => [y ^ x]
+	cmd2['>>']   = (x,y) =>	[y >> x]
+	cmd2['<<']   = (x,y) => [y << x]
+	cmd2['and']  = (x,y) => [digit y!=0 and x!=0]
+	cmd2['or']   = (x,y) =>	[digit y!=0 or x!=0]
+	cmd2['xor']  = (x,y) => [digit y+x == 1]
+	cmd2['2dup'] = (x,y) => [y,x,y,x]
 
-	cmd3['rot']  = (c,b,a) => [b,c,a]
-	cmd3['-rot'] = (c,b,a) => [c,a,b]
+	cmd3['rot']  = (x,y,z) => [y,x,z]
+	cmd3['-rot'] = (x,y,z) => [x,z,y]
 
 standard = (name,value) -> if localStorage[name]? then localStorage[name] else value
 
@@ -212,22 +211,27 @@ setup = ->
 
 ###########################
 
-	new Button 0,0,50,20,'font',range(16,40,2), settings.get.font, () ->
-		settings.set 'font', @value()
-		document.getElementById("code").style.fontSize = settings.get.font + 'px'
+	new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
+		settings.set 'dims', @value()
+		btnj.visible settings.get.dims in ['2D','3D']
+		btnk.visible settings.get.dims == '3D'
 
-	new Button 0,20,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
-
-	new Button 0,40,50,20,'n',range(2,28), settings.get.n, () ->
+	new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
 		settings.set 'n', int @value()
 		btni.setLst range settings.get.n
 		btnj.setLst range settings.get.n
 		btnk.setLst range settings.get.n
 		settings.set 'SIZE', int 400/settings.get.n
 
+	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
+
 	new Button 0,60,50,20,'fps',range(26), settings.get.fps, () ->
 		settings.set 'fps', int @value()
 		frameRate settings.get.fps
+
+	new Button 0,80,50,20,'font',range(16,40,2), settings.get.font, () ->
+		settings.set 'font', @value()
+		document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
 ###########################
 
@@ -268,6 +272,10 @@ setup = ->
 		settings.set 't', int @value()
 		trace()
 
+	level = new Button 380,80,50,20,'level',range(100), settings.get.level, () ->
+		settings.set 't', int @value()
+		trace()
+
 	btni.button1.style 'color','white'
 	btnj.button1.style 'color','white'
 	btnk.button1.style 'color','white'
@@ -278,10 +286,10 @@ setup = ->
 	displayDebug()
 
 displayDebug = =>
-	if settings.get.debug == 'yes' then btni.show() else btni.hide()
-	if settings.get.debug == 'yes' then btnj.show() else btnj.hide()
-	if settings.get.debug == 'yes' then btnk.show() else btnk.hide()
-	if settings.get.debug == 'yes' then btnt.show() else btnt.hide()
+	btni.visible settings.get.debug == 'yes'
+	btnj.visible settings.get.debug == 'yes' and settings.get.dims >= '2D'
+	btnk.visible settings.get.debug == 'yes' and settings.get.dims >= '3D'
+	btnt.visible settings.get.debug == 'yes'
 	control = $ '#tabell'
 	if settings.get.debug == 'yes' then control.show() else control.hide()
 
@@ -369,36 +377,67 @@ draw = ->
 	showAxes = =>
 		if settings.get.debug == 'no' then return
 
-		i0 = settings.get.i
-		j0 = settings.get.j
-		k0 = settings.get.k
+		i0 = 0
+		j0 = 0
+		k0 = 0
 
 		size = settings.get.SIZE
-		len = size * (settings.get.n-1)
+		n = settings.get.n
+		len = size * (n-1)
 
-		x = size * (0.5+i0-settings.get.n/2)
-		y = size * (0.5+j0-settings.get.n/2)
-		z = size * (0.5+k0-settings.get.n/2)
-		translate x,y,z
+		x = size * (0.5+i0-n/2)
+		y = size * (0.5+(n-1-j0)-n/2)
+		z = size * (0.5+k0-n/2)
+		push()
+		translate z,y,x
 
 		push() # x
-		translate -x,0,0
-		rotateZ radians 90
+		translate 0,0,-x
+		rotateX radians 90
 		specularMaterial 255,0,0
 		cylinder size/50,len
 		pop()
 
+		if settings.get.dims >= '2D'
+			push() # y
+			translate 0,-y,0
+			specularMaterial 0,255,0
+			cylinder size/50,len
+			pop()
+
+		if settings.get.dims == '3D'
+			push() # z
+			translate -z,0,0
+			rotateZ radians 90
+			specularMaterial 0,0,255
+			cylinder size/50,len
+			pop()
+
+		pop()
+
+	drawCurrent = (radius,len) =>
+		if settings.get.debug == 'no' then return
+
+		i0 = settings.get.i
+		j0 = settings.get.j
+		k0 = settings.get.k
+		if (i0==i and j0==j and k0==k) == false then return
+
+		push() # x
+		rotateX radians 90
+		specularMaterial 255,0,0
+		cylinder radius,len
+		pop()
+
 		push() # y
-		translate 0,-y,0
 		specularMaterial 0,255,0
-		cylinder size/50,len
+		cylinder radius,len
 		pop()
 
 		push() # z
-		translate 0,0,-z
-		rotateX radians 90
+		rotateZ radians 90
 		specularMaterial 0,0,255
-		cylinder size/50,len
+		cylinder radius,len
 		pop()
 
 	if settings.get.fps == 0 then return
@@ -425,24 +464,30 @@ draw = ->
 	t = frameCount
 	count = 0
 	scaling = parseFloat settings.get.scaling
-	for i in range settings.get.n
-		for j in range settings.get.n
-			for k in range settings.get.n
+	size = settings.get.SIZE
+	n = settings.get.n
+	jvalues = if settings.get.dims == '1D' then range 1 else range n
+	kvalues = if settings.get.dims <= '2D' then range 1 else range n
+	for i in range n
+		for j in jvalues
+			for k in kvalues
 				push()
-				x = settings.get.SIZE * (0.5+i-settings.get.n/2)
-				y = settings.get.SIZE * (0.5+j-settings.get.n/2)
-				z = settings.get.SIZE * (0.5+k-settings.get.n/2)
-				translate x,y,z
+				x = size * (0.5+i-n/2)
+				y = size * (0.5+(n-1-j)-n/2)
+				z = size * (0.5+k-n/2)
+				translate z,y,x
 
-				f = 255/(settings.get.n-1)
+				f = 255/(n-1)
 				specularMaterial f*i, f*j, f*k #,alpha
 
 				if calc()
-					drawFigure scaling * settings.get.SIZE
+					drawFigure scaling * size
+					drawCurrent scaling * 2*size/10,scaling * size
 					count++
 				else
 					if settings.get.grid == 'yes'
-						drawFigure scaling * 2*settings.get.SIZE/10
+						drawFigure scaling * size/5
+						drawCurrent scaling * 2*size/50, scaling * size/5
 				pop()
 	showAxes()
 
@@ -460,11 +505,11 @@ draw = ->
 
 tableClear = -> $("#tabell tr").remove()
 
-tableAppend = (t, a, b, col='#80808000') ->
+tableAppend = (t, x, b, col='#80808000') ->
 	row = t.insertRow -1
 	cell1 = row.insertCell -1
 	cell2 = row.insertCell -1
-	cell1.innerHTML = a
+	cell1.innerHTML = x
 	cell2.innerHTML = b
 	cell1.style.backgroundColor = '#C0C0C000'
 	cell2.style.color = '#FFFFFF'
