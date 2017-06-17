@@ -16,7 +16,6 @@
 ```coffeescript
 # No operand
 i j k
-t
 drop pop
 
 # One operand
@@ -100,7 +99,6 @@ rot   Fetches the third element of the stack
 i   coordinate 0 .. n-1
 j   coordinate 0 .. n-1
 k   coordinate 0 .. n-1
-t   frameCount 0..
 //  integer division
 %%  negative number modulo
 bit
@@ -163,10 +161,12 @@ Set n=3
 ```coffeescript
 5 bitijk + + 3 =
 ```
-Bit 0 and 2 are visible for all three dimensions.
-Please note, the binary number 101 is 4 + 1 = 5 in decimal.
-The eight corners shows clean colors. The origin is black.
-Try changing the digit 3 to 0,1 or 2. Compare with Rubik's cube.
+* Bit 0 and 2 are visible for all three dimensions.
+* Please note, the binary number 101 is 4 + 1 = 5 in decimal.
+* The eight corners shows clean colors.
+* The origin is black.
+* Try changing the digit 3 to 0,1 or 2.
+* Compare with Rubik's cube.
 
 ## Coordinates
 

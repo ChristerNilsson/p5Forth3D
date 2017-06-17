@@ -31,6 +31,9 @@ class Button
 			@button2.html @value()
 			@action()
 	value : -> @lst[@index]
+	set : (value) ->
+		@index = @lst.indexOf value
+		@button2.html @value()
 	setLst : (lst) ->
 		@lst = lst
 		if @index >= @lst.length
@@ -67,16 +70,21 @@ words = {}
 
 saveCanvasCount = 0
 
+current = ''
+
 settings = new Settings
 i=0
 j=0
 k=0
-# t=0
 
 btni = null
 btnj = null
 btnk = null
 btnt = null
+btnDims = null
+btnn = null
+btnRotate = null
+btnLevel = null
 
 codechange = (textarea) ->
 	settings.set 'code', textarea.value
@@ -89,9 +97,8 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'i', 0
 	settings.loadInt 'j', 0
 	settings.loadInt 'k', 0
-	# settings.loadInt 't', 0
 	settings.loadInt 'SIZE', 200/settings.get.n
-	settings.loadInt 'level', 0
+	settings.load 'level', 'A01'
 	settings.load 'dims', '1D'
 	settings.load 'code', '5 bitijk + + 3 ='
 	settings.load 'fig', 'sphere' # sphere or box
@@ -106,8 +113,7 @@ trace = ->
 	i = btni.value()
 	j = btnj.value()
 	k = btnk.value()
-	# t = btnt.value()
-	calc true
+	calc code.value, true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
 	d = (s) -> "'" + s + "'"
@@ -127,7 +133,6 @@ buildCommands = ->
 	cmd0['i']          = => [i]
 	cmd0['j']          = => [j]
 	cmd0['k']          = => [k]
-	# cmd0['t']          = => [t]
 	cmd0['pop']        = => [rstack.pop()]
 
 	cmd1['push']   = (x) =>
@@ -191,8 +196,6 @@ setup = ->
 	code = $ '#code'
 	tabell = $ '#tabell'
 
-	p1 = $ '#p1'
-	p2 = $ '#p2'
 	p3 = $ '#p3'
 
 	loadSettings()
@@ -201,9 +204,9 @@ setup = ->
 
 	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
-	linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
-	linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
-	linkAppend links, "examples.html", "Examples"
+	# linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
+	# linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
+	# linkAppend links, "examples.html", "Examples"
 
 	frameRate settings.get.fps
 
@@ -212,11 +215,11 @@ setup = ->
 
 ###########################
 
-	new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
+	btnDims = new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
 		settings.set 'dims', @value()
 		displayDebug()
 
-	new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
+	btnn = new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
 		settings.set 'n', int @value()
 		btni.setLst range settings.get.n
 		btnj.setLst range settings.get.n
@@ -239,7 +242,7 @@ setup = ->
 		settings.set 'fig', @value()
 		trace()
 
-	new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
+	btnRotate = new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
 		settings.set 'rotate', @value()
 		trace()
 
@@ -268,13 +271,11 @@ setup = ->
 		settings.set 'k', int @value()
 		trace()
 
-	# btnt = new Button 120,180,50,20,'t',range(10), settings.get.t, () ->
-	# 	settings.set 't', int @value()
-	# 	trace()
-
-	level = new Button 120,200,50,20,'level',range(100), settings.get.level, () ->
+	btnLevel = new Button 120,200,50,20,'level', _.keys(data), settings.get.level, () ->
 		settings.set 'level', @value()
-		trace()
+		setLevel()
+
+###########################
 
 	btni.button1.style 'color','white'
 	btnj.button1.style 'color','white'
@@ -283,13 +284,27 @@ setup = ->
 	btnj.button1.style 'background-color','green'
 	btnk.button1.style 'background-color','blue'
 
+	setLevel()
 	displayDebug()
+
+setLevel =  ->
+	current = data[settings.get.level]
+	settings.set 'dims',current[2-1]
+	settings.set 'n',current[3-1]
+	settings.set 'rotate', 'no'
+	btnDims.set current[2-1]
+	btnn.set current[3-1]
+	btnRotate.set current.rotate # ????
+	if settings.get.dims == '1D'
+		vinkelX = 90
+		vinkelY = 0
+	displayDebug()
+	trace()
 
 displayDebug = =>
 	btni.visible settings.get.debug == 'yes'
 	btnj.visible settings.get.debug == 'yes' and settings.get.dims >= '2D'
 	btnk.visible settings.get.debug == 'yes' and settings.get.dims >= '3D'
-	#btnt.visible settings.get.debug == 'yes'
 	control = $ '#tabell'
 	if settings.get.debug == 'yes' then control.show() else control.hide()
 
@@ -299,11 +314,11 @@ showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 gcd = (x, y) -> if y == 0 then x else gcd y, x % y
 
 mousePressed = ->
-	if 0 < mouseX < width and 0 < mouseY < height
+	if 0 < mouseX < width and 0 < mouseY < height and settings.get.dims == '3D'
 		lastX=mouseX
 		lastY=mouseY
 mouseDragged = ->
-	if 0 < mouseX < width and 0 < mouseY < height
+	if 0 < mouseX < width and 0 < mouseY < height and settings.get.dims == '3D'
 		dx = mouseX-lastX
 		dy = mouseY-lastY
 		vinkelX += dx/4
@@ -341,11 +356,11 @@ evaluate = (traceFlag, line, level='') ->
 			else
 				throw [level+cmd,'Unknown Word']
 
-calc = (traceFlag = false) ->
+calc = (sourcecode, traceFlag = false) ->
 	words = {}
 	stack = []
 	rstack = []
-	arr = code.value.replace(/\n/g,' ').split ' '
+	arr = sourcecode.replace(/\n/g,' ').split ' '
 	state = 'normal'
 	defWords = []
 	stateStack = []
@@ -365,31 +380,30 @@ calc = (traceFlag = false) ->
 					stateStack.pop()
 			else
 				evaluate traceFlag, cmd
-		stack.length==1 and 0 != _.last stack
+		stack.length==1 and 1 == _.last stack
 	catch e
 		if traceFlag then showError e
 
 draw = ->
 	bg 0.5
 
-	if 0 < mouseX < width and 0 < mouseY < height
-		locX = 2 * mouseX / width - 1
-		locY = 1 - 2 * mouseY / height
-	else
-		locX = -(1 - 2 * lastX / height)
-		locY = -(2 * lastY / width - 1)
-
 	ambientLight 128, 128,128
-	pointLight 255, 255, 255, locX,locY,0.25
+	pointLight 255, 255, 255, 0.5,0.5,0.25
 
 	push()
-	drawOne -200,16
-	pop()
-	push()
-	drawOne 200,-16
+	drawOne current[4-1], -200,16,words1,cubes1
 	pop()
 
-drawOne = (yOffset,vOffset) ->
+	push()
+	drawOne code.value, 200,-16,words2,cubes2
+	pop()
+
+	#if frameCount < 100 then save "out-#{frameCount}.png"
+	if saveCanvasCount > 0
+		saveCanvas 'p5Forth3D', 'png'
+		saveCanvasCount--
+
+drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
 
 	drawFigure = (s) =>
 		s = _.max [int(s),5]
@@ -473,7 +487,6 @@ drawOne = (yOffset,vOffset) ->
 	rotateX radians vinkelY+vOffset
 	rotateY radians vinkelX
 
-	# t = frameCount
 	count = 0
 	scaling = parseFloat settings.get.scaling
 	size = settings.get.SIZE
@@ -485,14 +498,14 @@ drawOne = (yOffset,vOffset) ->
 			for k in kvalues
 				push()
 				x = size * (0.5+i-n/2)
-				y = size * (0.5+(n-1-j)-n/2)# -200
+				y = size * (0.5+(n-1-j)-n/2)
 				z = size * (0.5+k-n/2)
 				translate z,y,x
 
 				f = 255/(n-1)
 				specularMaterial f*i, f*j, f*k #,alpha
 
-				if calc()
+				if calc sourcecode
 					drawFigure scaling * size
 					drawCurrent scaling * 2*size/10,scaling * size
 					count++
@@ -503,17 +516,15 @@ drawOne = (yOffset,vOffset) ->
 				pop()
 	showAxes()
 
-	arr = code.value.replace(/\n/g,' ').split ' '
+	arr = sourcecode.replace(/\n/g,' ').split ' '
 	arr = (item for item in arr when item.length > 0)
-	p1.innerHTML = 'Words: ' + arr.length
-	p2.innerHTML = 'Figures: ' + count
+
+	words.innerHTML = arr.length
+	cubes.innerHTML = count
+
 	if millis() > timestamp
 		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}"
 		timestamp = millis() + 1000
-	#if frameCount < 100 then save "out-#{frameCount}.png"
-	if saveCanvasCount > 0
-		saveCanvas 'p5Forth3D', 'png'
-		saveCanvasCount--
 
 tableClear = -> $("#tabell tr").remove()
 
