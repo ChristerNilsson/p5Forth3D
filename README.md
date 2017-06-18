@@ -13,6 +13,12 @@
 * Please note, logical values (false,true) are (0,1).
 * You can make arithmetical calculations with them.
 
+## Scoring
+
+* Every solved exercise renders ten points
+* Using less words adds ten points per word
+* Using more words subtracts one point per word
+
 ## The following words are available
 
 ```coffeescript

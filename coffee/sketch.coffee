@@ -359,6 +359,9 @@ setLevel =  ->
 	exercise = new Exercise settings.get.level
 
 	btnDims.set current[1]
+	if settings.get.dims in ['1D','2D']
+		btnRotate.set 'no'
+		settings.set 'rotate', 'no'
 	btnRotate.disabled settings.get.dims in ['1D','2D']
 	btnn.set current[2]
 	if settings.get.dims in ['1D','2D']
