@@ -175,7 +175,7 @@ trace = ->
 	i = btni.value()
 	j = btnj.value()
 	k = btnk.value()
-	calc code.value, true
+	#calc code.value, true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
 	d = (s) -> "'" + s + "'"
@@ -464,11 +464,11 @@ draw = ->
 	pointLight 255, 255, 255, 0.5,0.5,0.25
 
 	push()
-	drawOne current[3], -200,16,words1,cubes1
+	drawOne exercise.pattern_a, -200,16,words1,cubes1
 	pop()
 
 	push()
-	drawOne code.value, 200,-16,words2,cubes2
+	drawOne exercise.pattern_b, 200,-16,words2,cubes2
 	pop()
 
 	#if frameCount < 100 then save "out-#{frameCount}.png"
@@ -476,7 +476,7 @@ draw = ->
 		saveCanvas 'p5Forth3D', 'png'
 		saveCanvasCount--
 
-drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
+drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 
 	drawFigure = (s) =>
 		s = _.max [int(s),5]
@@ -566,6 +566,7 @@ drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
 	n = settings.get.n
 	jvalues = if settings.get.dims == '1D' then range 1 else range n
 	kvalues = if settings.get.dims <= '2D' then range 1 else range n
+	index = 0
 	for i in range n
 		for j in jvalues
 			for k in kvalues
@@ -578,7 +579,7 @@ drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
 				f = 255/(n-1)
 				specularMaterial f*i, f*j, f*k #,alpha
 
-				if calc sourcecode
+				if pattern[index] == '1'
 					drawFigure scaling * size
 					drawCurrent scaling * 2*size/10,scaling * size
 					count++
@@ -587,6 +588,7 @@ drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
 						drawFigure scaling * size/5
 						drawCurrent scaling * 2*size/50, scaling * size/5
 				pop()
+				index++
 	showAxes()
 
 	if millis() > timestamp
