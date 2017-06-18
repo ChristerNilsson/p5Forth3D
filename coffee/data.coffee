@@ -41,16 +41,15 @@ data  =
 	C06: ['2017-06-17','3D',3,'j 1 = k 1 = and']
 	C07: ['2017-06-17','3D',3,'i j = k 0 = and']
 	C08: ['2017-06-17','3D',3,'i j = j k = and']
-	C09: ['2017-06-17','3D',3,'i j k * * 1 =']
-	C10: ['2017-06-17','3D',3,'i j k * * 1 = not']
-	C11: ['2017-06-17','3D',3,'5 bitijk + + 2 >='] # Menger sponge
-	C12: ['2017-06-17','3D',3,'i j k + + 2 %'] # ball
-	C13: ['2017-06-17','3D',3,'5 bitijk + + 1 <='] # Menger cross
-	C14: ['2017-06-17','3D',3,'5 bitijk + + 0 ='] # rubik center
-	C15: ['2017-06-17','3D',3,'5 bitijk + + 1 ='] # rubik center tiles
-	C16: ['2017-06-17','3D',3,'5 bitijk + + 2 ='] # rubik side cubes
-	C17: ['2017-06-17','3D',3,'5 bitijk + + 3 ='] # rubik corner cubes
-	C18: ['2017-06-17','3D',3,'2 bitijk = =']
+	C09: ['2017-06-17','3D',3,'i j k * * 1 = not']
+	C10: ['2017-06-17','3D',3,'5 bitijk + + 2 >='] # Menger sponge
+	C11: ['2017-06-17','3D',3,'i j k + + 2 %'] # ball
+	C12: ['2017-06-17','3D',3,'5 bitijk + + 1 <='] # Menger cross
+	C13: ['2017-06-17','3D',3,'5 bitijk + + 0 ='] # rubik center
+	C14: ['2017-06-17','3D',3,'5 bitijk + + 1 ='] # rubik center tiles
+	C15: ['2017-06-17','3D',3,'5 bitijk + + 2 ='] # rubik side cubes
+	C16: ['2017-06-17','3D',3,'5 bitijk + + 3 ='] # rubik corner cubes
+	C17: ['2017-06-17','3D',3,'2 bitijk = =']
 	D01: ['2017-06-17','3D',4,'3 bitijk = =']
 	D02: ['2017-06-17','3D',4,'5 bitijk = =']
 	D03: ['2017-06-17','3D',4,'6 bitijk = =']

@@ -175,7 +175,7 @@ trace = ->
 	i = btni.value()
 	j = btnj.value()
 	k = btnk.value()
-	#calc code.value, true
+	calc code.value, true
 
 linkAppend = (t, link, text) -> # exakt en kolumn
 	d = (s) -> "'" + s + "'"
@@ -358,6 +358,11 @@ setLevel =  ->
 	current = data[settings.get.level]
 	settings.set 'dims',current[1]
 	settings.set 'n',current[2]
+
+	btni.setLst range current[2]
+	btnj.setLst range current[2]
+	btnk.setLst range current[2]
+
 	settings.set 'SIZE', int 200/settings.get.n
 
 	exercise = new Exercise settings.get.level
@@ -534,18 +539,18 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 		push() # x
 		rotateX radians 90
 		specularMaterial 255,0,0
-		cylinder radius,len
+		cylinder radius,len*1.05
 		pop()
 
 		push() # y
 		specularMaterial 0,255,0
-		cylinder radius,len
+		cylinder radius,len*1.05
 		pop()
 
 		push() # z
 		rotateZ radians 90
 		specularMaterial 0,0,255
-		cylinder radius,len
+		cylinder radius,len*1.05
 		pop()
 
 	if settings.get.fps == 0 then return
