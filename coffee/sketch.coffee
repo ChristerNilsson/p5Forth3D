@@ -146,7 +146,6 @@ btnRotate = null
 btnLevel = null
 
 codechange = (textarea) ->
-	#settings.set 'code', textarea.value
 	localStorage['Forth3D/code/'+settings.get.level] = textarea.value
 	exercise.code_b = textarea.value
 	exercise.update()
@@ -162,7 +161,6 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'SIZE', 200/settings.get.n
 	settings.load 'level', 'a01'
 	settings.load 'dims', '1D'
-	settings.load 'code', ''
 	settings.load 'fig', 'sphere' # sphere or box
 	settings.load 'grid', 'yes'
 	settings.load 'rotate', 'no'
@@ -262,18 +260,11 @@ setup = ->
 
 	loadSettings()
 
-	#code.val settings.get.code
-
 	document.getElementById("code").style.fontSize = settings.get.font + 'px'
-
-	# linkAppend links, "examples2x2x2.html", "Examples 2x2x2"
-	# linkAppend links, "examples3x3x3.html", "Examples 3x3x3"
-	# linkAppend links, "examples.html", "Examples"
 
 	frameRate settings.get.fps
 
-	# removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
-	texture createGraphics 1,1
+	texture createGraphics 1,1 # removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 
 ###########################
 
