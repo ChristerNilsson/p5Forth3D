@@ -42,6 +42,9 @@ class Button
 	visible : (b) ->
 		if b then @button1.show() else @button1.hide()
 		if b then @button2.show() else @button2.hide()
+	disabled : (b) ->
+		@button1.elt.disabled = b
+		@button2.elt.disabled = b
 
 class NormalButton
 	constructor : (x,y,w,h,txt,@action) ->
@@ -218,6 +221,7 @@ setup = ->
 	btnDims = new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
 		settings.set 'dims', @value()
 		displayDebug()
+	btnDims.disabled true
 
 	btnn = new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
 		settings.set 'n', int @value()
@@ -225,6 +229,7 @@ setup = ->
 		btnj.setLst range settings.get.n
 		btnk.setLst range settings.get.n
 		settings.set 'SIZE', int 200/settings.get.n
+	btnn.disabled true
 
 	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
 
@@ -289,15 +294,18 @@ setup = ->
 
 setLevel =  ->
 	current = data[settings.get.level]
-	settings.set 'dims',current[2-1]
-	settings.set 'n',current[3-1]
-	settings.set 'rotate', 'no'
-	btnDims.set current[2-1]
-	btnn.set current[3-1]
-	btnRotate.set current.rotate # ????
-	if settings.get.dims == '1D'
+	settings.set 'dims',current[1]
+	settings.set 'n',current[2]
+	settings.set 'SIZE', int 200/settings.get.n
+	btnDims.set current[1]
+	btnRotate.disabled settings.get.dims in ['1D','2D']
+	btnn.set current[2]
+	if settings.get.dims in ['1D','2D']
 		vinkelX = 90
 		vinkelY = 0
+	if settings.get.dims == '3D'
+		vinkelX = 45
+		vinkelY = 45
 	displayDebug()
 	trace()
 
@@ -391,7 +399,7 @@ draw = ->
 	pointLight 255, 255, 255, 0.5,0.5,0.25
 
 	push()
-	drawOne current[4-1], -200,16,words1,cubes1
+	drawOne current[3], -200,16,words1,cubes1
 	pop()
 
 	push()
