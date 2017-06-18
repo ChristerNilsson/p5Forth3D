@@ -160,7 +160,7 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'j', 0
 	settings.loadInt 'k', 0
 	settings.loadInt 'SIZE', 200/settings.get.n
-	settings.load 'level', 'A01'
+	settings.load 'level', 'a01'
 	settings.load 'dims', '1D'
 	settings.load 'code', ''
 	settings.load 'fig', 'sphere' # sphere or box
