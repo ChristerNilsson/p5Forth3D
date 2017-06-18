@@ -1,5 +1,7 @@
 # p5Forth3D
 
+* Navigate by clicking _level_ and _a01_
+
 * This program combines Forth Salon with three-dimensional color cubes.
 * For each pixel (i,j,k), a small forth code calculates if it should be visible or not.
 * This code is written by you.
