@@ -2,19 +2,19 @@ class Settings
 	constructor : -> @get = {}
 
 	load : (name,value) ->
-		v = localStorage["Forth3D/"+name]
+		v = localStorage["Forth3D/settings/"+name]
 		@get[name] = if v? then v else value
 
 	loadInt : (name,value) ->
-		v = int localStorage["Forth3D/"+name]
+		v = int localStorage["Forth3D/settings/"+name]
 		@get[name] = if v? then v else value
 
 	set : (name,value) ->
-		localStorage["Forth3D/"+name] = value
+		localStorage["Forth3D/settings/"+name] = value
 		@get[name] = value
 
 class Button
-	constructor : (x,y,w,h,txt,@lst,val,@action) ->
+	constructor : (x,y,w,h,txt,@lst,val,@wrap,@action) ->
 		@index = @lst.indexOf val
 		@button1 = createButton txt
 		@button1.position x,y
@@ -23,11 +23,17 @@ class Button
 		@button2.position x+w,y
 		@button2.size w,h
 		@button1.mousePressed () =>
-			@index = (@index-1) %% @lst.length
+			if @wrap
+				@index = (@index-1) %% @lst.length
+			else if @index>0
+				@index--
 			@button2.html @value()
 			@action()
 		@button2.mousePressed () =>
-			@index = (@index+1) %% @lst.length
+			if @wrap
+				@index = (@index+1) %% @lst.length
+			else if @index < @lst.length-1
+				@index++
 			@button2.html @value()
 			@action()
 	value : -> @lst[@index]
@@ -53,6 +59,55 @@ class NormalButton
 		@button.size w,h
 		@button.mousePressed () => @action()
 
+class Exercise # contains current problem
+	constructor : (@level) ->
+		current = data[@level]
+		@dims = current[1]   # data
+		@n = current[2]      # data
+		@code_a = current[3] # data
+		@code_b = localStorage['Forth3D/code/' + @level]
+		if not @code_b? then @code_b = ''
+		@update()
+
+	update : ->
+		@words_a = calcWords @code_a
+		@words_b = calcWords @code_b
+		@pattern_a = calcCubes @code_a
+		@pattern_b = calcCubes @code_b
+		if @pattern_a == @pattern_b
+			@score = 10
+			diff = @words_a - @words_b
+			if diff > 0 then @score += 10 * diff else @score += diff
+			if @score <= 0 then @score = 1
+		else
+			@score = 0
+		localStorage['Forth3D/score/' + @level]	= @score
+		score.innerHTML = 'Score: ' + @score
+		if @score == 0 then score.style.color = 'red'
+		else if @score >= 10 then score.style.color = 'lightgreen'
+		else score.style.color = 'yellow'
+
+		words1.innerHTML = @words_a
+		words2.innerHTML = @words_b
+		words2.style.color = if @words_a >= @words_b then 'lightgreen' else 'red'
+
+		cubes1.innerHTML = countChar @pattern_a,'1'
+		cubes = countChar @pattern_b,'1'
+		cubes2.innerHTML = cubes
+		cubes2.style.color = if @pattern_a == @pattern_b then 'lightgreen' else 'red'
+
+		totalScore = 0
+		for key in _.keys data
+			tmp = localStorage['Forth3D/score/' + key]
+			if tmp? then totalScore += int tmp
+		total.innerHTML = 'Total: ' + totalScore
+
+countChar = (s,ch) ->
+	count = 0
+	for c in s
+		if c==ch then count++
+	count
+
 vinkelX = 90 # grader
 vinkelY = 0
 
@@ -74,6 +129,7 @@ words = {}
 saveCanvasCount = 0
 
 current = ''
+exercise = null
 
 settings = new Settings
 i=0
@@ -90,12 +146,15 @@ btnRotate = null
 btnLevel = null
 
 codechange = (textarea) ->
-	settings.set 'code', textarea.value
+	#settings.set 'code', textarea.value
+	localStorage['Forth3D/code/'+settings.get.level] = textarea.value
+	exercise.code_b = textarea.value
+	exercise.update()
 	trace()
 
 loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'font', 32
-	settings.loadInt 'n', 3
+	settings.loadInt 'n', 2
 	settings.loadInt 'fps', 10
 	settings.loadInt 'i', 0
 	settings.loadInt 'j', 0
@@ -103,10 +162,10 @@ loadSettings = -> # från localStorage till settings, fixar default
 	settings.loadInt 'SIZE', 200/settings.get.n
 	settings.load 'level', 'A01'
 	settings.load 'dims', '1D'
-	settings.load 'code', '5 bitijk + + 3 ='
+	settings.load 'code', ''
 	settings.load 'fig', 'sphere' # sphere or box
 	settings.load 'grid', 'yes'
-	settings.load 'rotate', 'yes'
+	settings.load 'rotate', 'no'
 	settings.load 'debug', 'no'
 	settings.load 'scaling', '1.0'
 
@@ -203,7 +262,7 @@ setup = ->
 
 	loadSettings()
 
-	code.val settings.get.code
+	#code.val settings.get.code
 
 	document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
@@ -231,31 +290,31 @@ setup = ->
 		settings.set 'SIZE', int 200/settings.get.n
 	btnn.disabled true
 
-	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, () -> settings.set 'scaling', @lst[@index]
+	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, true, () -> settings.set 'scaling', @lst[@index]
 
-	new Button 0,60,50,20,'fps',range(26), settings.get.fps, () ->
+	new Button 0,60,50,20,'fps',range(26), settings.get.fps, true, () ->
 		settings.set 'fps', int @value()
 		frameRate settings.get.fps
 
-	new Button 0,80,50,20,'font',range(16,40,2), settings.get.font, () ->
+	new Button 0,80,50,20,'font',range(16,40,2), settings.get.font, true, () ->
 		settings.set 'font', @value()
 		document.getElementById("code").style.fontSize = settings.get.font + 'px'
 
 ###########################
 
-	new Button 120,0,50,20,'figure', 'sphere box'.split(' '), settings.get.fig, () ->
+	new Button 120,0,50,20,'figure', 'sphere box'.split(' '), settings.get.fig, true, () ->
 		settings.set 'fig', @value()
 		trace()
 
-	btnRotate = new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, () ->
+	btnRotate = new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, true, () ->
 		settings.set 'rotate', @value()
 		trace()
 
-	new Button 120,40,50,20,'grid', 'yes no'.split(' '), settings.get.grid, () ->
+	new Button 120,40,50,20,'grid', 'yes no'.split(' '), settings.get.grid, true, () ->
 		settings.set 'grid', @value()
 		trace()
 
-	new Button 120,60,50,20,'debug', 'yes no'.split(' '), settings.get.debug, () ->
+	new Button 120,60,50,20,'debug', 'yes no'.split(' '), settings.get.debug, true, () ->
 		settings.set 'debug', @value()
 		displayDebug()
 
@@ -264,19 +323,19 @@ setup = ->
 
 ###########################
 
-	btni = new Button 120,120,50,20,'i',range(settings.get.n), settings.get.i, () ->
+	btni = new Button 120,120,50,20,'i',range(settings.get.n), settings.get.i, true, () ->
 		settings.set 'i', int @value()
 		trace()
 
-	btnj = new Button 120,140,50,20,'j',range(settings.get.n), settings.get.j, () ->
+	btnj = new Button 120,140,50,20,'j',range(settings.get.n), settings.get.j, true, () ->
 		settings.set 'j', int @value()
 		trace()
 
-	btnk = new Button 120,160,50,20,'k',range(settings.get.n), settings.get.k, () ->
+	btnk = new Button 120,160,50,20,'k',range(settings.get.n), settings.get.k, true, () ->
 		settings.set 'k', int @value()
 		trace()
 
-	btnLevel = new Button 120,200,50,20,'level', _.keys(data), settings.get.level, () ->
+	btnLevel = new Button 120,200,50,20,'level', _.keys(data), settings.get.level, false, () ->
 		settings.set 'level', @value()
 		setLevel()
 
@@ -293,10 +352,16 @@ setup = ->
 	displayDebug()
 
 setLevel =  ->
+	source = localStorage['Forth3D/code/' + settings.get.level]
+	code.value = if source? then source else ''
+
 	current = data[settings.get.level]
 	settings.set 'dims',current[1]
 	settings.set 'n',current[2]
 	settings.set 'SIZE', int 200/settings.get.n
+
+	exercise = new Exercise settings.get.level
+
 	btnDims.set current[1]
 	btnRotate.disabled settings.get.dims in ['1D','2D']
 	btnn.set current[2]
@@ -524,15 +589,25 @@ drawOne = (sourcecode, yOffset,vOffset,words,cubes) ->
 				pop()
 	showAxes()
 
-	arr = sourcecode.replace(/\n/g,' ').split ' '
-	arr = (item for item in arr when item.length > 0)
-
-	words.innerHTML = arr.length
-	cubes.innerHTML = count
-
 	if millis() > timestamp
 		p3.innerHTML = "FPS: #{nf(frameRate(),0,1)}"
 		timestamp = millis() + 1000
+
+calcWords = (sourcecode) ->
+	arr = sourcecode.replace(/\n/g,' ').split ' '
+	arr = (item for item in arr when item.length > 0)
+	arr.length
+
+calcCubes = (sourcecode) ->
+	n = settings.get.n
+	jvalues = if settings.get.dims == '1D' then range 1 else range n
+	kvalues = if settings.get.dims <= '2D' then range 1 else range n
+	res = ''
+	for i in range n
+		for j in jvalues
+			for k in kvalues
+				res += if calc sourcecode then '1' else '0'
+	res
 
 tableClear = -> $("#tabell tr").remove()
 
