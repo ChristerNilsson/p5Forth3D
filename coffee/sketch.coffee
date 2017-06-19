@@ -50,7 +50,9 @@ handler = () -> # Här är det ok att påverka guit.
 		btni.setLst range fetch 'n'
 		btnj.setLst range fetch 'n'
 		btnk.setLst range fetch 'n'
-	else if @name() == 'level' then setLevel()
+	else if @name() == 'level'
+		store @name(), @value()
+		setLevel()
 	else store @name(), @value()
 
 class Button
