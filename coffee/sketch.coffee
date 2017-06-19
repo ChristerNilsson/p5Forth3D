@@ -1,17 +1,57 @@
-class Settings
-	constructor : -> @get = {}
+store = (name,value) -> # påverka EJ guit här!
+	if localStorage["Forth3D/settings/" + name] == value then return
+	localStorage["Forth3D/settings/" + name] = value
+	if name == 'debug' then	displayDebug()
+	if name == 'font' then document.getElementById("code").style.fontSize = fetch('font') + 'px'
+	if name == 'n'
+		if fetch('dims') in ['1D','2D'] then Size = 250 else Size=200
+		store 'SIZE', int Size/fetch('n')
 
-	load : (name,value) ->
-		v = localStorage["Forth3D/settings/"+name]
-		@get[name] = if v? then v else value
+	if name == 'fps' then frameRate fetch 'fps'
+	if name in ['i','j','k','rotate','grid','figure'] then trace()
 
-	loadInt : (name,value) ->
-		v = int localStorage["Forth3D/settings/"+name]
-		@get[name] = if v? then v else value
+fetch = (name) ->
+	s = localStorage["Forth3D/settings/" + name]
+	if name in ['fps','font','i','j','k'] then return int s
+	s
 
-	set : (name,value) ->
-		localStorage["Forth3D/settings/"+name] = value
-		@get[name] = value
+displayDebug = =>
+	btni.visible fetch('debug') == 'yes'
+	btnj.visible fetch('debug') == 'yes' and fetch('dims') >= '2D'
+	btnk.visible fetch('debug') == 'yes' and fetch('dims') >= '3D'
+	control = $ '#tabell'
+	if fetch('debug') == 'yes' then control.show() else control.hide()
+
+setDefault = (name,value) ->
+	if not localStorage["Forth3D/settings/" + name]?
+		localStorage["Forth3D/settings/" + name] = value
+
+setDefaults = ->
+	setDefault 'font', 32
+	setDefault 'n', 2
+	setDefault 'fps', 10
+	setDefault 'SIZE', 200/fetch 'n'
+	setDefault 'dims', '1D'
+	setDefault 'size', '1.0'
+	setDefault 'level', 'a01'
+	setDefault 'figure', 'sphere'
+	setDefault 'grid', 'yes'
+	setDefault 'rotate', 'no'
+	setDefault 'debug', 'no'
+	setDefault 'i', 0
+	setDefault 'j', 0
+	setDefault 'k', 0
+
+handler = () -> # Här är det ok att påverka guit.
+	if @name() == 'snapshot' then saveCanvasCount++
+	else if @name() in ['i','j','k','fps','font'] then store @name(), int @value()
+	else if @name() == 'n'
+		store @name(), @value()
+		btni.setLst range fetch 'n'
+		btnj.setLst range fetch 'n'
+		btnk.setLst range fetch 'n'
+	else if @name() == 'level' then setLevel()
+	else store @name(), @value()
 
 class Button
 	constructor : (x,y,w,h,txt,@lst,val,@wrap,@action) ->
@@ -36,6 +76,7 @@ class Button
 				@index++
 			@button2.html @value()
 			@action()
+	name : -> @button1.elt.innerText
 	value : -> @lst[@index]
 	set : (value) ->
 		@index = @lst.indexOf value
@@ -58,6 +99,7 @@ class NormalButton
 		@button.position x,y
 		@button.size w,h
 		@button.mousePressed () => @action()
+	name : -> @button.elt.innerText
 
 class Exercise # contains current problem
 	constructor : (@level) ->
@@ -128,10 +170,9 @@ words = {}
 
 saveCanvasCount = 0
 
-current = ''
+# current = ''
 exercise = null
 
-settings = new Settings
 i=0
 j=0
 k=0
@@ -146,26 +187,10 @@ btnRotate = null
 btnLevel = null
 
 codechange = (textarea) ->
-	localStorage['Forth3D/code/'+settings.get.level] = textarea.value
+	localStorage['Forth3D/code/' + fetch('level')] = textarea.value
 	exercise.code_b = textarea.value
 	exercise.update()
 	trace()
-
-loadSettings = -> # från localStorage till settings, fixar default
-	settings.loadInt 'font', 32
-	settings.loadInt 'n', 2
-	settings.loadInt 'fps', 10
-	settings.loadInt 'i', 0
-	settings.loadInt 'j', 0
-	settings.loadInt 'k', 0
-	settings.loadInt 'SIZE', 200/settings.get.n
-	settings.load 'level', 'a01'
-	settings.load 'dims', '1D'
-	settings.load 'fig', 'sphere' # sphere or box
-	settings.load 'grid', 'yes'
-	settings.load 'rotate', 'no'
-	settings.load 'debug', 'no'
-	settings.load 'scaling', '1.0'
 
 trace = ->
 	tableClear()
@@ -258,80 +283,29 @@ setup = ->
 
 	p3 = $ '#p3'
 
-	loadSettings()
-
-	document.getElementById("code").style.fontSize = settings.get.font + 'px'
-
-	frameRate settings.get.fps
-
-	texture createGraphics 1,1 # removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
+	setDefaults()
 
 ###########################
+	btnDims = new Button 0,0,50,20,'dims',['1D','2D','3D'], fetch('dims'), null
+	btnn = new Button 0,20,50,20,'n',range(2,28), fetch('n'), null
+	new Button 0,40,50,20,'size','0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), fetch('size'), true, handler
+	new Button 0,60,50,20,'fps',range(26), fetch('fps'), true, handler
+	new Button 0,80,50,20,'font',range(16,40,2), fetch('font'), true, handler
+###########################
+	new Button 120,0,50,20,'figure', 'sphere box'.split(' '), fetch('figure'), true, handler
+	btnRotate = new Button 120,20,50,20,'rotate', 'yes no'.split(' '), fetch('rotate'), true, handler
+	new Button 120,40,50,20,'grid', 'yes no'.split(' '), fetch('grid'), true, handler
+	new Button 120,60,50,20,'debug', 'yes no'.split(' '), fetch('debug'), true, handler
+	new NormalButton 120,80,100,20,'snapshot', handler
+###########################
+	btni = new Button 120,120,50,20,'i',range(fetch('n')), fetch('i'), true, handler
+	btnj = new Button 120,140,50,20,'j',range(fetch('n')), fetch('j'), true, handler
+	btnk = new Button 120,160,50,20,'k',range(fetch('n')), fetch('k'), true, handler
+	btnLevel = new Button 60,220,50,20,'level', _.keys(data), fetch('level'), false, handler
+###########################
 
-	btnDims = new Button 0,0,50,20,'dims',['1D','2D','3D'], settings.get.dims, () ->
-		settings.set 'dims', @value()
-		displayDebug()
 	btnDims.disabled true
-
-	btnn = new Button 0,20,50,20,'n',range(2,28), settings.get.n, () ->
-		settings.set 'n', int @value()
-		btni.setLst range settings.get.n
-		btnj.setLst range settings.get.n
-		btnk.setLst range settings.get.n
-		settings.set 'SIZE', int 200/settings.get.n
 	btnn.disabled true
-
-	new Button 0,40,50,20,'size','0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0'.split(' '), settings.get.scaling, true, () -> settings.set 'scaling', @lst[@index]
-
-	new Button 0,60,50,20,'fps',range(26), settings.get.fps, true, () ->
-		settings.set 'fps', int @value()
-		frameRate settings.get.fps
-
-	new Button 0,80,50,20,'font',range(16,40,2), settings.get.font, true, () ->
-		settings.set 'font', @value()
-		document.getElementById("code").style.fontSize = settings.get.font + 'px'
-
-###########################
-
-	new Button 120,0,50,20,'figure', 'sphere box'.split(' '), settings.get.fig, true, () ->
-		settings.set 'fig', @value()
-		trace()
-
-	btnRotate = new Button 120,20,50,20,'rotate', 'yes no'.split(' '), settings.get.rotate, true, () ->
-		settings.set 'rotate', @value()
-		trace()
-
-	new Button 120,40,50,20,'grid', 'yes no'.split(' '), settings.get.grid, true, () ->
-		settings.set 'grid', @value()
-		trace()
-
-	new Button 120,60,50,20,'debug', 'yes no'.split(' '), settings.get.debug, true, () ->
-		settings.set 'debug', @value()
-		displayDebug()
-
-	new NormalButton 120,80,100,20,'snapshot', () ->
-		saveCanvasCount++
-
-###########################
-
-	btni = new Button 120,120,50,20,'i',range(settings.get.n), settings.get.i, true, () ->
-		settings.set 'i', int @value()
-		trace()
-
-	btnj = new Button 120,140,50,20,'j',range(settings.get.n), settings.get.j, true, () ->
-		settings.set 'j', int @value()
-		trace()
-
-	btnk = new Button 120,160,50,20,'k',range(settings.get.n), settings.get.k, true, () ->
-		settings.set 'k', int @value()
-		trace()
-
-	btnLevel = new Button 120,200,50,20,'level', _.keys(data), settings.get.level, false, () ->
-		settings.set 'level', @value()
-		setLevel()
-
-###########################
-
 	btni.button1.style 'color','white'
 	btnj.button1.style 'color','white'
 	btnk.button1.style 'color','white'
@@ -339,46 +313,35 @@ setup = ->
 	btnj.button1.style 'background-color','green'
 	btnk.button1.style 'background-color','blue'
 
+	store 'font',fetch('font')
+	store 'fps', fetch('fps')
 	setLevel()
 	displayDebug()
+	texture createGraphics 1,1 # removes error message: [.Offscreen-For-WebGL-000000000571CD90]RENDER WARNING: there is no texture bound to the unit 0
 
 setLevel =  ->
-	source = localStorage['Forth3D/code/' + settings.get.level]
+	source = localStorage['Forth3D/code/' + fetch('level')]
 	code.value = if source? then source else ''
 
-	current = data[settings.get.level]
-	settings.set 'dims',current[1]
-	settings.set 'n',current[2]
+	current = data[fetch('level')]
+	store 'dims', current[1]
+	store 'n', current[2]
 
-	btni.setLst range current[2]
-	btnj.setLst range current[2]
-	btnk.setLst range current[2]
-
-	settings.set 'SIZE', int 200/settings.get.n
-
-	exercise = new Exercise settings.get.level
+	exercise = new Exercise fetch 'level'
 
 	btnDims.set current[1]
-	if settings.get.dims in ['1D','2D']
+	if fetch('dims') in ['1D','2D']
 		btnRotate.set 'no'
-		settings.set 'rotate', 'no'
-	btnRotate.disabled settings.get.dims in ['1D','2D']
+		store 'rotate', 'no'
+	btnRotate.disabled fetch('dims') in ['1D','2D']
 	btnn.set current[2]
-	if settings.get.dims in ['1D','2D']
+	if fetch('dims') in ['1D','2D']
 		vinkelX = 90
 		vinkelY = 0
-	if settings.get.dims == '3D'
+	if fetch('dims') == '3D'
 		vinkelX = 45
 		vinkelY = 45
-	displayDebug()
 	trace()
-
-displayDebug = =>
-	btni.visible settings.get.debug == 'yes'
-	btnj.visible settings.get.debug == 'yes' and settings.get.dims >= '2D'
-	btnk.visible settings.get.debug == 'yes' and settings.get.dims >= '3D'
-	control = $ '#tabell'
-	if settings.get.debug == 'yes' then control.show() else control.hide()
 
 digit = (bool) -> if bool then 1 else 0
 showStack = (level,cmd) -> tableAppend tabell, level + cmd, stack.join ' '
@@ -386,11 +349,11 @@ showError = (e) -> tableAppend tabell, e[0], e[1], '#FF0000'
 gcd = (x, y) -> if y == 0 then x else gcd y, x % y
 
 mousePressed = ->
-	if 0 < mouseX < width and 0 < mouseY < height and settings.get.dims == '3D'
+	if 0 < mouseX < width and 0 < mouseY < height and fetch('dims') == '3D'
 		lastX=mouseX
 		lastY=mouseY
 mouseDragged = ->
-	if 0 < mouseX < width and 0 < mouseY < height and settings.get.dims == '3D'
+	if 0 < mouseX < width and 0 < mouseY < height and fetch('dims') == '3D'
 		dx = mouseX-lastX
 		dy = mouseY-lastY
 		vinkelX += dx/4
@@ -480,16 +443,16 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 	drawFigure = (s) =>
 		s = _.max [int(s),5]
 		u = int s/2
-		if settings.get.fig == 'sphere' then sphere u,u,u else box s,s,s
+		if fetch('figure') == 'sphere' then sphere u,u,u else box s,s,s
 	showAxes = =>
-		if settings.get.debug == 'no' then return
+		if fetch('debug') == 'no' then return
 
 		i0 = 0
 		j0 = 0
 		k0 = 0
 
-		size = settings.get.SIZE
-		n = settings.get.n
+		size = fetch('SIZE')
+		n = fetch('n')
 		len = size * (n-1)
 
 		x = size * (0.5+i0-n/2)
@@ -505,14 +468,14 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 		cylinder size/50,len
 		pop()
 
-		if settings.get.dims >= '2D'
+		if fetch('dims') >= '2D'
 			push() # y
 			translate 0,-y,0
 			specularMaterial 0,255,0
 			cylinder size/50,len
 			pop()
 
-		if settings.get.dims == '3D'
+		if fetch('dims') == '3D'
 			push() # z
 			translate -z,0,0
 			rotateZ radians 90
@@ -523,11 +486,11 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 		pop()
 
 	drawCurrent = (radius,len) =>
-		if settings.get.debug == 'no' then return
+		if fetch('debug') == 'no' then return
 
-		i0 = settings.get.i
-		j0 = settings.get.j
-		k0 = settings.get.k
+		i0 = fetch('i')
+		j0 = fetch('j')
+		k0 = fetch('k')
 		if (i0==i and j0==j and k0==k) == false then return
 
 		push() # x
@@ -547,10 +510,10 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 		cylinder radius,len*1.05
 		pop()
 
-	if settings.get.fps == 0 then return
+	if fetch('fps') == 0 then return
 	trace()
 
-	if settings.get.rotate == 'yes'
+	if fetch('rotate') == 'yes'
 		vinkelY += 1
 		vinkelX += 0.5
 
@@ -560,11 +523,11 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 	rotateY radians vinkelX
 
 	count = 0
-	scaling = parseFloat settings.get.scaling
-	size = settings.get.SIZE
-	n = settings.get.n
-	jvalues = if settings.get.dims == '1D' then range 1 else range n
-	kvalues = if settings.get.dims <= '2D' then range 1 else range n
+	scaling = parseFloat fetch('size')
+	size = fetch('SIZE')
+	n = fetch('n')
+	jvalues = if fetch('dims') == '1D' then range 1 else range n
+	kvalues = if fetch('dims') <= '2D' then range 1 else range n
 	index = 0
 	for i in range n
 		for j in jvalues
@@ -583,7 +546,7 @@ drawOne = (pattern, yOffset,vOffset,words,cubes) ->
 					drawCurrent scaling * 2*size/10,scaling * size
 					count++
 				else
-					if settings.get.grid == 'yes'
+					if fetch('grid') == 'yes'
 						drawFigure scaling * size/5
 						drawCurrent scaling * 2*size/50, scaling * size/5
 				pop()
@@ -600,9 +563,9 @@ calcWords = (sourcecode) ->
 	arr.length
 
 calcCubes = (sourcecode) ->
-	n = settings.get.n
-	jvalues = if settings.get.dims == '1D' then range 1 else range n
-	kvalues = if settings.get.dims <= '2D' then range 1 else range n
+	n = fetch('n')
+	jvalues = if fetch('dims') == '1D' then range 1 else range n
+	kvalues = if fetch('dims') <= '2D' then range 1 else range n
 	res = ''
 	for i in range n
 		for j in jvalues
