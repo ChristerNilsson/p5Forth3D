@@ -1,5 +1,5 @@
 store = (name,value) -> # påverka EJ guit här!
-	if localStorage["Forth3D/settings/" + name] == value then return
+	#if localStorage["Forth3D/settings/" + name] == value then return
 	localStorage["Forth3D/settings/" + name] = value
 	if name == 'debug' then	displayDebug()
 	if name == 'font' then document.getElementById("code").style.fontSize = fetch('font') + 'px'
@@ -12,7 +12,7 @@ store = (name,value) -> # påverka EJ guit här!
 
 fetch = (name) ->
 	s = localStorage["Forth3D/settings/" + name]
-	if name in ['fps','font','i','j','k'] then return int s
+	if name in ['fps','font','i','j','k','n'] then return int s
 	s
 
 displayDebug = =>
@@ -45,11 +45,8 @@ setDefaults = ->
 handler = () -> # Här är det ok att påverka guit.
 	if @name() == 'snapshot' then saveCanvasCount++
 	else if @name() in ['i','j','k','fps','font'] then store @name(), int @value()
-	else if @name() == 'n'
-		store @name(), @value()
-		btni.setLst range fetch 'n'
-		btnj.setLst range fetch 'n'
-		btnk.setLst range fetch 'n'
+	# else if @name() == 'n'
+	# 	store @name(), @value()
 	else if @name() == 'level'
 		store @name(), @value()
 		setLevel()
@@ -332,6 +329,10 @@ setLevel =  ->
 	exercise = new Exercise fetch 'level'
 
 	btnDims.set current[1]
+	btni.setLst range fetch 'n'
+	btnj.setLst range fetch 'n'
+	btnk.setLst range fetch 'n'
+
 	if fetch('dims') in ['1D','2D']
 		btnRotate.set 'no'
 		store 'rotate', 'no'
