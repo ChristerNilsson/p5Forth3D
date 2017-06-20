@@ -28,7 +28,7 @@ drop pop
 
 # One operand
 not chs inv abs sqrt ~ dup sign push
-biti bitj bitk bitij bitik bitjk bitijk
+biti bitj bitk bitij bitik bitjk bitijk b2d
 
 # Two operands
 swap 2dup
@@ -42,64 +42,70 @@ rot -rot
 ```
 
 ```coffeescript
-1 not    0  =
-0 not    1  =
+1 not    0  assert
+0 not    1  assert
 
-3 chs    -3  =
-2 inv    0.5  =
--3 abs   3  =
-9 sqrt   3  =
-7 ~     -8  =
--8 sign -1  =
-7 sign  1  =
-0 sign  0  =
+3 chs    -3  assert
+2 inv    0.5  assert
+-3 abs   3  assert
+9 sqrt   3  assert
+7 ~     -8  assert
+-8 sign -1  assert
+7 sign  1  assert
+0 sign  0  assert
 
-2 3 +    5  =
-2 3 -   -1  =
-2 3 *    6  =
-2 3 **   8  =
-1 2 /    0.5  =
-3 2 //   1  =
-7 2 %    1  =
--7 2 %%  1  =
-12 15 gcd 3 =
+2 3 +    5  assert
+2 3 -   -1  assert
+2 3 *    6  assert
+2 3 **   8  assert
+1 2 /    0.5  assert
+3 2 //   1  assert
+7 2 %    1  assert
+-7 2 %%  1  assert
+12 15 gcd 3 assert
 
-2 3 <    1  =
-2 3 >    0  =
-2 3 <=   1  =
-2 3 >=   0  =
-2 3 <>   1  =
-2 3 =  0  =
+2 3 <    1  assert
+2 3 >    0  assert
+2 3 <=   1  assert
+2 3 >=   0  assert
+2 3 <>   1  assert
+2 3 =  0  assert
 
-7 12 &   4  =
-7 12 |  15  =
-7 12 ^  11  =
-7 2 >>  1   =
-2 3 <<  16  =
-0 5 bit  1  =
-1 5 bit  0  =
-2 5 bit  1  =
-3 5 bit  0  =
+7 12 &   4  assert
+7 12 |  15  assert
+7 12 ^  11  assert
+7 2 >>  1   assert
+2 3 <<  16  assert
+0 5 bit  1  assert
+1 5 bit  0  assert
+2 5 bit  1  assert
+3 5 bit  0  assert
+1111 b2d  15  assert
 
-0 0 and  0  =
-0 1 and  0  =
-1 0 and  0  =
-1 1 and  1  =
+0 0 and  0  assert
+0 1 and  0  assert
+1 0 and  0  assert
+1 1 and  1  assert
 
-0 0 or   0  =
-0 1 or   1  =
-1 0 or   1  =
-1 1 or   1  =
+0 0 or   0  assert
+0 1 or   1  assert
+1 0 or   1  assert
+1 1 or   1  assert
 
-0 0 xor  0  =
-0 1 xor  1  =
-1 0 xor  1  =
-1 1 xor  0  =
+0 0 xor  0  assert
+0 1 xor  1  assert
+1 0 xor  1  assert
+1 1 xor  0  assert
 
 rot   Fetches the third element of the stack
 -rot  The opposite
 
 ```
+
+## Assert
+
+* Assert takes the two topmost items and compares them.
+* If they are unequal an error message is shown in debug mode.
 
 ## These words are only defined in p5Forth3D:
 
@@ -138,8 +144,8 @@ bitijk
 : sq dup * ;
 : dist sq swap sq + sqrt ;
 
-6 sq     36  =
-3 4 dist  5  =
+6 sq     36  assert
+3 4 dist  5  assert
 
 12 5 dist
 
@@ -164,7 +170,7 @@ Remove a word:
 ## Words in [Forth Salon](http://forthsalon.appspot.com/word-list)
 
 ## Exercises
-Set n=3
+Set level=c01
 
 ```coffeescript
 5 bitijk + + 3 =
@@ -211,8 +217,8 @@ Make a simple resistance calculator.
 * Define s for serial resistances. r = a + b
 * Define p for parallel resistances. 1/r = 1/a + 1/b
 ```forth
-2 2 s 4 =
-2 2 p 1 =
+2 2 s  4  assert
+2 2 p  1  assert
 ```
 
 ## Thanks!

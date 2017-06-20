@@ -12,8 +12,8 @@ store = (name,value) -> # påverka EJ guit här!
 
 fetch = (name) ->
 	s = localStorage["Forth3D/settings/" + name]
-	if name in ['fps','font','i','j','k','n'] then return int s
-	s
+	print 'fetch',name,s
+	if name in ['fps','font','i','j','k','n'] then int s else s
 
 displayDebug = =>
 	btni.visible fetch('debug') == 'yes'
@@ -50,6 +50,7 @@ handler = () -> # Här är det ok att påverka guit.
 	else if @name() == 'level'
 		store @name(), @value()
 		setLevel()
+		displayDebug()
 	else store @name(), @value()
 
 class Button
@@ -239,6 +240,7 @@ buildCommands = ->
 	cmd1['bitik']  = (x) => [x >> i & 1, x >> k & 1]
 	cmd1['bitjk']  = (x) => [x >> j & 1, x >> k & 1]
 	cmd1['bitijk'] = (x) => [x >> i & 1, x >> j & 1, x >> k & 1]
+	cmd1['b2d']    = (x) => [parseInt x, 2]
 
 	cmd2['swap'] = (x,y) => [x,y]
 	cmd2['<']    = (x,y) => [digit y < x]
@@ -385,6 +387,9 @@ evaluate = (traceFlag, line, level='') ->
 			if traceFlag then showStack level,cmd
 		else if cmd0[cmd]?
 			stack = stack.concat cmd0[cmd]()
+			if traceFlag then showStack level,cmd
+		else if cmd == 'assert'
+			if stack.pop() != stack.pop() then throw [level+cmd,'Assert failure']
 			if traceFlag then showStack level,cmd
 		else
 			nr = parseFloat cmd
