@@ -1,5 +1,7 @@
 # p5Forth3D
 
+[Try it!](https://christernilsson.github.io/p5Forth3D/index.html)
+
 * Navigate by clicking _level_ and _a01_
 
 * This program combines Forth Salon with three-dimensional color cubes.
